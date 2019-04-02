@@ -1,0 +1,14 @@
+require('dotenv').config()
+module.exports={    
+    'connection':{
+        'host':process.env.DB_host,
+        'user':process.env.DB_USER,
+        'password':process.env.DB_PASS,
+        'database':process.env.DB_NAME
+    },
+    'database':process.env.DB_NAME,
+    'secret':'secure',
+    'client_id':process.env.STRAVA_CLIENT_ID,
+    'client_secret':process.env.STRAVA_CLIENT_SECRET,
+    'callback_url':process.env.STRAVA_CALLBACK_URL
+};

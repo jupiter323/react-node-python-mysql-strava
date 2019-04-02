@@ -1,0 +1,74 @@
+div, td {
+    font-size:13px;
+}
+
+table {
+    margin-left:-3px;
+}
+
+body {
+    padding-left:20px;
+}
+
+.block{
+    margin:8px;
+}
+
+.ui.dropdown > .text {
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease 0s;
+    white-space: nowrap;
+    width: 350px;
+}
+
+Select{
+    height:20px;
+}
+
+#processing{
+    width:295px;
+    border: 1px solid gray;
+    background-color:lightgray;
+    padding:10px;
+    display:none;
+}
+
+#butcancel {
+    margin-left:140px;
+}
+
+.hidden{
+    display:none;
+}
+
+.leftTxt{
+    width:200px; 
+    float:left;
+}
+
+#errors{
+    color:red
+}
+
+#message{
+    color:blue
+}
+
+.param{
+    width:300px;
+}
+
+.params{
+    width:400px;
+}
+
+.chk{
+    margin-left:0px
+}
+
+#inputfile{
+    margin:auto
+}

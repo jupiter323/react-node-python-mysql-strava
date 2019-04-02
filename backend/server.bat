@@ -1,0 +1,2 @@
+start nodemon server.js
+
