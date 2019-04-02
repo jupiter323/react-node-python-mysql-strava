@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Header } from './component';
-import { PostContainer } from './container';
+import { MainContainer } from './container';
 
 class App extends Component {
   render() {
     return (
       <div>
-          <Header/>
-          <PostContainer/>
+          {/* <Header/> */}
+          <MainContainer/>
       </div>
     );
   }

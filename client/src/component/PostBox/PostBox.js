@@ -119,16 +119,6 @@ class PostBox extends Component {
                         onfinishedProcessing={this.onGetFinishedProcessing}
                     />
                 </div>
-                <div className="PostBox-page-num">
-                    <Button
-                        color="orange"
-                        content="LOGIN WITH STRAVA"
-                        onClick={
-                            () => this.state.onClick('LOGIN', this.state.email)
-                        }
-                        disabled={this.state.loggedin}
-                    />
-                </div>
                 <Modal
                     open={this.state.open}
                     closeOnEscape={this.closeOnEscape}

@@ -1,5 +1,5 @@
-import PostContainer from './PostContainer/Postcontainer';
+import MainContainer from './PostContainer/MainContainer';
 
 export{
-    PostContainer
+    MainContainer
 };
