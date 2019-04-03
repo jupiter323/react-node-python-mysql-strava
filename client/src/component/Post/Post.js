@@ -54,13 +54,16 @@ class Post extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            options: nextProps.options,
-            hr_cat_sel_options: this.addOptions( nextProps.options, 'heart_rate_divisions'),
-            slope_cat_sel_options:this.addOptions(nextProps.options, 'slope_divisions'),
-            output_column_sel_options:this.addOptions(nextProps.options, 'output_column_selections'),
-            loading:false
-        })
+        if(nextProps.options.length !== 0){
+            this.setState({
+                options: nextProps.options,
+                hr_cat_sel_options: this.addOptions( nextProps.options, 'heart_rate_divisions'),
+                slope_cat_sel_options:this.addOptions(nextProps.options, 'slope_divisions'),
+                output_column_sel_options:this.addOptions(nextProps.options, 'output_column_selections'),
+                loading:false
+            })
+        }
+        
     }
 
     addOptions(settings, name) {

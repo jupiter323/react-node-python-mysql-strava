@@ -130,6 +130,7 @@ class MainContainer extends Component {
             this.getStravaData(email);
         } else if (type === 'LOGIN') {
             console.log("&&&&&&&&&&")
+            window.location.href = "http://127.0.0.1:3001/api/account/login"
         }
 
     }

@@ -40,13 +40,12 @@ class Header extends Component {
                             search={this.caseSensitiveSearch}
                             selection 
                             style={{ width: '180px', height:"30px", margin:'auto' }} 
-                        />
-                        
+                        />                        
                         <Menu.Item>
                             <Button 
                                 className='login_button'
                                 color="orange"
-                                content="LOG IN"
+                                content="Sign up with Strava"
                                 onClick={
                                     () => this.state.onClick('LOGIN')
                                 }
