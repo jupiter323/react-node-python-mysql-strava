@@ -54,6 +54,7 @@ class Post extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps.options)
         if(nextProps.options.length !== 0){
             this.setState({
                 options: nextProps.options,

@@ -6,7 +6,7 @@ var db = require('./db');
 // Set up User class
 var User = function (user) {
   var that = new Object();
-  if(user){
+  if (user) {
     that.id = user.id;
     that.username = user.username;
     that.fullname = user.fullname;
@@ -29,7 +29,7 @@ var User = function (user) {
     that.lastPlayed = user.lastPlayed;
     that.fullname = user.fullname;
     that.phone_num = user.phone_num;
-  } 
+  }
 
   return that;
 };
@@ -65,7 +65,7 @@ var login = function (email, password, callback) {
     }
     if (!rows.length)
       return callback(null, false);
-    if (validPassword(password, rows[0].password)) {     
+    if (validPassword(password, rows[0].password)) {
       return callback(null, true, new User(rows[0]));
     } else {
       console.log('wrong pw')
@@ -74,44 +74,54 @@ var login = function (email, password, callback) {
   });
 };
 
-var createUser = function (body, callback) {
-  var id = generateUserId();
-  var newUser = {
-    id: id,
-    username: body.username,
-    email: body.email,
-    password: hashPassword(body.password),
-    avatar: gravatar(body),
-    createdDate: getDateTime(),
-  };
+var createUser = function (user, token, callback) {
 
-  db.query(`INSERT INTO users (id, username, email, password, avatar,created,online ) values (?,?,?,?,?,?,?)`,
-    [id, body.username, body.email, hashPassword(body.password), gravatar(body), getDateTime(),'y'],
+  db.query(`INSERT INTO user (userId, username, token ) values (?,?,?)`,
+    [user.id, user.username, token],
     function (err) {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
           // If we somehow generated a duplicate user id, try again
-          return createUser(body, callback);
+          return createUser(user, callback);
+        }
+        return callback(err);
+      }
+      console.log(user)
+      // Successfully created user
+      return regiserProfile(user, callback);
+    }
+  )
+}
+
+var regiserProfile = function (user, callback) {
+ 
+  db.query(`INSERT INTO user_profile (userId, username, firstname, lastname, badge_type_id, premium, resource_state, summit, sex, profile, profile_medium, city ,country,follower, friend, created_at, updated_at ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    [user.id, user.username, user.firstname, user.lastname, user.badge_type_id, user.premium, user.resource_state, user.summit,user.sex, user.profile,user.profile_medium, user.city, user.country,user.follower,user.friend,user.created_at, user.updated_at ],
+    function (err) {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          // If we somehow generated a duplicate user id, try again
+          return createUser(user, callback);
         }
         return callback(err);
       }
 
       // Successfully created user
-      return callback(null, true, new User(newUser));
+      return callback(null, true, user);
     }
   )
 }
 
-var register = function (body, callback) {
-  
-  db.query('SELECT * FROM users WHERE email = ? OR username = ?', [body.email, body.username], function (err, rows) {
+var register = function (user,token, callback) {
+
+  db.query('SELECT * FROM user WHERE userId = ? OR username = ?', [user.id, user.username], function (err, rows) {
     if (err) {
       callback(err);
     }
     if (rows.length) {
       return callback(null, false);
     }
-    return createUser(body, callback);
+    return createUser(user,token, callback);
   });
 }
 
@@ -128,7 +138,7 @@ var findOne = function (id, callback) {
 
 var getUserSession = function (id, callback) {
   db.query('SELECT * FROM users WHERE id = ? AND online = "y"', [id], function (err, row) {
-    
+
     if (err)
       return callback(err);
     else
@@ -138,58 +148,58 @@ var getUserSession = function (id, callback) {
 
 var find_all = function (callback) {
   db.query('SELECT * FROM users', [], function (err, rows) {
-    if(err)return callback(err)
+    if (err) return callback(err)
     return callback(err, rows);
   });
 }
 
 var updateProfile = function (user, callback) {
-  
-  if (user.changedPW){
-    user.password=hashPassword(user.password)
+
+  if (user.changedPW) {
+    user.password = hashPassword(user.password)
   }
-  delete user.changedPW  
+  delete user.changedPW
   user.updated = getDateTime()
   db.query('UPDATE users SET ? WHERE id = ?', [user, user.id]
     , function (err) {
       return callback(err);
-  })
+    })
 }
 
-var recordCounting = function (req,callback){
-  if(req.body.result==true){
-    db.query('UPDATE users SET played_count=played_count+1,won_count=won_count+1,total_earned=total_earned+?,lastWonDate=?,giftNumber=CONCAT(IFNULL(giftNumber,""),?) WHERE id = ?', [req.body.prize,req.body.lastWonDate,req.body.gift_num,req.body.userId]
-    , function (err) {
-      return callback(err);
-    })
-  }else{
+var recordCounting = function (req, callback) {
+  if (req.body.result == true) {
+    db.query('UPDATE users SET played_count=played_count+1,won_count=won_count+1,total_earned=total_earned+?,lastWonDate=?,giftNumber=CONCAT(IFNULL(giftNumber,""),?) WHERE id = ?', [req.body.prize, req.body.lastWonDate, req.body.gift_num, req.body.userId]
+      , function (err) {
+        return callback(err);
+      })
+  } else {
     db.query('UPDATE users SET played_count=played_count+1 WHERE id = ?', [req.body.userId]
-    , function (err) {
-      return callback(err);
-    })
-  }  
- 
+      , function (err) {
+        return callback(err);
+      })
+  }
+
 }
 
-var gettingLastPlayed = function(userId,callback){
+var gettingLastPlayed = function (userId, callback) {
   db.query('SELECT lastPlayed FROM users WHERE id=?', [userId], function (err, row) {
-    if(err) return callback(err)
+    if (err) return callback(err)
     return callback(err, row);
   });
 }
 
-var addingPoints = function(id,tdp,twp,tmp,typ,ly,callback){
-  db.query('UPDATE users SET ? WHERE id = ?', [{ todayScore: tdp,thisWeekScore:twp,thisMonthScore:tmp,thisYearScore:typ,lastPlayed:ly }, id]
-  , function (err) {
-    return callback(err);
-  })
+var addingPoints = function (id, tdp, twp, tmp, typ, ly, callback) {
+  db.query('UPDATE users SET ? WHERE id = ?', [{ todayScore: tdp, thisWeekScore: twp, thisMonthScore: tmp, thisYearScore: typ, lastPlayed: ly }, id]
+    , function (err) {
+      return callback(err);
+    })
 }
 
-var zeroPoints = function(points,callback){
+var zeroPoints = function (points, callback) {
   db.query('UPDATE users SET ?', [points]
-  , function (err) {
-    return callback(err);
-  })
+    , function (err) {
+      return callback(err);
+    })
 }
 
 var addSocketID = function (id, socketID, callback) {
@@ -200,7 +210,7 @@ var addSocketID = function (id, socketID, callback) {
 }
 
 var logout = function (id, callback) {
-  
+
   db.query('UPDATE users SET ? WHERE id = ?', [{ online: 'n' }, id]
     , function (err) {
       return callback(err);

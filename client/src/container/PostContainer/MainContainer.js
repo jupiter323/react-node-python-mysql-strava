@@ -23,8 +23,8 @@ class MainContainer extends Component {
 
     checkExpirationTime = () => {
         let expireTime = localStorage.getItem('expireTime')
-        let currTIme = Date.now()
-        if (expireTime < currTIme) return true;
+        let currTime = Date.now()
+        if (expireTime < currTime) return true;
         else return false
     }
 
@@ -41,9 +41,9 @@ class MainContainer extends Component {
                 var userInfo = await Promise.all([
                     service.gettingToken(code)
                 ]);
-
-                var userProfile = userInfo[0].data.profile
-                localStorage.setItem('token', userProfile.access_token)
+                console.log(userInfo[0].data)
+                var userProfile = userInfo[0].data
+                localStorage.setItem('token', userProfile.token)
                 localStorage.setItem('profile', JSON.stringify(userProfile))
                 localStorage.setItem('expireTime', (Date.now() + 6 * 3600 * 1000))
                 window.location.href = this.removeUrlParams(code)
@@ -129,7 +129,6 @@ class MainContainer extends Component {
             this.setState({ loggingin: true })
             this.getStravaData(email);
         } else if (type === 'LOGIN') {
-            console.log("&&&&&&&&&&")
             window.location.href = "http://127.0.0.1:3001/api/account/login"
         }
 

@@ -1,16 +1,12 @@
 const router = require('express').Router();
-// const jwt = require('jsonwebtoken');
 const request = require("request");
 const passport = require('passport')
 const StravaStrategy = require('passport-strava-oauth2').Strategy
 
 const fs = require("fs");
-// const User = require('../model/user');
+const User = require('../model/user');
 const StrvDataModel = require('../controller/stravaControl')
 const config = require('../config/db-config')
-// const checkJWT = require('../middlewares/checkJWT');
-// const CONSTANTS = require('../config/contants')
-// const jwt_decode = require('jwt-decode');
 
 const stravaConfig = {
     clientID: config.client_id,
@@ -56,14 +52,11 @@ router.post('/token', (req, res, next) => {
                     "data/strava_config",
                     `{\n"access_token"    :"${access_token}", \n"client_id"  :  "16560", \n"client_secret" :"952ad2776cfeee810e58edc79b110713605b4e73", \n"redirect_uri"  :"http://localhost"\n}`
                 );
-                res.send({
-                    profile: body,
-                    msg: 'succeeded'
-                })
+                registerUser(body, access_token,res)
             } else {
                 res.send({
-                    profile: null,
-                    msg: 'failed'
+                    success: false,
+                    message: error
                 })
             }
         }
@@ -74,6 +67,34 @@ router.post('/token', (req, res, next) => {
 router.post('/getStrava', (req, res) => {     
     StrvDataModel.saveStravaData(req,res)        
 })
+
+function registerUser(body, token,res){
+    if(body.athlete){
+        User.register(body.athlete,token, function (err, status, user) {
+            if (err) {
+                res.status(401).send({ success: false,message:err });
+            } else if (status == false) {
+                res.send({
+                    success: false,
+                    message: 'successfully logged in!',
+                    token:token,
+                    profile:user
+                });
+            } else {            
+                res.send({
+                    success: true,
+                    message: 'Registered successfully!',
+                    token: token,
+                    profile:user
+                });
+    
+            }
+        });
+    }else{
+        res.status(401).send({ success: false });
+    }
+    
+}
 
 // router.post('/register', (req, res, next) => {
 
