@@ -1,6 +1,6 @@
 {
-"access_token"    :"c868475b87554dfffcc8e36146653b16b4a1f88e", 
+"access_token"    :"4979640c5f951fbd37837a42ed11d8fa53a25609", 
 "client_id"  :  "16560", 
 "client_secret" :"952ad2776cfeee810e58edc79b110713605b4e73", 
-"redirect_uri"  :"http://localhost"
+"redirect_uri"  :"http://127.0.0.1:3000"
 }

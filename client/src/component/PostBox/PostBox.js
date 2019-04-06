@@ -65,8 +65,6 @@ class PostBox extends Component {
     }
 
     closeModalSave = () => {
-        console.log()
-
         if (this.validateEmail(this.state.email)) {
             this.setState({ 
                 open: false,

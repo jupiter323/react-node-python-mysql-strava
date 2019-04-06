@@ -44,6 +44,10 @@ Select{
     display:none;
 }
 
+.visible{
+    display: block
+}
+
 .leftTxt{
     width:200px; 
     float:left;
@@ -71,4 +75,22 @@ Select{
 
 #inputfile{
     margin:auto
+}
+
+.grid.container {
+    margin-top: 5em;
+    margin: 32px;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.require-label{
+    margin-left: 50% !important
 }

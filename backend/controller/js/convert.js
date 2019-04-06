@@ -156,7 +156,6 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
             catch (err) {
             }
         }
-        // console.log('participants='+participants)
 
         // parse gpx data
         if (params.name.endsWith('.gpx')) {

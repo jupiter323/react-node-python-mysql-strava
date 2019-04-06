@@ -12,7 +12,8 @@ class MainContainer extends Component {
             fetchingStrava: false,
             profile: null,
             file: null,
-            options: []
+            options: [],
+            userOptions:[]
         }
     }
 
@@ -85,13 +86,16 @@ class MainContainer extends Component {
     }
 
     getGpxoptions = async () => {
-        var options_res = await Promise.all([
-            service.getOptions()
+        var [options_res,useroptions_res] = await Promise.all([
+            service.getOptions(),
+            service.getuseroptions()
         ]);
 
-        var gpxOption = options_res[0].data.optionsRes
+        var gpxOption = options_res.data.optionsRes
+        var userOption = useroptions_res.data.users
         this.setState({
-            options: gpxOption
+            options: gpxOption,
+            userOptions:userOption
         })
     }
 
@@ -104,7 +108,8 @@ class MainContainer extends Component {
             });
 
             var profile = JSON.parse(localStorage.getItem('profile'))
-            var stravaId = profile.athlete.username
+            var stravaId = profile.profile.username
+            console.log(stravaId)
             var fetchResponse = await Promise.all([
                 service.gettingStravaData(stravaId, email)
             ]);
@@ -112,6 +117,7 @@ class MainContainer extends Component {
             var result = fetchResponse[0].data
 
             window.alert(result.msg)
+            
             this.setState({
                 fetchingStrava: false
             });
@@ -130,6 +136,11 @@ class MainContainer extends Component {
             this.getStravaData(email);
         } else if (type === 'LOGIN') {
             window.location.href = "http://127.0.0.1:3001/api/account/login"
+        } else if(type === "EXIT"){
+            this.setState({
+                loggedin:false
+            })
+            localStorage.clear()
         }
 
     }
@@ -141,13 +152,13 @@ class MainContainer extends Component {
 
     render() {
 
-        const { loggedin, fetchingStrava, profile, options } = this.state;
+        const { loggedin, fetchingStrava, profile, options,userOptions } = this.state;
         return (
-
             <div>
                 <Header
                     loggedin={loggedin}
                     onClick={this.handleNavigateClick}
+                    userOption = {userOptions}
                 />
                 <PostWrapper>
                     <PostBox
@@ -159,7 +170,6 @@ class MainContainer extends Component {
                     />
                 </PostWrapper>
             </div>
-
         );
     }
 }

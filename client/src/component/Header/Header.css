@@ -5,3 +5,11 @@
     text-align: center;
     font-weight: 600;
 }
+
+.hiden_button{
+    display: none !important
+}
+
+.visible_button{
+    display: block !important
+}

@@ -1,6 +1,5 @@
-var formidable = require('formidable');
+
 var fs = require('fs');
-var path = require('path');
 
 let convert = require('./js/convert')
 var exec = require('child_process').exec;
@@ -77,7 +76,6 @@ exports.OptionsToJson = function(req,res){
         optionsRes:settings
     })
 }
-
 
 function handler(req, res){
     //	console.log('-------------> ip address is'+req.socket.localAddress);

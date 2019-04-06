@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Checkbox, Dropdown } from 'semantic-ui-react';
+import { Button, Input, Checkbox, Dropdown,Label } from 'semantic-ui-react';
 import _ from 'lodash'
 import './Post.css';
 import * as service from '../../services/restful';
@@ -44,13 +44,18 @@ class Post extends Component {
             csvwithcomma: true,
             options: null,
             resultState: null,
-            loading:true
+            loading:true,
+            requireHr : false,
+            requireSlope : false,
+            requireOut : false,
         };
         this.filesIndex = -1;
         this.files = [];
         this.starttime = '';
         this.runprocess = false;
         this.cancelprocess = this.cancelprocess.bind(this)
+
+        
     }
 
     componentWillReceiveProps(nextProps) {
@@ -95,13 +100,16 @@ class Post extends Component {
     }
 
     onChooseFile(event) {
+
+        let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object",  err3 = "This browser does not support the `files` property of the file input."
+
         if (typeof window.FileReader !== 'function')
-            throw ("The file API isn't supported on this browser.");
+            throw err1;
         let input = event.target;
         if (!input)
-            throw ("The browser does not properly implement the event object");
+            throw err2;
         if (!input.files)
-            throw ("This browser does not support the `files` property of the file input.");
+            throw err3;
         if (!input.files[0])
             return undefined;
         this.files = input.files
@@ -126,10 +134,38 @@ class Post extends Component {
             this.cancelprocess()
             return
         }
+
+        if(this.state.hr_cat_sel === ''){
+            this.requirefield("requireHr") 
+            return           
+        }
+
+        if(this.state.output_column_sel === ''){
+            this.requirefield("requireOut")
+            return
+        }
+
+        if(this.state.slope_cat_sel === ''){
+            this.requirefield("requireSlope")
+            return
+        }
+
         let fr = new FileReader()
         fr.onload = this.onFileReaderData.bind(this);
         fr.readAsBinaryString(this.files[this.filesIndex])
         document.getElementById('processing').style.display = "block"
+    }
+
+    requirefield(name){
+        
+        this.setState({
+            [name]:true
+        })
+        setTimeout(() => {
+            this.setState({
+                [name]:false
+            })             
+        }, 1000);
     }
 
     async onFileReaderData(event) {
@@ -139,10 +175,10 @@ class Post extends Component {
         let params = '<params>'
 
         params += 'name:' + this.files[this.filesIndex].name
-
+        
         params += ';hr-cat-sel:' + this.state.hr_cat_sel
         params += ';slope-cat-sel:' + this.state.slope_cat_sel
-        params += ';output-column-sel:' + this.state.output_column_sel 
+        params += ';output-column-sel:' + this.state.output_column_sel        
         params += ';user-id:' + this.state.user_id
         params += ';mv:' + this.state.mv
         params += ';gewicht:' + this.state.gewicht
@@ -159,6 +195,7 @@ class Post extends Component {
         params += '</params>'
         let data1 = btoa(data).toString()
         params = params + data1
+
         var response = await Promise.all([
             service.convertGPX(params)
         ]);
@@ -193,7 +230,6 @@ class Post extends Component {
         this.setState({ [name]: value })
     }
 
-
     render() {
         const { csvwithcomma, zeronegativeenergy } = this.state
 
@@ -212,6 +248,9 @@ class Post extends Component {
                         onChange={this.handleChange}
                         loading ={this.state.loading}
                     />
+                    <Label basic color='red' className={this.requireHr?"visible require-label":"hidden"} pointing>
+                        Require this field
+                    </Label>
                 </div>
                 <div className="block">
                     <div className="leftTxt">slope category division</div>
@@ -224,6 +263,9 @@ class Post extends Component {
                         onChange={this.handleChange}
                         loading ={this.state.loading}
                     />
+                    <Label basic color='red' className={this.requireSlope?"visible require-label":"hidden"}  pointing>
+                        Require this field
+                    </Label>
                 </div>
                 <div className="block">
                     <div className="leftTxt">output colums</div>
@@ -236,6 +278,9 @@ class Post extends Component {
                         onChange={this.handleChange}
                         loading ={this.state.loading}
                     />
+                    <Label basic color='red' pointing className={this.requireOut?"visible require-label":"hidden"} >
+                        Require this field
+                    </Label>
                 </div>
 
                 <table>
@@ -256,7 +301,27 @@ class Post extends Component {
                     </tbody>
                 </table>
 
+               
                 <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
+                
+                <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
+                
+                {/* <div className="ui middle aligned center aligned grid container">
+                    <div className="ui fluid segment">
+                    <input type="file"  className="inputfile" id="embedpollfileinput" onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
+
+                    <label htmlFor="embedpollfileinput" className="ui middle orange right floated button">
+                        <i className="ui cloud upload icon"></i> 
+                        Train File
+                    </label>
+                    <input type="file" className="inputfile" id="embedpollfileinput" onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple/>
+
+                    <label htmlFor="embedpollfileinput" className="ui middle orange right floated button">
+                        <i className="ui cloud upload icon"></i> 
+                        Test File
+                    </label>
+                    </div>                    
+                </div> */}
 
                 <span id="processing">processing...
                 <Button id="butcancel" onClick={this.cancelprocess}>cancel</Button>

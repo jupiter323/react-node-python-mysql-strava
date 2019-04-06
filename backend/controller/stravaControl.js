@@ -158,10 +158,7 @@ function getAcitivies(number,stravaId,email, page) {
 
 function emailConfirm(toEmail){
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    console.log({
-        email:toEmail,
-        api:process.env.SENDGRID_API_KEY
-    })
+    
     const msg = {
         to: toEmail,
         from: 'test@test.com',
