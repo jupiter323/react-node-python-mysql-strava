@@ -66,15 +66,16 @@ class PostBox extends Component {
 
     closeModalSave = () => {
         if (this.validateEmail(this.state.email)) {
-            this.setState({ 
+            this.setState({
                 open: false,
-                emailError:false
-             });
-            this.state.onClick('getStravaData', this.state.email)
+                emailError: false
+            });
+            this.state.onClick('getStravaData', this.state.email);
+            localStorage.setItem('getlistemail', this.state.email);
         } else {
-            this.setState({emailError:true})
+            this.setState({ emailError: true })
             setTimeout(() => {
-                this.setState({emailError:false})   
+                this.setState({ emailError: false })
             }, 5000);
         }
 
@@ -96,7 +97,7 @@ class PostBox extends Component {
                         content="Convert GPX"
                         icon="cloud upload"
                         labelPosition="left"
-                        disabled={ !this.state.fileReady || this.state.fileProcessing}
+                        disabled={!this.state.fileReady || this.state.fileProcessing}
                         onClick={this.onClick}
                         loading={this.state.fileProcessing}
                     />

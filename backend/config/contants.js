@@ -42,3 +42,8 @@ module.exports.OOPTIONS_LOAD_FAILURE = 'Failed loading options';
 
 module.exports.STRAVA_CONFIG_PATH = 'data/strava_config';
 module.exports.STRAVA_RESPONSE_PATH = ''
+
+
+/* activity count updata */
+module.exports.ACTIVTY_COUNT_UPDATE_FAILD = 'activity count update faild';
+module.exports.ACTIVTY_COUNT_UPDATE_OK = 'activity count update successfully'

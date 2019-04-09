@@ -31,7 +31,8 @@ exports.getToken = function(req, res) {
                     res.send({
                         status:status,
                         error:err,
-                        message:msg
+                        message:msg,
+                        data: body
                     }) 
                 })
                         

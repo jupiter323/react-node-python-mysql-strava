@@ -13,15 +13,29 @@ class MainContainer extends Component {
             profile: null,
             file: null,
             options: [],
-            userOptions:[]
+            userOptions: []
         }
     }
 
 
     componentDidMount() {
+        this.callGetActivityListInterval();
         this.loginWithStrava();
     }
+    async callGetActivityListInterval() {
 
+        var profile = await JSON.parse(localStorage.getItem('profile'))
+        var intervalFun = setInterval(() => {
+            var curr_token = localStorage.getItem('token');
+            if (!curr_token)
+                clearInterval(intervalFun);
+            else {
+                var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
+                var stravaId = profile.athlete.username
+                service.gettingStravaData(stravaId, email);
+            }
+        }, 60000);
+    }
     checkExpirationTime = () => {
         let expireTime = localStorage.getItem('expireTime')
         let currTime = Date.now()
@@ -42,9 +56,9 @@ class MainContainer extends Component {
                 var userInfo = await Promise.all([
                     service.gettingToken(code)
                 ]);
-                console.log(userInfo[0].data)
-                var userProfile = userInfo[0].data
-                localStorage.setItem('token', userProfile.token)
+                console.log(userInfo[0].data.data)
+                var userProfile = userInfo[0].data.data
+                localStorage.setItem('token', userProfile.access_token)
                 localStorage.setItem('profile', JSON.stringify(userProfile))
                 localStorage.setItem('expireTime', (Date.now() + 6 * 3600 * 1000))
                 window.location.href = this.removeUrlParams(code)
@@ -86,7 +100,7 @@ class MainContainer extends Component {
     }
 
     getGpxoptions = async () => {
-        var [options_res,useroptions_res] = await Promise.all([
+        var [options_res, useroptions_res] = await Promise.all([
             service.getOptions(),
             service.getuseroptions()
         ]);
@@ -95,7 +109,7 @@ class MainContainer extends Component {
         var userOption = useroptions_res.data.users
         this.setState({
             options: gpxOption,
-            userOptions:userOption
+            userOptions: userOption
         })
     }
 
@@ -108,7 +122,8 @@ class MainContainer extends Component {
             });
 
             var profile = JSON.parse(localStorage.getItem('profile'))
-            var stravaId = profile.profile.username
+            console.log("profile :", profile)
+            var stravaId = profile.athlete.username
             console.log(stravaId)
             var fetchResponse = await Promise.all([
                 service.gettingStravaData(stravaId, email)
@@ -117,7 +132,7 @@ class MainContainer extends Component {
             var result = fetchResponse[0].data
 
             window.alert(result.msg)
-            
+
             this.setState({
                 fetchingStrava: false
             });
@@ -136,9 +151,9 @@ class MainContainer extends Component {
             this.getStravaData(email);
         } else if (type === 'LOGIN') {
             window.location.href = "http://127.0.0.1:3001/api/account/login"
-        } else if(type === "EXIT"){
+        } else if (type === "EXIT") {
             this.setState({
-                loggedin:false
+                loggedin: false
             })
             localStorage.clear()
         }
@@ -152,13 +167,13 @@ class MainContainer extends Component {
 
     render() {
 
-        const { loggedin, fetchingStrava, profile, options,userOptions } = this.state;
+        const { loggedin, fetchingStrava, profile, options, userOptions } = this.state;
         return (
             <div>
                 <Header
                     loggedin={loggedin}
                     onClick={this.handleNavigateClick}
-                    userOption = {userOptions}
+                    userOption={userOptions}
                 />
                 <PostWrapper>
                     <PostBox
