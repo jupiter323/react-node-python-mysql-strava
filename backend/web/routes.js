@@ -8,21 +8,23 @@
 // const routeHandler = require('./../handlers/route-handler');
 const userRoutes = require('../routes/auth');
 const mainRoutes = require('../routes/main');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
+class Routes {
 
-class Routes{
-
-	constructor(app){
+	constructor(app) {
 		this.app = app;
 	}
 
 	/* creating app Routes starts */
-	appRoutes(){
-        this.app.use('/api',mainRoutes);
-        this.app.use('/api/account', userRoutes);
+	appRoutes() {
+		this.app.use('/api', mainRoutes);
+		this.app.use('/api/account', userRoutes);
+		this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 	}
 
-	routesConfig(){
+	routesConfig() {
 		this.appRoutes();
 	}
 }

@@ -1,8 +1,8 @@
 var db = require('./db');
 var Constants = require('../config/contants')
 
-exports.getactivityCountByUsername = function (username, callback) {
-    db.query('SELECT * FROM activity WHERE username = ?', [username], function (err, rows) {
+exports.getactivityCountByUsername = function (stravaId, callback) {
+    db.query('SELECT * FROM activity WHERE username = ?', [stravaId], function (err, rows) {
         if (err) {
             callback(err);
         }

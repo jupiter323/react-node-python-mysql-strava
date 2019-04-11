@@ -29,8 +29,7 @@ passport.use(stravaLogin)
 
 router.get('/login', passport.authenticate('strava', { scope: ['activity:read_all'] }));
 
-router.route('/token')
-    .post(UserControl.getToken)
+router.post('/token', UserControl.getToken)
 
 router.post('/getStrava', (req, res) => {
     StrvDataModel.saveStravaData(req, res)

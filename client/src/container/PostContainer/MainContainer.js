@@ -19,19 +19,24 @@ class MainContainer extends Component {
 
 
     componentDidMount() {
+        var curr_token = localStorage.getItem('token');
+        var profile = JSON.parse(localStorage.getItem('profile'))
+        console.log(profile, curr_token)
         this.callGetActivityListInterval();
         this.loginWithStrava();
     }
     async callGetActivityListInterval() {
 
-        var profile = await JSON.parse(localStorage.getItem('profile'))
+
         var intervalFun = setInterval(() => {
             var curr_token = localStorage.getItem('token');
             if (!curr_token)
                 clearInterval(intervalFun);
             else {
-                var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
-                var stravaId = profile.athlete.username
+                var profile = JSON.parse(localStorage.getItem('profile'))
+                var email = localStorage.getItem('getlistemail') || 'jupiterfierce@gmail.com'
+                var stravaId = profile.athlete.id
+
                 service.gettingStravaData(stravaId, email);
             }
         }, 60000);
@@ -51,6 +56,7 @@ class MainContainer extends Component {
         try {
 
             var code = url.searchParams.get("code");
+            console.log(code, url)
             if (code) {
 
                 var userInfo = await Promise.all([
@@ -60,7 +66,7 @@ class MainContainer extends Component {
                 var userProfile = userInfo[0].data.data
                 localStorage.setItem('token', userProfile.access_token)
                 localStorage.setItem('profile', JSON.stringify(userProfile))
-                localStorage.setItem('expireTime', (Date.now() + 6 * 3600 * 1000))
+                localStorage.setItem('expireTime', userProfile.expires_at * 1000)
                 window.location.href = this.removeUrlParams(code)
 
             } else {
@@ -123,7 +129,7 @@ class MainContainer extends Component {
 
             var profile = JSON.parse(localStorage.getItem('profile'))
             console.log("profile :", profile)
-            var stravaId = profile.athlete.username
+            var stravaId = profile.athlete.id
             console.log(stravaId)
             var fetchResponse = await Promise.all([
                 service.gettingStravaData(stravaId, email)

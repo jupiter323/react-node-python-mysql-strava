@@ -61,7 +61,7 @@ var getUser = function (projection, params, callback) {
 
 var registerUser = function (params, callback) {
   let user = params.athlete
-  db.query('SELECT * FROM user WHERE userId = ? AND username = ?', [user.id, user.username], function (err, rows) {
+  db.query('SELECT * FROM user WHERE userId = ? ', [user.id], function (err, rows) {
     if (err) {
       callback(err);
     }

@@ -139,11 +139,10 @@ function getStreamActivities(number, stravaId, email) {
         }
     );
 }
-function isUpdatedActivities(stravaId) {
-    var username = stravaId;
+function isUpdatedActivities(stravaId) {    
     const activitiesCount = ActivityIDs.length
     return new Promise((resolve, reject) => {
-        Activity.getactivityCountByUsername(username, (err, counts) => {
+        Activity.getactivityCountByUsername(stravaId, (err, counts) => {
             if (err) {
                 console.log(err);
                 reject(err);
@@ -158,7 +157,6 @@ function isUpdatedActivities(stravaId) {
     })
 }
 function getAcitivies(number, stravaId, email, page) {
-
     strava.athlete.listActivities({ per_page: 200, page: page }, async function (
         err,
         payload,
@@ -219,7 +217,8 @@ exports.saveStravaData = async function (req, res) {
         const curr_time = new Date().toISOString()
         requestDate = curr_time.split("T")[0]
         requestTime = curr_time.split("T")[1].replace(/:|\//g, "-").split('.')[0]
-        getAcitivies(number, req.body.stravaId, req.body.email, req.body.pageNum)
+
+        getAcitivies(number, req.body.stravaId || "aaa", req.body.email, req.body.pageNum)
         res.send({
             msg: "Download started, we will send email when download finish!"
         })
