@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dafbfce7-1041-4d8f-bb13-35d4287b3626" name="Default Changelist" comment="" />
+    <list default="true" id="dafbfce7-1041-4d8f-bb13-35d4287b3626" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../backend/controller/stravaControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/controller/stravaControl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/controller/userControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/controller/userControl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/data/strava_config" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/data/strava_config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/model/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/model/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/model/user_profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/model/user_profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/routes/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/routes/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/web/cron.js" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/web/cron.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/component/Header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/component/Header/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/services/restful.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/services/restful.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -9,41 +20,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="23" lean-forward="true" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-              <folding>
-                <element signature="e#0#32#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/predict.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="56" column="30" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
-              <folding>
-                <element signature="e#45#54#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/requirements.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -57,6 +34,9 @@
       <find>all_files = glob.glob(main_path + user + train_data_path + &quot;*.csv&quot;)</find>
       <find>User 2</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -73,23 +53,14 @@
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Stravapy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Stravapy" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -198,7 +169,7 @@
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
-          <caret line="10" column="23" lean-forward="true" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
@@ -217,8 +188,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
+        <state relative-caret-position="198">
+          <caret line="9" column="7" lean-forward="true" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
         </state>
       </provider>
     </entry>
