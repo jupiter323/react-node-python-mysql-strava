@@ -18,6 +18,6 @@ router.route('/getuserlistoptions')
     .get(UserControl.getUserListOptions)
 
 router.route('/getuseroption')
-    .get()
+    .post(UserControl.getUserOption)
 
 module.exports = router;

@@ -7,7 +7,7 @@ const appConfig = require('./config/app-config');
 
 // const socketEvents = require('./web/socket');
 const routes = require('./web/routes');
-// const cronJob = require('./web/cron')
+const cronJob = require('./web/cron')
 var path = require('path');
 
 class Server {
@@ -24,7 +24,7 @@ class Server {
 
     includeRoutes() {
         new routes(this.app).routesConfig();
-        // new cronJob().cronjobConfig();
+        new cronJob().cronjobConfig();
         // new socketEvents(this.socket).socketConfig();
     }
 

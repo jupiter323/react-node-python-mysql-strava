@@ -2,6 +2,8 @@ var fs = require("fs");
 const strava = require('strava-v3');
 const sgMail = require('@sendgrid/mail');
 const Activity = require('../model/activity')
+const User = require('../model/user')
+
 var ActivityIDs = [];
 // var number = 0;
 var allActivities = [];
@@ -107,13 +109,14 @@ function updateDownloadedActivitiesCount(stravaId, activitiesCount) {
     })
 
 }
-function getStreamActivities(number, stravaId, email) {
+function getStreamActivities(number, stravaId, email, access_token) {
     const activitiesCount = ActivityIDs.length
     id = activitiesCount - number - 1;
     number++;
 
     strava.streams.activity(
         {
+            ...access_token,
             id: ActivityIDs[id],
             types:
                 "heartrate,distance,latlng,time,altitude,watts,temp,velocity_smooth"
@@ -121,15 +124,17 @@ function getStreamActivities(number, stravaId, email) {
         function (err, payload, limits) {
             console.log(` ${number}----->> streams segment ${ActivityIDs[id]}`);
             if (err) {
+                fetching = false;
                 console.log(err);
             } else {
                 if (payload.message) {
+                    
                 } else {
                     expertCSV(stravaId, payload, id);
                 }
             }
 
-            if (number < activitiesCount) getStreamActivities(number, stravaId, email);
+            if (number < activitiesCount) getStreamActivities(number, stravaId, email, access_token);
             else {
                 fetching = false;
                 updateDownloadedActivitiesCount(stravaId, activitiesCount);
@@ -139,7 +144,7 @@ function getStreamActivities(number, stravaId, email) {
         }
     );
 }
-function isUpdatedActivities(stravaId) {    
+function isUpdatedActivities(stravaId) {
     const activitiesCount = ActivityIDs.length
     return new Promise((resolve, reject) => {
         Activity.getactivityCountByUsername(stravaId, (err, counts) => {
@@ -156,43 +161,62 @@ function isUpdatedActivities(stravaId) {
         })
     })
 }
+
 function getAcitivies(number, stravaId, email, page) {
-    strava.athlete.listActivities({ per_page: 200, page: page }, async function (
-        err,
-        payload,
-        limits
-    ) {
-        console.log("----->> Start list activities");
-        if (payload.length === undefined) {
-            console.log(payload);
+    User.getUser('access_token', { userId: stravaId }, (err, rows) => {
+        if (err) {
+            console.log(err);
+            fetching = false;
             return;
-        }
-        console.log("page count:" + payload.length)
-        if (err || payload.length === 0) {
-            if (err) return callback(err);
-            console.log(" <<----- End list activities");
-            //check updated status
-            isUpdatedActivities(stravaId).then((updatedStatus) => {
-                if (updatedStatus[0])
-                    getStreamActivities(updatedStatus[1], stravaId, email);
-            }).catch(err => {
-                console.log(err);
-            });
-
         } else {
-            // print number of list in current page
-            console.log(`page ${page}' has ${payload.length} records`);
-
-            // filter "type": "Ride"
-            for (var i = 0; i < payload.length; i++) {
-                if (payload[i].type === "Ride") {
-                    allActivities.push(payload[i]);
-                    ActivityIDs.push(payload[i].id);
+            var access_token = rows[0]
+            strava.athlete.listActivities({ ...access_token, per_page: 200, page: page }, async function (
+                err,
+                payload,
+                limits
+            ) {
+                console.log("----->> Start list activities");
+                if (payload.length === undefined) {
+                    console.log(payload);
+                    fetching = false;
+                    return;
                 }
-            }
-            getAcitivies(number, stravaId, email, page + 1);
+                console.log(stravaId + " page count:" + payload.length)
+                if (err || payload.length === 0) {
+                    if (err) {
+                        fetching = false;
+                        return callback(err);
+                    }
+                    console.log(" <<----- End list activities");
+                    //check updated status
+                    isUpdatedActivities(stravaId).then((updatedStatus) => {
+                        if (updatedStatus[0])
+                            getStreamActivities(updatedStatus[1], stravaId, email, access_token);
+                        else
+                            fetching = false
+                    }).catch(err => {
+                        fetching = false
+                        console.log(err);
+                    });
+
+                } else {
+                    // print number of list in current page
+                    console.log(`page ${page}' has ${payload.length} records`);
+
+                    // filter "type": "Ride"
+                    for (var i = 0; i < payload.length; i++) {
+                        if (payload[i].type === "Ride") {
+                            allActivities.push(payload[i]);
+                            ActivityIDs.push(payload[i].id);
+                        }
+                    }
+                    getAcitivies(number, stravaId, email, page + 1);
+                }
+            });
         }
-    });
+
+    })
+
 }
 
 function emailConfirm(toEmail) {
@@ -218,7 +242,7 @@ exports.saveStravaData = async function (req, res) {
         requestDate = curr_time.split("T")[0]
         requestTime = curr_time.split("T")[1].replace(/:|\//g, "-").split('.')[0]
 
-        getAcitivies(number, req.body.stravaId || "aaa", req.body.email, req.body.pageNum)
+        getAcitivies(number, req.body.stravaId, req.body.email, req.body.pageNum)
         res.send({
             msg: "Download started, we will send email when download finish!"
         })

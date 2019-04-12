@@ -44,7 +44,7 @@ var UserProfile = function (user) {
 }
 
 var getUserList = function (projection, callback) {
-  if (projection === '') projection = 'all'
+  if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user', [], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
@@ -52,8 +52,8 @@ var getUserList = function (projection, callback) {
 }
 
 var getUser = function (projection, params, callback) {
-  if (projection === '') projection = 'all'
-  db.query('SELECT ' + projection + ' FROM user', [params], function (err, rows) {
+  if (projection === '') projection = '*'
+  db.query('SELECT ' + projection + ' FROM user WHERE userId = ?', [params.userId], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
   });
@@ -74,7 +74,7 @@ var registerUser = function (params, callback) {
 
 var updateUser = function (params, callback) {
   let user = params.athlete
-  db.query('UPDATE user SET ? WHERE id = ?', [new User(params), user.id]
+  db.query('UPDATE user SET ? WHERE userId = ?', [new User(params), user.id]
     , function (err) {
 
       let msg = ''
