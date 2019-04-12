@@ -5,6 +5,7 @@
 /backend/.env
 /backend/storage
 /backend/stravapy/__pycache__
+/backend/stravapy/.idea
 /client/node_modules
 /client/.pnp
 .pnp.js
