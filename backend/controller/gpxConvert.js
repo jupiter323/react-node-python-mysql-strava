@@ -79,7 +79,7 @@ exports.OptionsToJson = function(req,res){
 
 function handler(req, res){
     //	console.log('-------------> ip address is'+req.socket.localAddress);
-    
+    // console.log(req.params.name)
     function sendres(params,result){
         res.writeHead(200, { 'content-type': 'text/plain' });
         params.parseresult = result
@@ -105,10 +105,11 @@ function handler(req, res){
             if (useexec) {
                 let mstime = new Date().getTime()
                 let fname = __dirname + '/temp_files/' + mstime + '.txt'
-                fs.writeFileSync(fname, data)
+                fs.writeFileSync(fname, data)           
                 let pid = exec('node ./js/exec_convert.js '+ mstime + '.txt', function(error, stdout, stderr) {
                     console.log('stdout: ', stdout);
                     console.log('stderr: ', stderr);
+                    
                     if (error !== null) {
                         console.log('exec error: ', error);
                     }

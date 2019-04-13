@@ -66,6 +66,7 @@ class Header extends Component {
             console.log(profile)
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('expireTime', profile.expires_at * 1000);
+            this.props.changeProfile(profile);
         }
     }
 

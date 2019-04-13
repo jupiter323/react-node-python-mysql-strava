@@ -187,7 +187,7 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
                 // xmlparser.waypointsToCsv(file, trackinfo.waypoints)
 
                 // get hourly weather 
-                console.log('=====================params=========================\n',params)
+                console.log('=====================params=========================\n',params['user-id'],params)
                 segs.getDarkSkyData(params, trackinfo, (weatherresult) => {
                     if (weatherresult.error != '') {
                         sendres(params, weatherresult.error)

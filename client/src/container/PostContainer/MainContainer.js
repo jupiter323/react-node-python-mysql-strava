@@ -70,9 +70,8 @@ class MainContainer extends Component {
                 window.location.href = this.removeUrlParams(code)
 
             } else {
-
                 var curr_token = localStorage.getItem('token')
-                var profile = JSON.parse(localStorage.getItem('profile'))
+                var profile = JSON.parse(localStorage.getItem('profile'));
                 if (curr_token) {
                     if (this.checkExpirationTime) {
                         this.setState({
@@ -171,6 +170,10 @@ class MainContainer extends Component {
         return url;
     }
 
+    changeProfile = (profile) => {
+        this.setState({ profile });
+
+    }
     render() {
 
         const { loggedin, fetchingStrava, profile, options, userOptions } = this.state;
@@ -180,6 +183,7 @@ class MainContainer extends Component {
                     loggedin={loggedin}
                     onClick={this.handleNavigateClick}
                     userOption={userOptions}
+                    changeProfile={this.changeProfile}
                 />
                 <PostWrapper>
                     <PostBox

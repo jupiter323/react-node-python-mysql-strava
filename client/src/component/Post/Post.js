@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, Checkbox, Dropdown,Label } from 'semantic-ui-react';
+import { Button, Input, Checkbox, Dropdown, Label } from 'semantic-ui-react';
 import _ from 'lodash'
 import './Post.css';
 import * as service from '../../services/restful';
@@ -7,27 +7,26 @@ import * as service from '../../services/restful';
 
 
 class Post extends Component {
-
     constructor(props) {
-        super(props);
+        super(props);       
         this.state = {
             hr_cat_sel: '',
             slope_cat_sel: '',
             output_column_sel: '',
-            hr_cat_sel_options:[{
-                key:'',
-                value:'',
-                text:''
+            hr_cat_sel_options: [{
+                key: '',
+                value: '',
+                text: ''
             }],
-            slope_cat_sel_options:[{
-                key:'',
-                value:'',
-                text:''
+            slope_cat_sel_options: [{
+                key: '',
+                value: '',
+                text: ''
             }],
-            output_column_sel_options:[{
-                key:'',
-                value:'',
-                text:''
+            output_column_sel_options: [{
+                key: '',
+                value: '',
+                text: ''
             }],
             user_id: '',
             mv: '',
@@ -44,10 +43,10 @@ class Post extends Component {
             csvwithcomma: true,
             options: null,
             resultState: null,
-            loading:true,
-            requireHr : false,
-            requireSlope : false,
-            requireOut : false,
+            loading: true,
+            requireHr: false,
+            requireSlope: false,
+            requireOut: false,
         };
         this.filesIndex = -1;
         this.files = [];
@@ -55,21 +54,24 @@ class Post extends Component {
         this.runprocess = false;
         this.cancelprocess = this.cancelprocess.bind(this)
 
-        
+
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.options)
-        if(nextProps.options.length !== 0){
+        console.log("next:", nextProps.profile.athlete.id);
+        if (nextProps.profile.athlete) {
+            this.setState({ user_id: nextProps.profile.athlete.id })
+        }
+        if (nextProps.options.length !== 0) {
             this.setState({
                 options: nextProps.options,
-                hr_cat_sel_options: this.addOptions( nextProps.options, 'heart_rate_divisions'),
-                slope_cat_sel_options:this.addOptions(nextProps.options, 'slope_divisions'),
-                output_column_sel_options:this.addOptions(nextProps.options, 'output_column_selections'),
-                loading:false
+                hr_cat_sel_options: this.addOptions(nextProps.options, 'heart_rate_divisions'),
+                slope_cat_sel_options: this.addOptions(nextProps.options, 'slope_divisions'),
+                output_column_sel_options: this.addOptions(nextProps.options, 'output_column_selections'),
+                loading: false
             })
         }
-        
+
     }
 
     addOptions(settings, name) {
@@ -81,7 +83,7 @@ class Post extends Component {
                 const option = {}
                 s = sub_value.name + ' = ' + sub_value.values.toString()
                 option.key = sub_value.name
-                option.value= s
+                option.value = s
                 option.text = s
                 options.push(option)
             })
@@ -101,7 +103,7 @@ class Post extends Component {
 
     onChooseFile(event) {
 
-        let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object",  err3 = "This browser does not support the `files` property of the file input."
+        let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object", err3 = "This browser does not support the `files` property of the file input."
 
         if (typeof window.FileReader !== 'function')
             throw err1;
@@ -135,17 +137,17 @@ class Post extends Component {
             return
         }
 
-        if(this.state.hr_cat_sel === ''){
-            this.requirefield("requireHr") 
-            return           
+        if (this.state.hr_cat_sel === '') {
+            this.requirefield("requireHr")
+            return
         }
 
-        if(this.state.output_column_sel === ''){
+        if (this.state.output_column_sel === '') {
             this.requirefield("requireOut")
             return
         }
 
-        if(this.state.slope_cat_sel === ''){
+        if (this.state.slope_cat_sel === '') {
             this.requirefield("requireSlope")
             return
         }
@@ -156,15 +158,15 @@ class Post extends Component {
         document.getElementById('processing').style.display = "block"
     }
 
-    requirefield(name){
-        
+    requirefield(name) {
+
         this.setState({
-            [name]:true
+            [name]: true
         })
         setTimeout(() => {
             this.setState({
-                [name]:false
-            })             
+                [name]: false
+            })
         }, 1000);
     }
 
@@ -175,10 +177,10 @@ class Post extends Component {
         let params = '<params>'
 
         params += 'name:' + this.files[this.filesIndex].name
-        
+
         params += ';hr-cat-sel:' + this.state.hr_cat_sel
         params += ';slope-cat-sel:' + this.state.slope_cat_sel
-        params += ';output-column-sel:' + this.state.output_column_sel        
+        params += ';output-column-sel:' + this.state.output_column_sel
         params += ';user-id:' + this.state.user_id
         params += ';mv:' + this.state.mv
         params += ';gewicht:' + this.state.gewicht
@@ -246,9 +248,9 @@ class Post extends Component {
                         options={this.state.hr_cat_sel_options}
                         placeholder='select one option'
                         onChange={this.handleChange}
-                        loading ={this.state.loading}
+                        loading={this.state.loading}
                     />
-                    <Label basic color='red' className={this.requireHr?"visible require-label":"hidden"} pointing>
+                    <Label basic color='red' className={this.requireHr ? "visible require-label" : "hidden"} pointing>
                         Require this field
                     </Label>
                 </div>
@@ -261,9 +263,9 @@ class Post extends Component {
                         options={this.state.slope_cat_sel_options}
                         placeholder='select one option'
                         onChange={this.handleChange}
-                        loading ={this.state.loading}
+                        loading={this.state.loading}
                     />
-                    <Label basic color='red' className={this.requireSlope?"visible require-label":"hidden"}  pointing>
+                    <Label basic color='red' className={this.requireSlope ? "visible require-label" : "hidden"} pointing>
                         Require this field
                     </Label>
                 </div>
@@ -276,9 +278,9 @@ class Post extends Component {
                         options={this.state.output_column_sel_options}
                         placeholder='select one option'
                         onChange={this.handleChange}
-                        loading ={this.state.loading}
+                        loading={this.state.loading}
                     />
-                    <Label basic color='red' pointing className={this.requireOut?"visible require-label":"hidden"} >
+                    <Label basic color='red' pointing className={this.requireOut ? "visible require-label" : "hidden"} >
                         Require this field
                     </Label>
                 </div>
@@ -301,11 +303,11 @@ class Post extends Component {
                     </tbody>
                 </table>
 
-               
+
                 <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
-                
+
                 <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
-                
+
                 {/* <div className="ui middle aligned center aligned grid container">
                     <div className="ui fluid segment">
                     <input type="file"  className="inputfile" id="embedpollfileinput" onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
