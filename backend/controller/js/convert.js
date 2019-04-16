@@ -36,7 +36,7 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
             params[pair[0]] = pair[1]
         }
     }
-    
+
     // init extra params
     params['intensityscore'] = ""
     params['otherpeople'] = 0
@@ -50,22 +50,24 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
     //fs.writeFileSync(file, JSON.stringify(params,"",3))
 
     data = data.substr(i2 + 9) // remove <param> .. </param> section
-    
+
     // exit if extension is not supported
     if (!params.name.endsWith('.gpx') && !params.name.endsWith('.fit') && !params.name.endsWith('_log_2.csv') && !params.name == '2501580_out.csv' && !params.name.endsWith('.csv')) {
         sendres(params, 'unsupported file extension')
         return
     }
-    
+
     if (params.hasOwnProperty('name')) {
 
-       
-        let savealias = params.name
-        if (params.hasOwnProperty('user-id') && params['user-id'] != "") {
+
+        let savealias;
+        if (params.hasOwnProperty('activity-id'))
+            savealias = params['activity-id'] || Date.now();
+        else if (params.hasOwnProperty('user-id') && params['user-id'] != "") {
             let index = params.name.indexOf('_')
             if (index > 0) savealias = params['user-id'] + params.name.substr(index)
         }
-        
+
         let file = rootdir + '/uploads/' + params.name
 
         // ready if file is participants info file
@@ -162,7 +164,7 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
             let gpx_xml_data = Buffer.from(data, 'base64').toString()
             if (params.saveuploads == 'true') fs.writeFileSync(file, gpx_xml_data)
             let trackinfo = waypoints.gpxParser(gpx_xml_data)
-            console.log("=============trackInfo=====================\n",trackinfo)
+            console.log("=============trackInfo=====================\n", trackinfo)
             processParserData(trackinfo)
         }
 
@@ -179,7 +181,7 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
             if (params.saveuploads == 'true') fs.writeFileSync(file, fit_data)
             waypoints.csvParser(csv_data, processParserData)
         }
-        
+
         // process waypoint data
         function processParserData(trackinfo) {
             if (trackinfo != null && trackinfo.waypoints != undefined) {
@@ -187,7 +189,7 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
                 // xmlparser.waypointsToCsv(file, trackinfo.waypoints)
 
                 // get hourly weather 
-                console.log('=====================params=========================\n',params['user-id'],params)
+                console.log('=====================params=========================\n', params['user-id'], params)
                 segs.getDarkSkyData(params, trackinfo, (weatherresult) => {
                     if (weatherresult.error != '') {
                         sendres(params, weatherresult.error)
@@ -226,8 +228,9 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
                             if (params.csvwithcomma == "true") csv = csv.replace(/\./g, ',')
                         }
                         try {
-
-                            fs.writeFileSync(rootdir + '/output-files/' + savealias + '.csv', csv)
+                            let outfiles = 'storage/gpx/output-files/' + params["user-id"]
+                            if (!fs.existsSync(outfiles)) fs.mkdirSync(outfiles)
+                            fs.writeFileSync(`${outfiles}/${savealias}.csv`, csv)
                             let warning = ""
                             if (weatherresult.warning != "") sendres(params, weatherresult.warning)
                             else sendres(params, 'ok')

@@ -213,6 +213,7 @@ function makedirs(){
     if (!fs.existsSync(uploads)) fs.mkdirSync(uploads)
     let outfiles = 'storage/gpx/output-files/'
     if (!fs.existsSync(outfiles)) fs.mkdirSync(outfiles)
+
     let slotfiles = 'storage/gpx/timeslot-files/'
     if (!fs.existsSync(slotfiles)) fs.mkdirSync(slotfiles)
     let wfiles = 'storage/gpx/weather-files/'

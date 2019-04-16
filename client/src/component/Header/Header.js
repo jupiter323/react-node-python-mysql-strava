@@ -112,6 +112,16 @@ class Header extends Component {
                                     }
                                 }
                             />
+                            <Button
+                                className={this.state.loggedin ? "exit_button visible_button" : "exit_button hiden_button"}
+                                color="orange"
+                                content="Profile"
+                                onClick={
+                                    () => {
+                                        this.state.onClick('PROFILE')
+                                    }
+                                }
+                            />
                         </Menu.Item>
                     </Menu.Menu>
 
