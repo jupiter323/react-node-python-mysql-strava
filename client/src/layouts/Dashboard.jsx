@@ -61,11 +61,11 @@ class Dashboard extends React.Component {
     setauth();
     getUserData();
     getUsers();
-    
+
   }
   async callGetActivityListInterval(next) {
-    const {access_token, userProfile } = next
-    var intervalFun = setInterval(() => {      
+    const { access_token, userProfile } = next
+    var intervalFun = setInterval(() => {
       if (!access_token)
         clearInterval(intervalFun);
       else {
@@ -78,7 +78,9 @@ class Dashboard extends React.Component {
   }
 
   componentWillReceiveProps(next) {
-    const { access_token, logout, expireTime } = next;
+    const { access_token, logout, expireTime, userProfile, getUsers } = next;
+    if (this.props.userProfile !== userProfile)
+      getUsers();
     console.log("acces", access_token)
     if (!access_token || !expireTime) return;
 
@@ -186,7 +188,7 @@ Dashboard.propTypes = {
 };
 
 function mapStateToProps(state) {
-  return {    
+  return {
     access_token: state.user.access_token,
     expireTime: state.user.expireTime,
     userProfile: state.user.userProfile

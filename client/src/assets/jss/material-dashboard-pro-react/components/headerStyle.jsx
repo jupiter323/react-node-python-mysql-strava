@@ -12,7 +12,6 @@ import {
   warningColor,
   dangerColor
 } from "assets/jss/material-dashboard-pro-react.jsx";
-import { mainColor } from "variables/theme.jsx"
 const headerStyle = theme => ({
   appBar: {
     backgroundColor: "transparent",

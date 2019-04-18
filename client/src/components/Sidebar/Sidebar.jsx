@@ -24,11 +24,8 @@ import Icon from "@material-ui/core/Icon";
 
 // core components
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
-
 import sidebarStyle from "assets/jss/material-dashboard-pro-react/components/sidebarStyle.jsx";
-
-import avatar from "assets/img/faces/avatar.jpg";
-
+import logoutImage from "assets/img/logout.png"
 var ps;
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
@@ -86,19 +83,19 @@ class Sidebar extends React.Component {
     this.setState(st);
   }
   async componentWillReceiveProps(next) {
-    if (this.props.userProfile == next.userProfile) return
+    if (this.props.userProfile === next.userProfile) return
     const { userProfile, setUserOption } = next;
     if (userProfile) {
       var user = { "userId": userProfile.athlete.id, "username": userProfile.athlete.username, "profile_medium": userProfile.athlete.profile_medium }
       setUserOption(user);
-    }  
+    }
 
   }
   async onChangeSelectUser(user) {
     const { getUserOption, setUserOption } = this.props;
     await getUserOption(user);
     await setUserOption(user);
-    window.location.href = "/profile";
+    // window.location.href = "/profile";
   }
 
   render() {
@@ -146,12 +143,7 @@ class Sidebar extends React.Component {
       cx({
         [classes.caretRTL]: rtlActive
       });
-    const collapseItemMini =
-      classes.collapseItemMini +
-      " " +
-      cx({
-        [classes.collapseItemMiniRTL]: rtlActive
-      });
+  
     const photo =
       classes.photo +
       " " +
@@ -171,7 +163,7 @@ class Sidebar extends React.Component {
               onClick={() => this.openCollapse("openAvatar")}
             >
               <ListItemText
-                primary={rtlActive ? "تانيا أندرو" : currentUser.username||"No Name"}
+                primary={rtlActive ? "تانيا أندرو" : currentUser.username || "No Name"}
                 secondary={
                   <b
                     className={
@@ -194,17 +186,17 @@ class Sidebar extends React.Component {
                     return <ListItem key={user.userId} className={classes.collapseItem}>
                       <NavLink
                         onClick={() => this.onChangeSelectUser(user)}
-                        to="#"
+                        to="/profile"
                         className={
                           classes.itemLink + " " + classes.userCollapseLinks
                         }
                       >
-                       <div className={photo}>
-          <img src={user.profile_medium} className={classes.avatarImg} alt="..." />
-        </div>
-                   
+                        <div className={photo}>
+                          <img src={user.profile_medium} className={classes.avatarImg} alt="..." />
+                        </div>
+
                         <ListItemText
-                          primary={rtlActive ? "ملفي" : user.username||"No Name"}
+                          primary={rtlActive ? "ملفي" : user.username || "No Name"}
                           disableTypography={true}
                           className={collapseItemText}
                         />
@@ -221,6 +213,9 @@ class Sidebar extends React.Component {
                       classes.itemLink + " " + classes.userCollapseLinks
                     }
                   >
+                    <div className={photo}>
+                      <img src={logoutImage} className={classes.avatarImg} alt="..." />                    
+                    </div>
                     <ListItemText
                       primary={rtlActive ? "مستخدم آخر" : "Log Out"}
                       disableTypography={true}
@@ -414,10 +409,10 @@ class Sidebar extends React.Component {
       });
     var brand = (
       <div className={logoClasses}>
-        <a href="#" className={logoMini}>
+        <a href="#home" className={logoMini}>
           <img src={logo} alt="logo" className={classes.img} />
         </a>
-        <a href="#" className={logoNormal}>
+        <a href="#home" className={logoNormal}>
           {logoText}
         </a>
       </div>
