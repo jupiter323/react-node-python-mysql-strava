@@ -6,64 +6,58 @@
 import * as Actions from '../actions';
 
 const initialState = {
-    token: "",
-    workingFor: "",
-    workingForId: null,
-    isEmployee: false,
-    avatar: "",
+    access_token: "",
+    userProfile: "",
+    expireTime: "",
+
+    users: [],   
+    currentUser: {}
 };
 
 const user = function (state = initialState, action) {
-    switch ( action.type )
-    {
+    switch (action.type) {
+        case Actions.GET_USER_OPTION:
+            {
+                return {
+                    ...state
+                }
+            }
+        case Actions.SET_USER_OPTION://currrent user setting
+            {
+                return {
+                    ...state,
+                    [action.payload.key]: action.payload.value
+                };
+            }
         case Actions.SET_USER_DATA:
-        {
-            return {
-                token: action.token,
-                workingFor: action.workingFor,
-                workingForId: null,
-                username: action.username,
-                isEmployee: state.isEmployee,
-                avatar: state.isEmployee,
-            };
-        }
+            {
+                return {
+                    ...state,
+                    access_token: action.access_token,
+                    userProfile: action.userProfile,
+                    expireTime: action.expireTime
+                };
+            }
         case Actions.GET_USER_DATA:
-        {
-            return {
-                token: action.token,
-                workingFor: action.workingFor,
-                workingForId: Number(action.workingForId),
-                username: action.username,
-                isEmployee: action.isEmployee == 'true',
-                avatar: action.avatar
-            };
-        }
-        case Actions.UPDATE_USER_WORKINGFORID:
-        {
-            return {
-                token: state.token,
-                workingFor: state.workingFor,
-                workingForId: Number(action.workingForId),
-                username: state.username,
-                isEmployee: action.isEmployee == 'true',
-                avatar: state.avatar
-            };
-        }
-        case Actions.UPDATE_USER_AVATAR:
-        {
-            return {
-                token: state.token,
-                workingFor: state.workingFor,
-                workingForId: Number(state.workingForId),
-                username: action.username,
-                isEmployee: state.isEmployee == 'true',
-                avatar: action.avatar
-            };
-        }
+            {
+                return {
+                    ...state,
+                    access_token: action.access_token,
+                    userProfile: action.userProfile,
+                    expireTime: action.expireTime
+                };
+            }
+        case Actions.GET_USERS:
+            {
+                return {
+                    ...state,
+                    [action.payload.key]: action.payload.value
+                }
+            }
         default:
-        {
-            return state
-        }
+            {
+                return state
+            }
     }
 };
 

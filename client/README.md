@@ -1,1 +1,0 @@
-# Starva Client

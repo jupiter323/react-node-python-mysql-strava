@@ -2,76 +2,105 @@
  * Description: User data actions
  * Date: 12/28/2018
  */
-
+import * as service from "restful"
 export const SET_USER_DATA = '[USER] SET DATA';
 export const GET_USER_DATA = '[USER] GET DATA';
-export const UPDATE_USER_WORKINGFORID = '[USER] UPDATE WORKINGFORID';
-export const UPDATE_USER_AVATAR = '[USER] UPDATE AVATAR';
+export const SET_USER_OPTION = '[USER] SET OPTION';
+export const GET_USER_OPTION = '[USER] GET OPTION';
+export const GET_USERS = 'GET_USERS'
 
-export function setUserData(user) {  
-    let token = user.token;
-    let workingFor = JSON.stringify(user.workingFor);
-    let username = user.employeeName;
-    let avatar = user.avatar;
-    localStorage.setItem('token', token);
-    localStorage.setItem('workingFor', workingFor);
-    localStorage.setItem('username', username);
-    localStorage.setItem('avatar', avatar);
-    
+export function getUserOption(user) {
+    var userId = user.userId
+    var response = Promise.all([
+        service.getuseroption(userId)
+    ])    
+
+    return (dispatch) => {
+        response.then(useroption => {
+            var receivedProfile = useroption[0].data.users[0];
+            var profile = {
+                access_token: receivedProfile.access_token,
+                athlete: {
+                    badge_type_id: 1,
+                    id: user.userId,
+                    username: user.username,
+                    profile_medium: user.profile_medium
+                },
+                expires_at: receivedProfile.expiretime,
+                refresh_token: receivedProfile.refresh_token,
+                token_type: "Bearer"
+            }           
+            dispatch(setUserData(profile))
+            return dispatch({
+                type: GET_USER_OPTION
+
+            })
+        })
+
+    }
+}
+
+
+export function setUserOption(user) {
     return (dispatch) => {
         dispatch({
-            type   : SET_USER_DATA,
-            token,
-            workingFor,
-            username,
-            avatar
+            type: SET_USER_OPTION,
+            payload: { key: "currentUser", value: user }
+
+        })
+    }
+}
+
+export function setUserData(userProfile) {
+    let access_token = userProfile.access_token;
+    let expireTime = userProfile.expires_at * 1000
+    localStorage.setItem('token', access_token)
+    localStorage.setItem('profile', JSON.stringify(userProfile))
+    localStorage.setItem('expireTime', expireTime);
+    return (dispatch) => {
+        dispatch({
+            type: SET_USER_DATA,
+            access_token,
+            userProfile,
+            expireTime
         })
     }
 }
 
 export function getUserData() {
-    let token = localStorage.token;
-    let workingFor = localStorage.workingFor;
-    let workingForId = localStorage.workingForId;
-    let isEmployee = localStorage.isEmployee
-    let avatar = localStorage.avatar;
-    let username = localStorage.username;
-    
+    let access_token = localStorage.token;
+    let expireTime = localStorage.expireTime;
+    let userProfile = JSON.parse(localStorage.profile)
+
     return (dispatch) => {
         dispatch({
             type: GET_USER_DATA,
-            token,
-            workingFor,
-            workingForId,
-            isEmployee,
-            avatar,
-            username
+            access_token,
+            expireTime,
+            userProfile
         })
     }
 }
 
-export function updateWorkingForId(data) {
-    localStorage.setItem('workingForId', Number(data.workingForId));
-    localStorage.setItem('isEmployee', data.isEmployee);
+export function getUsers() {
+    var response = Promise.all([
+        service.getuseroptions()
+    ])
 
     return (dispatch) => {
-        dispatch({
-            type: UPDATE_USER_WORKINGFORID,
-            workingForId: data.workingForId,
-            isEmployee: data.isEmployee
+        response.then((usersdata) => {
+            return dispatch({
+                type: GET_USERS,
+                payload: {
+                    key: "users",
+                    value: usersdata[0].data.users
+                }
+            })
         })
+
     }
+
+
 }
 
-export function updateAvatarName(data) {
-    localStorage.setItem('avatar', data.avatar);
-    localStorage.setItem('username', data.name);
 
-    return (dispatch) => {
-        dispatch({
-            type: UPDATE_USER_AVATAR,
-            avatar: data.avatar,
-            username: data.name
-        })
-    }
-}

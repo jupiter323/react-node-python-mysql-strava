@@ -1,50 +1,59 @@
-/**
- * Description: Page style view routes
- * Date: 12/25/2018
- */
-
-import LoginPage from "views/Login/LoginPage.jsx";
-import RegisterPage from "views/Register/RegisterPage.jsx";
-import ResetPasswordPage from "views/ResetPassword/ResetPasswordPage.jsx";
-import ForgotPasswordPage from "views/ForgotPassword/ForgotPasswordPage.jsx";
+import PricingPage from "views/Pages/PricingPage.jsx";
+import LoginPage from "views/Pages/LoginPage.jsx";
+import RegisterPage from "views/Pages/RegisterPage.jsx";
+import LockScreenPage from "views/Pages/LockScreenPage.jsx";
 
 // @material-ui/icons
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import Fingerprint from "@material-ui/icons/Fingerprint";
+import MonetizationOn from "@material-ui/icons/MonetizationOn";
+import LockOpen from "@material-ui/icons/LockOpen";
 
 const pagesRoutes = [
   {
-    path: "/login",
-    name: "Login",
-    short: "Login",
-    mini: "L",
-    icon: Fingerprint,
-    component: LoginPage
-  },
-  {
-    path: "/register",
-    name: "Register",
+    path: "/pages/register-page",
+    name: "Register Page",
     short: "Register",
-    mini: "R",
+    mini: "RP",
     icon: PersonAdd,
     component: RegisterPage
   },
   {
-    path: "/resetpassword/:token",
-    name: "ResetPassword",
-    short: "ResetPassword",
-    mini: "RP",
-    icon: PersonAdd,
-    component: ResetPasswordPage
+    path: "/pages/login-page",
+    name: "Login Page",
+    short: "Login",
+    mini: "LP",
+    icon: Fingerprint,
+    component: LoginPage
   },
   {
-    path: "/forgotpassword",
-    name: "ForgotPassword",
-    short: "ForgotPassword",
-    mini: "FP",
-    icon: PersonAdd,
-    component: ForgotPasswordPage
+    path: "/pages/pricing-page",
+    name: "Pricing Page",
+    short: "Pricing",
+    mini: "PP",
+    icon: MonetizationOn,
+    component: PricingPage
   },
+  {
+    path: "/pages/lock-screen-page",
+    name: "Lock Screen Page",
+    short: "Lock",
+    mini: "LSP",
+    icon: LockOpen,
+    component: LockScreenPage
+  },
+  {
+    redirect: true,
+    path: "/pages",
+    pathTo: "/pages/register-page",
+    name: "Register Page"
+  },
+  {
+    redirect: true,
+    path: "/",
+    pathTo: "/pages/login-page",
+    name: "Login Page"
+  }
 ];
 
 export default pagesRoutes;

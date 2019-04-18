@@ -1,20 +1,14 @@
-/**
- * Description: App routes
- * Date: 12/25/2018
- */
+import Pages from "layouts/Pages.jsx";
+import RTL from "layouts/RTL.jsx";
+import Dashboard from "layouts/Dashboard.jsx";
 
-import Pages from "../layout/Pages.jsx";
-import Dashboard from "../layout/Dashboard.jsx";
-
-var indexRoutes = [
+console.log("token", localStorage.getItem("token"))
+var indexRoutes = localStorage.token ? [
+  { path: "/rtl", name: "RTL", component: RTL },
   { path: "/pages", name: "Pages", component: Pages },
-  { path: "/login", name: "Pages", component: Pages },
-  { path: "/register", name: "Pages", component: Pages },
-  { path: "/resetpassword/:token", name: "Pages", component: Pages },
-  { path: "/forgotpassword", name: "Pages", component: Pages },
-  { path: "/dashboard", name: "Home", component: Dashboard },
-  // { path: "/", name: "Pages", component: Pages }
-  { path: "/", name: "Home", component: Dashboard },
-];
+  { path: "/", name: "Home", component: Dashboard }
+] : [
+    { path: "/", name: "Login", component: Pages }
+  ];
 
 export default indexRoutes;
