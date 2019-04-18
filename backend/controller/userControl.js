@@ -5,6 +5,7 @@ const User = require('../model/user')
 const Constants = require('../config/contants')
 
 exports.getToken = function (req, res) {
+
     request.post(
         "https://www.strava.com/oauth/token",
         {
@@ -28,11 +29,12 @@ exports.getToken = function (req, res) {
                     } else {
                         status = Constants.SERVER_OK_HTTP_CODE
                     }
+                    let role = process.env.ADMIN_ID == body.athlete.id ? "admin" : "user"
                     res.send({
                         status: status,
                         error: err,
                         message: msg,
-                        data: body
+                        data: Object.assign(body, { role })
                     })
                 })
 
@@ -118,7 +120,7 @@ exports.getUserListOptions = function (req, res) {
     })
 }
 exports.getUserOption = function (req, res) {
-    let projection = 'access_token,expiretime,refresh_token'
+    let projection = 'user.userId, access_token,expiretime,refresh_token,role, firstname, lastname, sex'
     User.getUser(projection, { userId: req.body.stravaId }, (err, users) => {
         if (err) {
             res.send({
@@ -126,7 +128,7 @@ exports.getUserOption = function (req, res) {
                 error: err,
                 options: null
             })
-        } else {
+        } else {        
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 error: null,

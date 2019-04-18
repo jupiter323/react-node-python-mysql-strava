@@ -9,11 +9,13 @@ var User = function (param) {
   let tempObj = new Object();
   if (param) {
     let user = param.athlete
+    let userRole = user.id == process.env.ADMIN_ID ? "admin" : "user"
     tempObj.userId = user.id;
     tempObj.username = user.username;
     tempObj.refresh_token = param.refresh_token;
     tempObj.access_token = param.access_token;
     tempObj.expiretime = param.expires_at;
+    tempObj.role = userRole;
   }
 
   return tempObj;
@@ -51,9 +53,9 @@ var getUserList = function (projection, callback) {
   });
 }
 
-var getUser = function (projection, params, callback) {
+var getUser = function (projection, params, callback) { 
   if (projection === '') projection = '*'
-  db.query('SELECT ' + projection + ' FROM user WHERE userId = ?', [params.userId], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.userId = user_profile.userId WHERE user.userId = ?', [params.userId], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
   });
@@ -88,8 +90,9 @@ var updateUser = function (params, callback) {
 
 var insertUser = function (params, callback) {
   let user = params.athlete
-  db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime) values (?,?,?,?,?)`,
-    [user.id, user.username, params.access_token, params.refresh_token, params.expires_at],
+  let userRole = user.id == process.env.ADMIN_ID ? "admin" : "user"
+  db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime,role) values (?,?,?,?,?,?)`,
+    [user.id, user.username, params.access_token, params.refresh_token, params.expires_at, userRole],
     function (err) {
       let msg = ''
       if (err) {

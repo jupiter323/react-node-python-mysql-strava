@@ -44,7 +44,7 @@ function expertCSV(stravaId, payload, id) {
     if (!fs.existsSync(timefolder)) {
         fs.mkdirSync(timefolder);
     }
-
+    
     var content =
         "Distance ,Altitude, Time, Lat, Lng , Heartrate, Speed, Power, Temperature , start_date, moving_time, elapsed_time, total_elevation_gain, type, id, timezone,athlete_count\n";
     for (var i = 0; i < payload[0].data.length; i++) {
@@ -92,8 +92,7 @@ function expertCSV(stravaId, payload, id) {
             "," +
             allActivities[id].athlete_count +
             "\n";
-    }
-
+    }   
     fs.writeFileSync(`${timefolder}/${allActivities[id].id}.csv`, content);
 }
 function updateDownloadedActivitiesCount(stravaId, activitiesCount) {
@@ -128,7 +127,7 @@ function getStreamActivities(number, stravaId, email, access_token) {
                 console.log(err);
             } else {
                 if (payload.message) {
-                    
+                    console.log(payload.message)
                 } else {
                     expertCSV(stravaId, payload, id);
                 }
