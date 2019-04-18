@@ -10,7 +10,7 @@ const initialState = {
     userProfile: "",
     expireTime: "",
 
-    users: [],   
+    users: [],
     currentUser: {}
 };
 
@@ -49,9 +49,10 @@ const user = function (state = initialState, action) {
             }
         case Actions.GET_USERS:
             {
+                let users = state.userProfile.role === "admin" ? action.payload.value : []
                 return {
                     ...state,
-                    [action.payload.key]: action.payload.value
+                    [action.payload.key]: users
                 }
             }
         default:

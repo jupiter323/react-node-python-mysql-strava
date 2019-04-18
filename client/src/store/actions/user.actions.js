@@ -13,7 +13,7 @@ export function getUserOption(user) {
     var userId = user.userId
     var response = Promise.all([
         service.getuseroption(userId)
-    ])    
+    ])
 
     return (dispatch) => {
         response.then(useroption => {
@@ -24,12 +24,17 @@ export function getUserOption(user) {
                     badge_type_id: 1,
                     id: user.userId,
                     username: user.username,
-                    profile_medium: user.profile_medium
+                    profile_medium: user.profile_medium,
+                    firstname: receivedProfile.firstname,
+                    lastname: receivedProfile.lastname,
+                    sex: receivedProfile.sex
                 },
                 expires_at: receivedProfile.expiretime,
                 refresh_token: receivedProfile.refresh_token,
-                token_type: "Bearer"
-            }           
+                token_type: "Bearer",
+                role: receivedProfile.role
+            }
+            console.log("profile :",profile)
             dispatch(setUserData(profile))
             return dispatch({
                 type: GET_USER_OPTION
