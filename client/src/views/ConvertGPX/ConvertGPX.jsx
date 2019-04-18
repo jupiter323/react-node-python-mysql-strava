@@ -27,8 +27,7 @@ class ConvertGPX extends React.Component {
       fetchingStrava: false,
       profile: userProfile,
       file: null,
-      options: [],
-      userOptions: []
+      options: []
     }
   }
 
@@ -45,16 +44,14 @@ class ConvertGPX extends React.Component {
   }
 
   getGpxoptions = async () => {
-    var [options_res, useroptions_res] = await Promise.all([
-      service.getOptions(),
-      service.getuseroptions()
+    var [options_res] = await Promise.all([
+      service.getOptions()
     ]);
 
     var gpxOption = options_res.data.optionsRes
-    var userOption = useroptions_res.data.users
+    console.log("gpx option:", gpxOption)
     this.setState({
-      options: gpxOption,
-      userOptions: userOption
+      options: gpxOption
     })
   }
 
@@ -93,19 +90,11 @@ class ConvertGPX extends React.Component {
       this.setState({ loggingin: true })
       this.getStravaData(email);
     }
-
-  }
-
-
-  changeProfile = (profile) => {
-    this.setState({ profile });
-
   }
 
 
   render() {
-    const { classes } = this.props;
-    const { loggedin, fetchingStrava, profile, options, userOptions } = this.state;
+    const { loggedin, fetchingStrava, profile, options } = this.state;
     return (
       <div>
         <GridContainer>

@@ -2,14 +2,9 @@ import React from "react";
 
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
-import Checkbox from "@material-ui/core/Checkbox";
-
 // material-ui icons
 import Assignment from "@material-ui/icons/Assignment";
-import Person from "@material-ui/icons/Person";
-import Edit from "@material-ui/icons/Edit";
 import Close from "@material-ui/icons/Close";
-import Check from "@material-ui/icons/Check";
 import Remove from "@material-ui/icons/Remove";
 import Add from "@material-ui/icons/Add";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
@@ -54,50 +49,7 @@ class ExtendedTables extends React.Component {
     });
   }
   render() {
-    const { classes } = this.props;
-    const fillButtons = [
-      { color: "info", icon: Person },
-      { color: "success", icon: Edit },
-      { color: "danger", icon: Close }
-    ].map((prop, key) => {
-      return (
-        <Button color={prop.color} className={classes.actionButton} key={key}>
-          <prop.icon className={classes.icon} />
-        </Button>
-      );
-    });
-    const simpleButtons = [
-      { color: "info", icon: Person },
-      { color: "success", icon: Edit },
-      { color: "danger", icon: Close }
-    ].map((prop, key) => {
-      return (
-        <Button
-          color={prop.color}
-          simple
-          className={classes.actionButton}
-          key={key}
-        >
-          <prop.icon className={classes.icon} />
-        </Button>
-      );
-    });
-    const roundButtons = [
-      { color: "info", icon: Person },
-      { color: "success", icon: Edit },
-      { color: "danger", icon: Close }
-    ].map((prop, key) => {
-      return (
-        <Button
-          round
-          color={prop.color}
-          className={classes.actionButton + " " + classes.actionButtonRound}
-          key={key}
-        >
-          <prop.icon className={classes.icon} />
-        </Button>
-      );
-    });
+    const { classes } = this.props; 
     return (
       <GridContainer>
        <GridItem xs={12}>
