@@ -74,7 +74,8 @@ Select{
 }
 
 #inputfile{
-    margin:auto
+    margin:auto;
+    /* display: none; */
 }
 
 .grid.container {

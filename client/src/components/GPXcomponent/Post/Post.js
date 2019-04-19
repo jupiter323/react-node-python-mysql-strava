@@ -4,6 +4,10 @@ import _ from 'lodash'
 import './Post.css';
 import * as service from 'restful';
 
+import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
+// core components
+import GridContainer from "components/Grid/GridContainer.jsx";
+import GridItem from "components/Grid/GridItem.jsx";
 
 
 class Post extends Component {
@@ -104,7 +108,7 @@ class Post extends Component {
         input.value = ''
     }
 
-    onChooseFile(event) {
+    onChooseFile = (event) => {
 
         let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object", err3 = "This browser does not support the `files` property of the file input."
 
@@ -305,11 +309,18 @@ class Post extends Component {
                         <tr><td>csv numbers with comma</td><td><Checkbox className='param chk' id="csvwithcomma" checked={csvwithcomma} onChange={this.csvHandleChange} /></td></tr>
                     </tbody>
                 </table>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={2} >
+                        <GPXUpload onChange={this.onChooseFile} accept=".gpx" multiple innerText="Train GPX FIles" />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={2} >
+                        <GPXUpload onChange={this.onChooseFile} accept=".gpx" innerText="Test GPX FIle" />
+                    </GridItem>
+                </GridContainer>
 
 
-                <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
-
-                <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple />
+                {this.runprocess && <h5>ready gpx files</h5>}
+                {/* <Input id="inputfile" type='file' onMouseDown={this.onfileselectmousedown.bind(this)} onChange={this.onChooseFile.bind(this)} accept=".gpx" multiple /> */}
 
                 {/* <div className="ui middle aligned center aligned grid container">
                     <div className="ui fluid segment">
