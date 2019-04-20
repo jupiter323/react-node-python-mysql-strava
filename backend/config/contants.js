@@ -29,6 +29,8 @@ module.exports.SERVER_INTERNAL_ERROR = 400
 module.exports.USERNAME_AVAILABLE_FAILED = `Username is unavailable.`;
 module.exports.USERNAME_AVAILABLE_OK = `Username is available.`;
 module.exports.USER_REGISTRATION_OK = `Registered your account in our system successfully.`;
+module.exports.USER_UPDATE_OK = `Updated your account in our system successfully.`;
+module.exports.USER_UPDATE_FAILED = `Sorry, Unfortunately failed updating your account.`;
 module.exports.USER_REGISTRATION_FAILED = `Sorry, Unfortunately failed your account registration.`;
 module.exports.USER_LOGGED_OUT = `User is not logged out.`;
 /* Route related constants ends*/

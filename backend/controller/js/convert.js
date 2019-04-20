@@ -225,7 +225,7 @@ function convert(data, res) { // uploaded data : params + gpx/fit data in base64
                     if (params.hasOwnProperty("output-column-sel")) {
                         let csv = segs.toCsv(params, trackinfo, segments)
                         if (params.hasOwnProperty('csvwithcomma')) {
-                            if (params.csvwithcomma == "true") csv = csv.replace(/\./g, ',')
+                            // if (params.csvwithcomma == "true") csv = csv.replace(/\./g, ',')
                         }
                         try {
                             let outfiles = 'storage/gpx/output-files/' + params["user-id"]

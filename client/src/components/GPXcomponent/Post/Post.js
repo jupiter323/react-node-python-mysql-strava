@@ -64,7 +64,6 @@ class Post extends Component {
     componentWillReceiveProps(nextProps) {
         const { profile, options } = nextProps
         if (!profile) return
-        console.log("next:", profile.athlete.id);
         if (profile.athlete) {
             this.setState({ user_id: profile.athlete.id })
         }
@@ -314,7 +313,7 @@ class Post extends Component {
                         <GPXUpload onChange={this.onChooseFile} accept=".gpx" multiple innerText="Train GPX FIles" />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={2} >
-                        <GPXUpload onChange={this.onChooseFile} accept=".gpx" innerText="Test GPX FIle" />
+                        <GPXUpload onChange={this.onChooseFile} accept=".csv" innerText="Test GPX FIle" />
                     </GridItem>
                 </GridContainer>
 

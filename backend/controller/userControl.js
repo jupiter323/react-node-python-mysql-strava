@@ -120,7 +120,7 @@ exports.getUserListOptions = function (req, res) {
     })
 }
 exports.getUserOption = function (req, res) {
-    let projection = 'user.userId, access_token,expiretime,refresh_token,role, firstname, lastname, sex'
+    let projection = "*"
     User.getUser(projection, { userId: req.body.stravaId }, (err, users) => {
         if (err) {
             res.send({
@@ -128,7 +128,7 @@ exports.getUserOption = function (req, res) {
                 error: err,
                 options: null
             })
-        } else {        
+        } else {
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 error: null,
@@ -137,7 +137,25 @@ exports.getUserOption = function (req, res) {
         }
     })
 }
+exports.updateProfile = (req, res) => {
+    User.updateUserProfile(req.body.profile, (err, msg) => {
+        if (err) {
+            res.send({
+                status: Constants.SERVER_INTERNAL_ERROR,
+                error: err,
+                msg
+            })
+        }
+        else {
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                error: null,
+                msg
+            })
+        }
+    })
 
+}
 function saveStravaConfig(token) {
     fs.writeFileSync(
         Constants.STRAVA_CONFIG_PATH,

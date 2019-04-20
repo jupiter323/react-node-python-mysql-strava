@@ -37,4 +37,8 @@ router.post('/getStrava', (req, res) => {
 
 router.post('/checkusersession')
 
+router.post('/updateprofile', (req,res)=>{
+    UserControl.updateProfile(req,res);
+})
+
 module.exports = router;

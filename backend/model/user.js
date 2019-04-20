@@ -21,27 +21,56 @@ var User = function (param) {
   return tempObj;
 };
 
-var UserProfile = function (user) {
+var UserProfile = function (profile) {
   let tempObj = new Object()
-  if (user) {
+  let user = profile.athlete;
+  if (profile) {
     tempObj.userId = user.id
     tempObj.username = user.username
     tempObj.firstname = user.firstname
     tempObj.lastname = user.lastname
-    tempObj.badge_type_id = user.badge_type_id
-    tempObj.premium = user.premium
-    tempObj.resource_state = user.resource_state
-    tempObj.summit = user.summit
     tempObj.sex = user.sex
-    tempObj.profile = user.profile
-    tempObj.profile_medium = user.profile_medium
-    tempObj.city = user.city
-    tempObj.country = user.country
-    tempObj.follower = user.follower
-    tempObj.friend = user.friend
-    tempObj.created_at = user.created_at
-    tempObj.updated_at = user.updated_at
+
+    user.badge_type_id ? tempObj.badge_type_id = user.badge_type_id : null
+    user.premium ? tempObj.premium = user.premium : null
+    user.resource_state ? tempObj.resource_state = user.resource_state : null
+    user.summit ? tempObj.summit = user.summit : null
+    user.profile ? tempObj.profile = user.profile : null
+    user.profile_medium ? tempObj.profile_medium = user.profile_medium : null
+    user.city ? tempObj.city = user.city : null
+    user.country ? tempObj.country = user.country : null
+    user.follower ? tempObj.follower = user.follower : null
+    user.friend ? tempObj.friend = user.friend : null
+    user.created_at ? tempObj.created_at = user.created_at : null
+    user.updated_at ? tempObj.updated_at = user.updated_at : null
+
+    profile.age ? tempObj.age = profile.age : null
+    profile.height ? tempObj.height = profile.height : null
+    profile.weight ? tempObj.weight = profile.weight : null
+    profile.HeartRateThresholdpoint ? tempObj.HeartRateThresholdpoint = profile.HeartRateThresholdpoint : null
+    profile.HeartRateMaximum ? tempObj.HeartRateMaximum = profile.HeartRateMaximum : null
+    profile.HeartRaterestpulse ? tempObj.HeartRaterestpulse = profile.HeartRaterestpulse : null
+
+    profile.hrzone0min ? tempObj.hrzone0min = profile.hrzone0min : null
+    profile.hrzone0max ? tempObj.hrzone0max = profile.hrzone0max : null
+    profile.hrzone1min ? tempObj.hrzone1min = profile.hrzone1min : null
+    profile.hrzone1max ? tempObj.hrzone1max = profile.hrzone1max : null
+    profile.hrzone2min ? tempObj.hrzone2min = profile.hrzone2min : null
+    profile.hrzone2max ? tempObj.hrzone2max = profile.hrzone2max : null
+    profile.hrzone3min ? tempObj.hrzone3min = profile.hrzone3min : null
+    profile.hrzone3max ? tempObj.hrzone3max = profile.hrzone3max : null
+    profile.hrzone4min ? tempObj.hrzone4min = profile.hrzone4min : null
+    profile.hrzone4max ? tempObj.hrzone4max = profile.hrzone4max : null
+    profile.hrzone5min ? tempObj.hrzone5min = profile.hrzone5min : null
+    profile.hrzone5max ? tempObj.hrzone5max = profile.hrzone5max : null
+    profile.vo2max ? tempObj.vo2max = profile.vo2max : null
+    profile.Goalsfor2019 ? tempObj.Goalsfor2019 = profile.Goalsfor2019 : null
+    profile.Eventsplanned2019 ? tempObj.Eventsplanned2019 = profile.Eventsplanned2019 : null
+    profile.bikeSelect ? tempObj.bikeSelect = profile.bikeSelect : null
+    profile.hrsensorSelect ? tempObj.hrsensorSelect = profile.hrsensorSelect : null
+    profile.powermeterSelect ? tempObj.powermeterSelect = profile.powermeterSelect : null
   }
+  return tempObj;
 
 }
 
@@ -53,7 +82,7 @@ var getUserList = function (projection, callback) {
   });
 }
 
-var getUser = function (projection, params, callback) { 
+var getUser = function (projection, params, callback) {
   if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.userId = user_profile.userId WHERE user.userId = ?', [params.userId], function (err, rows) {
     if (err) return callback(err)
@@ -81,10 +110,16 @@ var updateUser = function (params, callback) {
 
       let msg = ''
 
-      if (err) msg = Constants.USER_REGISTRATION_FAILED
-      else msg = Constants.USER_REGISTRATION_OK
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          // If we somehow generated a duplicate user id, try again
+          return updateUser(params, callback);
+        }
+        msg = Constants.USER_REGISTRATION_FAILED;
+        return callback(err, msg)
+      }
+      return updateUserProfile(params, callback);
 
-      return callback(err, msg)
     })
 }
 
@@ -99,7 +134,7 @@ var insertUser = function (params, callback) {
 
         if (err.code === 'ER_DUP_ENTRY') {
           // If we somehow generated a duplicate user id, try again
-          return insertUser(user, callback);
+          return insertUser(params, callback);
         }
         msg = Constants.USER_REGISTRATION_FAILED
         return callback(err, msg);
@@ -110,6 +145,23 @@ var insertUser = function (params, callback) {
   )
 }
 
+var updateUserProfile = function (profile, callback) {
+  let userId = profile.athlete.id
+  db.query(`UPDATE user_profile SET ? WHERE userId =?`, [new UserProfile(profile), userId],
+    function (err) {
+      let msg = ''
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return updateUserProfile(profile, callback);
+        }
+        msg = Constants.USER_UPDATE_FAILED
+      } else
+        msg = Constants.USER_UPDATE_OK
+      // Successfully created user
+      return callback(err, msg);
+    }
+  )
+}
 
 var insertUserProfile = function (user, callback) {
 
@@ -119,7 +171,7 @@ var insertUserProfile = function (user, callback) {
       if (err) {
         let msg = ''
         if (err.code === 'ER_DUP_ENTRY') {
-          return createUser(user, callback);
+          return insertUserProfile(user, callback);
         }
         msg = Constants.USER_REGISTRATION_FAILED
       }
@@ -148,4 +200,5 @@ exports.updateUser = updateUser
 exports.getUser = getUser
 exports.registerUser = registerUser
 exports.getUserList = getUserList
+exports.updateUserProfile = updateUserProfile
 
