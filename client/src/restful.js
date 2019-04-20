@@ -39,3 +39,9 @@ export function getuseroption(stravaId) {
         stravaId
     })
 }
+
+export function setUserData(profile) {
+    return axios.post(baseUrl + 'account/updateprofile', {
+        profile
+    })
+}

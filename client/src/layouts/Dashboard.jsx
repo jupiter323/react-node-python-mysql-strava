@@ -47,6 +47,7 @@ const switchRoutes = (
 var ps;
 
 class Dashboard extends React.Component {
+  intervalFun
   constructor(props) {
     super(props);
     this.state = {
@@ -63,25 +64,28 @@ class Dashboard extends React.Component {
     getUsers();
 
   }
+
   async callGetActivityListInterval(next) {
     const { access_token, userProfile } = next
-    var intervalFun = setInterval(() => {
+    this.intervalFun = setInterval(() => {
+
       if (!access_token)
-        clearInterval(intervalFun);
+        clearInterval(this.intervalFun);
       else {
         var profile = userProfile
         var email = localStorage.getItem('getlistemail') || 'jupiterfierce@gmail.com'
         var stravaId = profile.athlete.id
+        console.log("interval", stravaId)
         service.gettingStravaData(stravaId, email);
       }
-    }, 60000);
+    }, 1800000);
   }
 
   componentWillReceiveProps(next) {
     const { access_token, logout, expireTime, userProfile, getUsers } = next;
     if (this.props.userProfile !== userProfile)
       getUsers();
-    console.log("acces", access_token)
+
     if (!access_token || !expireTime) return;
 
     var checkExpirationTime = () => {
@@ -94,8 +98,10 @@ class Dashboard extends React.Component {
     if (checkExpirationTime()) {//expired
       logout();
     }
-
-    this.callGetActivityListInterval(next);
+    if (this.props.userProfile !== userProfile) {
+      clearInterval(this.intervalFun);
+      this.callGetActivityListInterval(next);
+    }
   }
 
   componentDidMount() {

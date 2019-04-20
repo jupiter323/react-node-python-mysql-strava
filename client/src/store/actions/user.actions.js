@@ -9,6 +9,52 @@ export const SET_USER_OPTION = '[USER] SET OPTION';
 export const GET_USER_OPTION = '[USER] GET OPTION';
 export const GET_USERS = 'GET_USERS'
 
+
+function makeProfileObject(receivedProfile) {
+    var profile = {
+        access_token: receivedProfile.access_token,
+        athlete: {
+            badge_type_id: receivedProfile.badge_type_id,
+            id: receivedProfile.userId,
+            username: receivedProfile.username,
+            profile_medium: receivedProfile.profile_medium,
+            firstname: receivedProfile.firstname,
+            lastname: receivedProfile.lastname,
+            sex: receivedProfile.sex
+        },
+        expires_at: receivedProfile.expiretime,
+        refresh_token: receivedProfile.refresh_token,
+        role: receivedProfile.role,
+        // standard profile
+        age: receivedProfile.age,
+        height: receivedProfile.height,
+        weight: receivedProfile.weight,
+        HeartRateThresholdpoint: receivedProfile.HeartRateThresholdpoint,
+        HeartRateMaximum: receivedProfile.HeartRateMaximum,
+        HeartRaterestpulse: receivedProfile.HeartRaterestpulse,
+
+        // advanced profile
+        hrzone0min: receivedProfile.hrzone0min,
+        hrzone0max: receivedProfile.hrzone0max,
+        hrzone1min: receivedProfile.hrzone1min,
+        hrzone1max: receivedProfile.hrzone1max,
+        hrzone2min: receivedProfile.hrzone2min,
+        hrzone2max: receivedProfile.hrzone2max,
+        hrzone3min: receivedProfile.hrzone3min,
+        hrzone3max: receivedProfile.hrzone3max,
+        hrzone4min: receivedProfile.hrzone4min,
+        hrzone4max: receivedProfile.hrzone4max,
+        hrzone5min: receivedProfile.hrzone5min,
+        hrzone5max: receivedProfile.hrzone5max,
+        vo2max: receivedProfile.vo2max,
+        Goalsfor2019: receivedProfile.Goalsfor2019,
+        Eventsplanned2019: receivedProfile.Eventsplanned2019,
+        bikeSelect: receivedProfile.bikeSelect,
+        hrsensorSelect: receivedProfile.hrsensorSelect,
+        powermeterSelect: receivedProfile.powermeterSelect
+    }
+    return profile
+}
 export function getUserOption(user) {
     var userId = user.userId
     var response = Promise.all([
@@ -18,23 +64,8 @@ export function getUserOption(user) {
     return (dispatch) => {
         response.then(useroption => {
             var receivedProfile = useroption[0].data.users[0];
-            var profile = {
-                access_token: receivedProfile.access_token,
-                athlete: {
-                    badge_type_id: 1,
-                    id: user.userId,
-                    username: user.username,
-                    profile_medium: user.profile_medium,
-                    firstname: receivedProfile.firstname,
-                    lastname: receivedProfile.lastname,
-                    sex: receivedProfile.sex
-                },
-                expires_at: receivedProfile.expiretime,
-                refresh_token: receivedProfile.refresh_token,
-                token_type: "Bearer",
-                role: receivedProfile.role
-            }
-            console.log("profile :",profile)
+            var profile = makeProfileObject(receivedProfile)
+            console.log("profile :", profile)
             dispatch(setUserData(profile))
             return dispatch({
                 type: GET_USER_OPTION

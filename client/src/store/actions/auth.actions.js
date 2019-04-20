@@ -3,7 +3,7 @@
  * Date: 12/28/2018
  */
 
-import { setUserData } from './user.actions';
+import { getUserOption } from './user.actions';
 import * as service from 'restful';
 
 export const LOGIN = 'LOGIN';
@@ -38,11 +38,12 @@ export function login(code) {
         userInfo.then((user) => {
             console.log(user[0].data.data)
             var userProfile = user[0].data.data
-
+            var tempuser = {};
+            tempuser.userId = userProfile.athlete.id;
             dispatch({
                 type: LOGIN
             });
-            dispatch(setUserData(userProfile));
+            dispatch(getUserOption(tempuser))
             return dispatch({
                 type: LOGIN_SUCCESS
             });
