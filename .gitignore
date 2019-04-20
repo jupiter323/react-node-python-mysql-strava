@@ -7,6 +7,7 @@
 /backend/stravapy/__pycache__
 /backend/stravapy/.idea
 /client/node_modules
+/client/src/assets/scss/material-dashboard-pro-react.css
 /client/.pnp
 .pnp.js
 
