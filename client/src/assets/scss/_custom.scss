@@ -1,0 +1,31 @@
+
+.MuiFormLabel-root-526.MuiFormLabel-focused-527 {
+    color: orangered !important;
+}
+
+.Accordion-title-550 {
+    /* color: #3C4858!important;
+    font-size: 1.28571429rem!important; */
+    /* font-weight: 300!important; */
+    /* font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif!important;  */
+}
+
+.gpxfile-container {
+    position: relative;
+    cursor: pointer;
+    text-align: left;
+    height: fit-content;
+    width: fit-content;
+}
+
+.gpxfile-container input[type="file"] {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: 0 !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
