@@ -29,37 +29,50 @@ import Accordion from "components/Accordion/Accordion.jsx";
 
 import userProfileStyles from "assets/jss/material-dashboard-pro-react/views/userProfileStyles.jsx";
 import extendedFormsStyle from "assets/jss/material-dashboard-pro-react/views/extendedFormsStyle.jsx";
+import * as service from "restful"
 import avatar from "assets/img/faces/marc.jpg";
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
-    const { sex, age } = props.userProfile && props.userProfile.athlete
+    let profile = {}
+    Object.assign(profile, props.userProfile);
     this.state = {
-      userProfile: props.userProfile,
-      sexSelect: sex || "",
-      age: age || 16,
-      bikeSelect: "",
-      hrsensorSelect: "",
-      powermeterSelect: "",
+      profile
     };
   }
-  handleSelect = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-  handleAge = event => {
-    this.setState({ age: event.target.value });
+
+  handleInputValue = event => {
+    console.log(event.target.name)
+    var { profile } = this.state;
+    if (event.target.name === "sex")
+      profile.athlete[event.target.name] = event.target.value;
+    else
+      profile[event.target.name] = event.target.value
+    this.setState({ profile });
   }
 
   componentWillReceiveProps(next) {
     const { userProfile } = next;
-    const { sex } = next.userProfile && next.userProfile.athlete;
     if (userProfile === this.props.userProfile) return;
-    this.setState({ userProfile, sexSelect: sex });
+    var { profile } = this.state
+    Object.assign(profile, userProfile);
+    this.setState({ profile });
+  }
+  updateProfile = async () => {
+    const { setUserData } = this.props;
+    const { profile } = this.state;
+    var [response] = await Promise.all([
+      service.setUserData(profile)
+    ])
+    if (!response.data.error)
+      alert("profile update success!");
+    await setUserData(this.state.profile);
+    console.log("updated profile:", this.state.profile, response.data.profile);
 
   }
-
   render() {
     const { classes, currentUser } = this.props;
+    const { profile } = this.state;
     return (
       <div>
         <GridContainer>
@@ -80,6 +93,7 @@ class UserProfile extends React.Component {
                   <strong>Standard profile</strong>
                 </h4>
                 <GridContainer>
+                  {/* first name */}
                   <GridItem xs={12} sm={12} md={6}>
                     <CustomInput
                       labelText="First Name"
@@ -89,10 +103,11 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         disabled: true,
-                        value: this.state.userProfile && this.state.userProfile.athlete && this.state.userProfile.athlete.firstname
+                        value: (profile && profile.athlete && profile.athlete.firstname) || ""
                       }}
                     />
                   </GridItem>
+                  {/* last name */}
                   <GridItem xs={12} sm={12} md={6}>
                     <CustomInput
                       labelText="Last Name"
@@ -102,19 +117,20 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         disabled: true,
-                        value: this.state.userProfile && this.state.userProfile.athlete && this.state.userProfile.athlete.lastname
+                        value: (profile && profile.athlete && profile.athlete.lastname) || ""
                       }}
                     />
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
+                  {/* sex */}
                   <GridItem xs={12} sm={12} md={6}>
                     <FormControl
                       fullWidth
                       className={classes.selectFormControl}
                     >
                       <InputLabel
-                        htmlFor="sex-select"
+                        htmlFor="sex"
                       >
                         Sex
                           </InputLabel>
@@ -125,11 +141,11 @@ class UserProfile extends React.Component {
                         classes={{
                           select: classes.select
                         }}
-                        value={this.state.sexSelect}
-                        onChange={this.handleSelect}
+                        value={(profile.athlete && profile.athlete.sex) || ""}
+                        onChange={this.handleInputValue}
                         inputProps={{
-                          name: "sexSelect",
-                          id: "sex-select"
+                          name: "sex",
+                          id: "sex"
                         }}
                       >
                         <MenuItem
@@ -161,6 +177,7 @@ class UserProfile extends React.Component {
                       </Select>
                     </FormControl>
                   </GridItem>
+                  {/* age */}
                   <GridItem xs={12} sm={12} md={6}>
                     <CustomInput
                       labelText="Age"
@@ -169,15 +186,17 @@ class UserProfile extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
+                        name: "age",
                         type: "number",
                         inputProps: { min: 16, max: 100 },
-                        value: this.state.age,
-                        onChange: this.handleAge
+                        value: profile.age || 16,
+                        onChange: this.handleInputValue
                       }}
                     />
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
+                  {/* height */}
                   <GridItem xs={12} sm={12} md={6}>
                     <CustomInput
                       labelText="Height( cm)"
@@ -186,11 +205,15 @@ class UserProfile extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
+                        name: "height",
                         type: "number",
-                        inputProps: { min: 150, max: 300 }
+                        inputProps: { min: 150, max: 300 },
+                        value: profile.height || 150,
+                        onChange: this.handleInputValue
                       }}
                     />
                   </GridItem>
+                  {/* weight */}
                   <GridItem xs={12} sm={12} md={6}>
                     <CustomInput
                       labelText="Weight( kg)"
@@ -200,13 +223,16 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         type: "number",
-                        inputProps: { min: 40, max: 200 }
+                        name: "weight",
+                        inputProps: { min: 40, max: 200 },
+                        value: profile.weight || 40,
+                        onChange: this.handleInputValue
                       }}
                     />
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
-
+                  {/* hr threshold */}
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Heart Rate Threshold point"
@@ -216,10 +242,14 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         type: "number",
-                        inputProps: { min: 40, max: 200 }
+                        name: "HeartRateThresholdpoint",
+                        inputProps: { min: 40, max: 200 },
+                        value: profile.HeartRateThresholdpoint || 40,
+                        onChange: this.handleInputValue
                       }}
                     />
                   </GridItem>
+                  {/* hr maximum */}
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Heart Rate Maximum"
@@ -229,10 +259,14 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         type: "number",
-                        inputProps: { min: 40, max: 200 }
+                        inputProps: { min: 40, max: 200 },
+                        name: "HeartRateMaximum",
+                        value: profile.HeartRateMaximum || 40,
+                        onChange: this.handleInputValue
                       }}
                     />
                   </GridItem>
+                  {/* hr restpulse */}
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Heart Rate restpulse"
@@ -242,7 +276,10 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         type: "number",
-                        inputProps: { min: 40, max: 200 }
+                        inputProps: { min: 40, max: 200 },
+                        name: "HeartRaterestpulse",
+                        value: profile.HeartRaterestpulse || 40,
+                        onChange: this.handleInputValue
                       }}
                     />
                   </GridItem>
@@ -260,6 +297,7 @@ class UserProfile extends React.Component {
                             <GridContainer>
                               <GridItem xs={12} sm={12} md={12}>
                                 <GridContainer>
+                                  {/* hr zone 0 min */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 0 MIN"
@@ -269,10 +307,14 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone0min",
+                                        value: profile.hrzone0min || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
+                                  {/* hr zone 0 max */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 0 MAX"
@@ -282,12 +324,16 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone0max",
+                                        value: profile.hrzone0max || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* hr zone 1 min */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 1 MIN"
@@ -297,10 +343,14 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone1min",
+                                        value: profile.hrzone1min || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
+                                  {/* hr zone 1 max */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 1 MAX"
@@ -310,12 +360,16 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone1max",
+                                        value: profile.hrzone1max || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* hr zone 2 min */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 2 MIN"
@@ -325,25 +379,33 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone2min",
+                                        value: profile.hrzone2min || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
+                                  {/* hr zone 2 max */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
-                                      labelText="Heart Rate Zone 0 MAX"
+                                      labelText="Heart Rate Zone 2 MAX"
                                       id="hrzone2max"
                                       formControlProps={{
                                         fullWidth: true
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone2max",
+                                        value: profile.hrzone2max || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* hr zone 3 min */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 3 MIN"
@@ -353,10 +415,14 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone3min",
+                                        value: profile.hrzone3min || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
+                                  {/* hr zone 3 max */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 3 MAX"
@@ -366,12 +432,16 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone3max",
+                                        value: profile.hrzone3max || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* hr zone 4 min */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 4 MIN"
@@ -381,10 +451,14 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone4min",
+                                        value: profile.hrzone4min || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
+                                  {/* hr zone 4 max */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 4 MAX"
@@ -394,12 +468,16 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone4max",
+                                        value: profile.hrzone4max || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* hr zone 5 min */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 5 MIN"
@@ -409,10 +487,14 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone5min",
+                                        value: profile.hrzone5min || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
+                                  {/* hr zone 5 max */}
                                   <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                       labelText="Heart Rate Zone 5 MAX"
@@ -422,12 +504,16 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 40, max: 200 }
+                                        inputProps: { min: 40, max: 200 },
+                                        name: "hrzone5max",
+                                        value: profile.hrzone5max || 40,
+                                        onChange: this.handleInputValue
                                       }}
                                     />
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* vo2 max */}
                                   <GridItem xs={12} sm={12} md={4}>
                                     <CustomInput
                                       labelText="VO2 Max"
@@ -437,24 +523,39 @@ class UserProfile extends React.Component {
                                       }}
                                       inputProps={{
                                         type: "number",
-                                        inputProps: { min: 0, max: 1000 }
+                                        inputProps: { min: 0, max: 1000 },
+                                        name: "vo2max",
+                                        value: profile.vo2max || 0,
+                                        onChange: this.handleInputValue
                                       }}
 
                                     />
                                   </GridItem>
+                                  {/* goals for 2019 */}
                                   <GridItem xs={12} sm={12} md={4}>
                                     <CustomInput
                                       labelText="Goals for 2019"
                                       id="Goalsfor2019"
+                                      inputProps={{
+                                        name: "Goalsfor2019",
+                                        value: profile.Goalsfor2019 || "",
+                                        onChange: this.handleInputValue
+                                      }}
                                       formControlProps={{
                                         fullWidth: true
                                       }}
                                     />
                                   </GridItem>
+                                  {/* events planned for 2019 */}
                                   <GridItem xs={12} sm={12} md={4}>
                                     <CustomInput
                                       labelText="Events planned for 2019"
                                       id="Eventsplanned2019"
+                                      inputProps={{
+                                        name: "Eventsplanned2019",
+                                        value: profile.Eventsplanned2019 || "",
+                                        onChange: this.handleInputValue
+                                      }}
                                       formControlProps={{
                                         fullWidth: true
                                       }}
@@ -462,6 +563,7 @@ class UserProfile extends React.Component {
                                   </GridItem>
                                 </GridContainer>
                                 <GridContainer>
+                                  {/* bike brand and type */}
                                   <GridItem xs={12} sm={12} md={4}>
                                     <FormControl
                                       fullWidth
@@ -479,8 +581,8 @@ class UserProfile extends React.Component {
                                         classes={{
                                           select: classes.select
                                         }}
-                                        value={this.state.bikeSelect}
-                                        onChange={this.handleSelect}
+                                        value={profile.bikeSelect || ""}
+                                        onChange={this.handleInputValue}
                                         inputProps={{
                                           name: "bikeSelect",
                                           id: "bikeSelect"
@@ -515,6 +617,7 @@ class UserProfile extends React.Component {
                                       </Select>
                                     </FormControl>
                                   </GridItem>
+                                  {/* do you use hr sensor */}
                                   <GridItem xs={12} sm={12} md={4}>
                                     <FormControl
                                       fullWidth
@@ -532,8 +635,9 @@ class UserProfile extends React.Component {
                                         classes={{
                                           select: classes.select
                                         }}
-                                        value={this.state.hrsensorSelect}
-                                        onChange={this.handleSelect}
+
+                                        value={profile.hrsensorSelect || ""}
+                                        onChange={this.handleInputValue}
                                         inputProps={{
                                           name: "hrsensorSelect",
                                           id: "hrsensorSelect"
@@ -560,6 +664,7 @@ class UserProfile extends React.Component {
                                       </Select>
                                     </FormControl>
                                   </GridItem>
+                                  {/* do you use powermeter */}
                                   <GridItem xs={12} sm={12} md={4}>
                                     <FormControl
                                       fullWidth
@@ -577,8 +682,8 @@ class UserProfile extends React.Component {
                                         classes={{
                                           select: classes.select
                                         }}
-                                        value={this.state.powermeterSelect}
-                                        onChange={this.handleSelect}
+                                        value={profile.powermeterSelect || ""}
+                                        onChange={this.handleInputValue}
                                         inputProps={{
                                           name: "powermeterSelect",
                                           id: "powermeterSelect"
@@ -613,7 +718,7 @@ class UserProfile extends React.Component {
                     />
                   </GridItem>
                 </GridContainer>
-                <Button color="primary" className={classes.updateProfileButton}>
+                <Button color="primary" className={classes.updateProfileButton} onClick={this.updateProfile}>
                   Update Profile
                 </Button>
                 <Clearfix />
@@ -657,7 +762,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    logout: Actions.logout
+    logout: Actions.logout,
+    setUserData: Actions.setUserData
   }, dispatch);
 }
 

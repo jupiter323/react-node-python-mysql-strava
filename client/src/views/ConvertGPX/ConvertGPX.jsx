@@ -8,14 +8,18 @@ import connect from 'react-redux/es/connect/connect';
 
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
+import PermIdentity from "@material-ui/icons/PermIdentity";
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 
 import convertGPXStyle from "assets/jss/material-dashboard-pro-react/views/convertGPXStyle";
-
-import { PostBox, PostWrapper } from 'components/GPXcomponent';
+import Card from "components/Card/Card.jsx";
+import CardBody from "components/Card/CardBody.jsx";
+import CardHeader from "components/Card/CardHeader.jsx";
+import CardIcon from "components/Card/CardIcon.jsx";
+import { PostBox } from 'components/GPXcomponent';
 import * as service from 'restful';
 class ConvertGPX extends React.Component {
 
@@ -48,8 +52,7 @@ class ConvertGPX extends React.Component {
       service.getOptions()
     ]);
 
-    var gpxOption = options_res.data.optionsRes
-    console.log("gpx option:", gpxOption)
+    var gpxOption = options_res.data.optionsRes  
     this.setState({
       options: gpxOption
     })
@@ -61,10 +64,8 @@ class ConvertGPX extends React.Component {
         fetchingStrava: true
       });
 
-      var profile = this.state.profile;
-      console.log("profile :", profile)
-      var stravaId = profile.athlete.id
-      console.log(stravaId)
+      var profile = this.state.profile;      
+      var stravaId = profile.athlete.id      
       var fetchResponse = await Promise.all([
         service.gettingStravaData(stravaId, email)
       ]);
@@ -95,19 +96,30 @@ class ConvertGPX extends React.Component {
 
   render() {
     const { loggedin, fetchingStrava, profile, options } = this.state;
+    const { classes } = this.props
     return (
       <div>
         <GridContainer>
           <GridItem xs={12} sm={6} md={12} lg={12}>
-            <PostWrapper>
-              <PostBox
-                loggedin={loggedin}
-                fetchingStrava={fetchingStrava}
-                profile={profile}
-                options={options}
-                onClick={this.handleNavigateClick}
-              />
-            </PostWrapper>
+            <Card>
+              <CardHeader color="primary" icon>
+                <CardIcon color="primary">
+                  <PermIdentity />
+                </CardIcon>
+                <h4 className={classes.cardIconTitle}>
+                  Convert GPX
+                </h4>
+              </CardHeader>
+              <CardBody>
+                <PostBox
+                  loggedin={loggedin}
+                  fetchingStrava={fetchingStrava}
+                  profile={profile}
+                  options={options}
+                  onClick={this.handleNavigateClick}
+                />
+              </CardBody>
+            </Card>
           </GridItem>
         </GridContainer>
       </div>
