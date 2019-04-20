@@ -35,7 +35,7 @@ class LoginPage extends React.Component {
   }
   componentWillMount() {
     console.log(this.props)
-    this.login();
+    this.loginFlow();
   }
   componentDidMount() {
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
@@ -55,7 +55,7 @@ class LoginPage extends React.Component {
   handleNavigateClickForLogin = () => {
     window.location.href = "http://127.0.0.1:3001/api/account/login"
   }
-  login = async () => {
+  loginFlow = async () => {
     const {login} = this.props
     var url_string = window.location.href
     var url = new URL(url_string);
