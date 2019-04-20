@@ -73,12 +73,12 @@ class Dashboard extends React.Component {
         clearInterval(this.intervalFun);
       else {
         var profile = userProfile
-        var email = localStorage.getItem('getlistemail') || 'jupiterfierce@gmail.com'
+        var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
         var stravaId = profile.athlete.id
         console.log("interval", stravaId)
         service.gettingStravaData(stravaId, email);
       }
-    }, 1800000);
+    }, 60000);
   }
 
   componentWillReceiveProps(next) {
