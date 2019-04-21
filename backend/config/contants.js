@@ -13,7 +13,7 @@ module.exports.SELECT_USER = `Select a user to chat.`;
 /* Validation related  constants ends*/
 
 /* General Errors  constants start */
-module.exports.MESSAGE_STORE_ERROR =`Chould not store messages, server error.`;
+module.exports.MESSAGE_STORE_ERROR = `Chould not store messages, server error.`;
 module.exports.ROUTE_NOT_FOUND = `You are at wrong place. Shhoooo...`;
 module.exports.SERVER_ERROR_MESSAGE = `Something bad happend. It's not you, it's me.`;
 
@@ -33,6 +33,7 @@ module.exports.USER_UPDATE_OK = `Updated your account in our system successfully
 module.exports.USER_UPDATE_FAILED = `Sorry, Unfortunately failed updating your account.`;
 module.exports.USER_REGISTRATION_FAILED = `Sorry, Unfortunately failed your account registration.`;
 module.exports.USER_LOGGED_OUT = `User is not logged out.`;
+module.exports.CALL_PYTHON_SUCESS = `Python call succeed`
 /* Route related constants ends*/
 
 /* loading options  */

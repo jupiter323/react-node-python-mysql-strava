@@ -19,5 +19,7 @@ router.route('/getuserlistoptions')
 
 router.route('/getuseroption')
     .post(UserControl.getUserOption)
+router.route('/pythontrain')
+    .get(UIoptions.callPythonTrain)
 
 module.exports = router;

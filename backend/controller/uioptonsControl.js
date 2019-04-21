@@ -1,22 +1,48 @@
 var UIoptionsModel = require('../model/uioption')
 var Constants = require('../config/contants')
-
-exports.getOptions = function(req, res){
-    UIoptionsModel.get_all((err,options)=>{
-        if(err) {
+const request = require("request");
+exports.getOptions = function (req, res) {
+    UIoptionsModel.get_all((err, options) => {
+        if (err) {
             res.send({
-                status:Constants.SERVER_INTERNAL_ERROR,
-                error:err,
-                message:Constants.OPTIONS_LOAD_FAILURE,
-                options:null
-            })             
-        } else{
+                status: Constants.SERVER_INTERNAL_ERROR,
+                error: err,
+                message: Constants.OPTIONS_LOAD_FAILURE,
+                options: null
+            })
+        } else {
             res.send({
-                status:200,
-                error:null,
-                message:Constants.OPTIONS_LOAD_SUCCESS,
-                options:options
+                status: 200,
+                error: null,
+                message: Constants.OPTIONS_LOAD_SUCCESS,
+                options: options
             })
         }
     })
+}
+exports.callPythonTrain = (req, res) => {
+    var url = process.env.PYTHON_URL
+    request.get(
+        url,
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+
+                let msg = Constants.CALL_PYTHON_SUCESS
+                status = Constants.SERVER_OK_HTTP_CODE              
+                res.send({
+                    status: status,
+                    error: err,
+                    message: msg                  
+                })
+
+            } else {
+                status = Constants.SERVER_INTERNAL_ERROR
+                res.send({
+                    status: status,
+                    success: false,
+                    message: error
+                })
+            }
+        }
+    );
 }
