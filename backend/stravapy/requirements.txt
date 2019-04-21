@@ -1,12 +1,11 @@
 flask
-pandas
 numpy
+pandas
 seaborn
 sklearn
 imblearn
 xgboost
 scikit-plot
-lime
 ipython
 pydotplus
 lightgbm

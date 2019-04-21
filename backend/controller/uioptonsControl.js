@@ -21,18 +21,19 @@ exports.getOptions = function (req, res) {
     })
 }
 exports.callPythonTrain = (req, res) => {
-    var url = process.env.PYTHON_URL
+    var url = `${process.env.PYTHON_URL}?user=${req.query.user}`
     request.get(
         url,
         function (error, response, body) {
-            if (!error && response.statusCode == 200) {
+            console.log(error, body)
+            if (!error && JSON.parse(body).status === 'success') {
 
                 let msg = Constants.CALL_PYTHON_SUCESS
-                status = Constants.SERVER_OK_HTTP_CODE              
+                status = Constants.SERVER_OK_HTTP_CODE
                 res.send({
                     status: status,
-                    error: err,
-                    message: msg                  
+                    error: error,
+                    message: msg + JSON.parse(body).message
                 })
 
             } else {
@@ -40,7 +41,7 @@ exports.callPythonTrain = (req, res) => {
                 res.send({
                     status: status,
                     success: false,
-                    message: error
+                    message: error + JSON.parse(body).message
                 })
             }
         }
