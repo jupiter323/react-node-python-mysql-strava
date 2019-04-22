@@ -10,7 +10,6 @@
 /backend/stravapy/user_combinations_predictions
 /backend/stravapy/summary.csv
 /client/node_modules
-/client/src/assets/scss/material-dashboard-pro-react.css
 /client/.pnp
 .pnp.js
 
