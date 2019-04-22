@@ -40,15 +40,33 @@ class UserProfile extends React.Component {
       profile
     };
   }
-
+  convertValue(typeString, value) {
+    var convertedValue;
+    switch (typeString) {
+      case "number":
+        convertedValue = Number(value);
+        break;
+      case "string":
+        convertedValue = value.toString();
+      default:
+        convertedValue = value.toString();
+        break;
+    }
+    return convertedValue;
+  }
   handleInputValue = event => {
-    console.log(event.target.name)
+    console.log(event.target.name, event.type, event.target.type)
     var { profile } = this.state;
-    if (event.target.name === "sex")
-      profile.athlete[event.target.name] = event.target.value;
-    else
-      profile[event.target.name] = event.target.value
-    this.setState({ profile });
+    var value = this.convertValue(event.target.type, event.target.value)
+    // var value = event.target.value
+    if (event.target.name === "sex") {
+      profile.athlete[event.target.name] = value;
+      this.setState({ profile });
+    }
+    else {
+      profile[event.target.name] = value
+      this.setState({ profile });
+    }
   }
 
   componentWillReceiveProps(next) {
@@ -188,8 +206,8 @@ class UserProfile extends React.Component {
                       inputProps={{
                         name: "age",
                         type: "number",
-                        inputProps: { min: 0, max: 100 },
-                        value: profile.age,
+                        inputProps: { min: 16, max: 100 },
+                        value: profile.age || "",
                         onChange: this.handleInputValue
                       }}
                     />
@@ -208,7 +226,7 @@ class UserProfile extends React.Component {
                         name: "height",
                         type: "number",
                         inputProps: { min: 150, max: 300 },
-                        value: profile.height,
+                        value: profile.height || "",
                         onChange: this.handleInputValue
                       }}
                     />
@@ -225,7 +243,7 @@ class UserProfile extends React.Component {
                         type: "number",
                         name: "weight",
                         inputProps: { min: 40, max: 200 },
-                        value: profile.weight,
+                        value: profile.weight || "",
                         onChange: this.handleInputValue
                       }}
                     />
@@ -244,7 +262,7 @@ class UserProfile extends React.Component {
                         type: "number",
                         name: "HeartRateThresholdpoint",
                         inputProps: { min: 40, max: 200 },
-                        value: profile.HeartRateThresholdpoint,
+                        value: profile.HeartRateThresholdpoint || "",
                         onChange: this.handleInputValue
                       }}
                     />
@@ -261,7 +279,7 @@ class UserProfile extends React.Component {
                         type: "number",
                         inputProps: { min: 40, max: 200 },
                         name: "HeartRateMaximum",
-                        value: profile.HeartRateMaximum,
+                        value: profile.HeartRateMaximum || "",
                         onChange: this.handleInputValue
                       }}
                     />
@@ -278,7 +296,7 @@ class UserProfile extends React.Component {
                         type: "number",
                         inputProps: { min: 40, max: 200 },
                         name: "HeartRaterestpulse",
-                        value: profile.HeartRaterestpulse,
+                        value: profile.HeartRaterestpulse || "",
                         onChange: this.handleInputValue
                       }}
                     />
@@ -309,7 +327,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone0min",
-                                        value: profile.hrzone0min,
+                                        value: profile.hrzone0min || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -326,7 +344,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone0max",
-                                        value: profile.hrzone0max,
+                                        value: profile.hrzone0max || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -345,7 +363,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone1min",
-                                        value: profile.hrzone1min,
+                                        value: profile.hrzone1min || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -362,7 +380,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone1max",
-                                        value: profile.hrzone1max,
+                                        value: profile.hrzone1max || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -381,7 +399,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone2min",
-                                        value: profile.hrzone2min,
+                                        value: profile.hrzone2min || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -398,7 +416,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone2max",
-                                        value: profile.hrzone2max,
+                                        value: profile.hrzone2max || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -417,7 +435,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone3min",
-                                        value: profile.hrzone3min,
+                                        value: profile.hrzone3min || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -434,7 +452,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone3max",
-                                        value: profile.hrzone3max,
+                                        value: profile.hrzone3max || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -453,7 +471,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone4min",
-                                        value: profile.hrzone4min,
+                                        value: profile.hrzone4min || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -470,7 +488,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone4max",
-                                        value: profile.hrzone4max,
+                                        value: profile.hrzone4max || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -489,7 +507,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone5min",
-                                        value: profile.hrzone5min,
+                                        value: profile.hrzone5min || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -506,7 +524,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 40, max: 200 },
                                         name: "hrzone5max",
-                                        value: profile.hrzone5max,
+                                        value: profile.hrzone5max || "",
                                         onChange: this.handleInputValue
                                       }}
                                     />
@@ -525,7 +543,7 @@ class UserProfile extends React.Component {
                                         type: "number",
                                         inputProps: { min: 0, max: 1000 },
                                         name: "vo2max",
-                                        value: profile.vo2max,
+                                        value: profile.vo2max || "",
                                         onChange: this.handleInputValue
                                       }}
 
@@ -538,7 +556,7 @@ class UserProfile extends React.Component {
                                       id="Goalsfor2019"
                                       inputProps={{
                                         name: "Goalsfor2019",
-                                        value: profile.Goalsfor2019,
+                                        value: profile.Goalsfor2019 || "",
                                         onChange: this.handleInputValue
                                       }}
                                       formControlProps={{
@@ -553,7 +571,7 @@ class UserProfile extends React.Component {
                                       id="Eventsplanned2019"
                                       inputProps={{
                                         name: "Eventsplanned2019",
-                                        value: profile.Eventsplanned2019,
+                                        value: profile.Eventsplanned2019 || "",
                                         onChange: this.handleInputValue
                                       }}
                                       formControlProps={{
@@ -581,7 +599,7 @@ class UserProfile extends React.Component {
                                         classes={{
                                           select: classes.select
                                         }}
-                                        value={profile.bikeSelect}
+                                        value={profile.bikeSelect || ""}
                                         onChange={this.handleInputValue}
                                         inputProps={{
                                           name: "bikeSelect",
@@ -636,7 +654,7 @@ class UserProfile extends React.Component {
                                           select: classes.select
                                         }}
 
-                                        value={profile.hrsensorSelect}
+                                        value={profile.hrsensorSelect || ""}
                                         onChange={this.handleInputValue}
                                         inputProps={{
                                           name: "hrsensorSelect",
@@ -682,7 +700,7 @@ class UserProfile extends React.Component {
                                         classes={{
                                           select: classes.select
                                         }}
-                                        value={profile.powermeterSelect}
+                                        value={profile.powermeterSelect || ""}
                                         onChange={this.handleInputValue}
                                         inputProps={{
                                           name: "powermeterSelect",
