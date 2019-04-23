@@ -4,6 +4,33 @@ const UserProfile = require('../model/user_profile')
 const User = require('../model/user')
 const Constants = require('../config/contants')
 
+exports.register = (req, res) => {
+    User.registerEmailUser(req.body, (err, registered, response) => {
+        if (err) {
+            res.send({
+                status: Constants.SERVER_INTERNAL_ERROR,
+                success: false,
+                error: err,
+                msg: Constants.USER_REGISTRATION_FAILED
+            })
+        } else if (registered) { //registered
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: false,
+                error: null,
+                msg: Constants.USER_REGISTERED
+            })
+        } else { // success
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: true,
+                error: null,
+                msg: Constants.USER_REGISTRATION_OK,
+                response
+            })
+        }
+    })
+}
 exports.getToken = function (req, res) {
 
     request.post(

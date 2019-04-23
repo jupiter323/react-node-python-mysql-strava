@@ -7,7 +7,7 @@ module.exports={
         'database':process.env.DB_NAME
     },
     'database':process.env.DB_NAME,
-    'secret':'secure',
+    'secret':'eric_secure',
     'client_id':process.env.STRAVA_CLIENT_ID,
     'client_secret':process.env.STRAVA_CLIENT_SECRET,
     'callback_url':process.env.STRAVA_CALLBACK_URL

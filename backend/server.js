@@ -1,11 +1,9 @@
 const express = require('express');
 const http = require('http');
 var fs = require("fs");
-// const socketio = require('socket.io');
 
 const appConfig = require('./config/app-config');
 
-// const socketEvents = require('./web/socket');
 const routes = require('./web/routes');
 const cronJob = require('./web/cron')
 var path = require('path');
@@ -14,8 +12,7 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.http = http.Server(this.app);
-        // this.socket = socketio(this.http);
+        this.http = http.Server(this.app);       
     }
 
     appConfig() {
@@ -24,8 +21,7 @@ class Server {
 
     includeRoutes() {
         new routes(this.app).routesConfig();
-        new cronJob().cronjobConfig();
-        // new socketEvents(this.socket).socketConfig();
+        new cronJob().cronjobConfig();      
     }
 
     appExecute() {

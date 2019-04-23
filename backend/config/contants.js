@@ -1,5 +1,4 @@
 /*
-* Real time private chatting app using Angular 2, Nodejs, mongodb and Socket.io
 * @author Shashank Tiwari
 */
 
@@ -32,7 +31,10 @@ module.exports.USER_REGISTRATION_OK = `Registered your account in our system suc
 module.exports.USER_UPDATE_OK = `Updated your account in our system successfully.`;
 module.exports.USER_UPDATE_FAILED = `Sorry, Unfortunately failed updating your account.`;
 module.exports.USER_REGISTRATION_FAILED = `Sorry, Unfortunately failed your account registration.`;
+module.exports.USER_REGISTERED = `Sorry, User has already registered. Try again with other email`
 module.exports.USER_LOGGED_OUT = `User is not logged out.`;
+module.exports.USER_NOT_REGISTERED = `That email is not registered`
+module.exports.USER_PSSWORD_WRONG = `The password is wrong`
 module.exports.CALL_PYTHON_SUCESS = `Python call succeed`
 /* Route related constants ends*/
 

@@ -1,6 +1,5 @@
 var bcrypt = require('bcrypt-nodejs')
 var crypto = require('crypto')
-
 var Constants = require('../config/contants')
 
 var db = require('./db');
@@ -81,13 +80,63 @@ var getUserList = function (projection, callback) {
     return callback(err, rows);
   });
 }
-
+var getUserById = (projection, id, callback) => {
+  if (projection === '') projection = "*";
+  db.query('SELECT ' + projection + ' FROM client WHERE id = ?', [id], function (err, rows) {
+    if (err) return callback(err)
+    return callback(err, rows[0]);
+  });
+}
 var getUser = function (projection, params, callback) {
   if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.userId = user_profile.userId WHERE user.userId = ?', [params.userId], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
   });
+}
+var loginEmailUser = (params, callback) => {
+  const { email, password } = params
+  db.query("SELECT * FROM client WHERE email = ?", [email], (err, rows) => {
+    if (err)
+      return callback(err, null, null);//register faild
+    if (!rows.length) {
+      return callback(null, true, null); //registered already
+    }
+    if (bcrypt.compareSync(password, rows[0]["password"])){      
+      return callback(null, false, rows[0]) //success
+    }
+    return callback(null, false, null); //password wrong
+
+  })
+}
+var registerEmailUser = (params, callback) => {
+  var { email, password } = params;
+
+  db.query('SELECT * FROM client WHERE email = ?', [email], (err, rows) => {
+    if (err)
+      return callback(err, false, null);//register faild
+    if (rows.length) {
+      return callback(null, true, null); //registered already
+    }
+
+    var encoded_password = bcrypt.hashSync(password);
+    db.query(`INSERT INTO client (email,password) values (?,?)`,
+      [email, encoded_password],
+      function (err, response) {
+        if (err) {
+
+          if (err.code === 'ER_DUP_ENTRY') {
+            // If we somehow generated a duplicate user id, try again
+            return registerEmailUser(params, callback);
+          }
+          return callback(err, false, null); // register faild
+        }
+        // Successfully created user
+        return callback(null, false, response) //success
+      }
+    )
+
+  })
 }
 
 var registerUser = function (params, callback) {
@@ -194,11 +243,14 @@ var deleteUser = function (username, callback) {
 
 }
 
+exports.loginEmailUser = loginEmailUser
 exports.insertUserProfile = insertUserProfile
 exports.insertUser = insertUser
 exports.updateUser = updateUser
 exports.getUser = getUser
+exports.registerEmailUser = registerEmailUser
 exports.registerUser = registerUser
 exports.getUserList = getUserList
 exports.updateUserProfile = updateUserProfile
+exports.getUserById = getUserById
 
