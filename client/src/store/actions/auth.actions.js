@@ -76,7 +76,7 @@ export function emailLogin(params) {
         userInfo.then((user) => {
             var data = user[0].data
             console.log("login status: ", data)
-            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified }))
+            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId:data.id }))
             if (data.msg)
                 return dispatch({
                     type: LOGIN_ERROR,

@@ -16,8 +16,9 @@ function makeProfileObject(receivedProfile) {
         // access_token: receivedProfile.access_token,
         // expires_at: receivedProfile.expiretime,
         access_token: access_token,
-        expires_at: expireTime/1000,
+        expires_at: expireTime / 1000,
         verified: receivedProfile.verified,
+        clientId: receivedProfile.id,
         athlete: {
             badge_type_id: receivedProfile.badge_type_id,
             id: receivedProfile.userId,
@@ -90,7 +91,6 @@ export function getUserOption(user) {
         response.then(useroption => {
             var receivedProfile = useroption[0].data.users[0];
             var profile = makeProfileObject(receivedProfile)
-            console.log("profile :", profile)
             dispatch(setUserData(profile))
             return dispatch({
                 type: GET_USER_OPTION

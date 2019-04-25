@@ -57,15 +57,10 @@ class Dashboard extends React.Component {
     this.resizeFunction = this.resizeFunction.bind(this);
   }
   componentWillMount() {
-    const { getUserData, setauth, getUsers, getUserOption } = this.props;
-
+    const { getUserData, setauth, getUsers } = this.props;
     setauth();
-    
-    var user = {userId:31}
-    getUserOption(user);
     getUserData();
     getUsers();
-
   }
 
   async callGetActivityListInterval(next) {
@@ -85,10 +80,10 @@ class Dashboard extends React.Component {
   }
 
   componentWillReceiveProps(next) {
-    const { access_token, logout, expireTime, userProfile, getUsers } = next;
+    const { access_token, logout, expireTime, userProfile, getUsers, gotNewCoreData } = next;
     if (this.props.userProfile !== userProfile)
       getUsers();
-
+    if (!userProfile.athlete&&gotNewCoreData&&gotNewCoreData!==this.props.gotNewCoreData) this.whenLoggedInProfile(next);
     if (!access_token || !expireTime) return;
 
     var checkExpirationTime = () => {
@@ -107,7 +102,14 @@ class Dashboard extends React.Component {
     }
   }
 
+  whenLoggedInProfile(next) {
+    const { getUserOption, userProfile } = next;
+    var user = { userId: userProfile.clientId }
+    getUserOption(user);
+
+  }
   componentDidMount() {
+
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel, {
         suppressScrollX: true,
@@ -200,7 +202,9 @@ function mapStateToProps(state) {
   return {
     access_token: state.user.access_token,
     expireTime: state.user.expireTime,
-    userProfile: state.user.userProfile
+    userProfile: state.user.userProfile,
+    gotNewCoreData: state.user.gotNewCoreData
+
   }
 }
 

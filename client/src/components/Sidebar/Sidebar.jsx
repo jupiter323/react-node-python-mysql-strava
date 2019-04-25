@@ -82,14 +82,15 @@ class Sidebar extends React.Component {
     st[collapse] = !this.state[collapse];
     this.setState(st);
   }
-  async componentWillReceiveProps(next) {
+  
+  componentWillReceiveProps(next) {
     if (this.props.userProfile === next.userProfile) return
+    
     const { userProfile, setUserOption } = next;
-    if (userProfile) {
+    if (userProfile.athlete) {
       var user = { "userId": userProfile.athlete.id, "username": userProfile.athlete.username, "profile_medium": userProfile.athlete.profile_medium }
       setUserOption(user);
     }
-
   }
   async onChangeSelectUser(user) {
     const { getUserOption, setUserOption } = this.props;

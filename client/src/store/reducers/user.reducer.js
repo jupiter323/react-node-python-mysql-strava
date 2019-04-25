@@ -9,6 +9,7 @@ const initialState = {
     access_token: "",
     userProfile: "",
     expireTime: "",
+    gotNewCoreData: false,
 
     users: [],
     currentUser: {}
@@ -19,7 +20,8 @@ const user = function (state = initialState, action) {
         case Actions.GET_USER_OPTION:
             {
                 return {
-                    ...state
+                    ...state,
+                    gotNewCoreData: false
                 }
             }
         case Actions.SET_USER_OPTION://currrent user setting
@@ -31,7 +33,7 @@ const user = function (state = initialState, action) {
             }
         case Actions.SET_USER_DATA:
             {
-                console.log("set user data")
+                console.log("set user data", action.clientId)
                 return {
                     ...state,
                     access_token: action.access_token,
@@ -43,6 +45,7 @@ const user = function (state = initialState, action) {
             {
                 return {
                     ...state,
+                    gotNewCoreData: true,
                     access_token: action.access_token,
                     userProfile: action.userProfile,
                     expireTime: action.expireTime
