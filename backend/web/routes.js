@@ -1,16 +1,18 @@
 /*
-* Real time private chatting app using Angular 2, Nodejs, mongodb and Socket.io
 * @author Shashank Tiwari
 */
 
 'use strict';
 
 // const routeHandler = require('./../handlers/route-handler');
-const userRoutes = require('../routes/auth');
+var authRoutes = require('../routes/auth');
+const userRoutes = require('../routes/user');
 const mainRoutes = require('../routes/main');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+const passport = require('passport')
 
+require('../middlewares/passport');
 class Routes {
 
 	constructor(app) {
@@ -19,8 +21,9 @@ class Routes {
 
 	/* creating app Routes starts */
 	appRoutes() {
-		this.app.use('/api', mainRoutes);
-		this.app.use('/api/account', userRoutes);
+		this.app.use('/api/auth', authRoutes);
+		this.app.use('/api', passport.authenticate('jwt', { session: false }), mainRoutes);
+		this.app.use('/api/account',passport.authenticate('jwt', { session: false }), userRoutes);
 		this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 	}
 
@@ -28,5 +31,4 @@ class Routes {
 		this.appRoutes();
 	}
 }
-
 module.exports = Routes;
