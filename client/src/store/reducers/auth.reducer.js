@@ -40,6 +40,26 @@ const auth = function (state = initialState, action) {
                     errorMsg: action.errorMsg
                 };
             }
+        case Actions.REGISTER:
+            {
+                return {
+                    ...initialState,
+                    status: false
+                }
+            }
+        case Actions.REGISTER_FAILD:
+            {
+                return {
+                    status: false,
+                    errorMsg: action.errorMsg
+                };
+            }
+        case Actions.REGISTER_SUCCESS:
+            {
+                return {
+                    ...initialState
+                };
+            }
         default:
             {
                 return state

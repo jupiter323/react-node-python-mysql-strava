@@ -27,6 +27,11 @@ import CardBody from "components/Card/CardBody.jsx";
 
 import registerPageStyle from "assets/jss/material-dashboard-pro-react/views/registerPageStyle";
 import { NavLink } from "react-router-dom";
+
+import { bindActionCreators } from 'redux';
+import * as Actions from 'store/actions';
+import { withRouter } from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect';
 class RegisterPage extends React.Component {
   constructor(props) {
     super(props);
@@ -52,8 +57,14 @@ class RegisterPage extends React.Component {
       checked: newChecked
     });
   }
+  onChangeInputValue = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
   handleRegister = () => {
-
+    const { register } = this.props
+    register({ email: this.state.email, password: this.state.password })
   }
   render() {
     const { classes } = this.props;
@@ -108,6 +119,8 @@ class RegisterPage extends React.Component {
                           className: classes.customFormControlClasses
                         }}
                         inputProps={{
+                          name: "email",
+                          onChange: this.onChangeInputValue,
                           startAdornment: (
                             <InputAdornment
                               position="start"
@@ -125,6 +138,8 @@ class RegisterPage extends React.Component {
                           className: classes.customFormControlClasses
                         }}
                         inputProps={{
+                          name: "password",
+                          onChange: this.onChangeInputValue,
                           startAdornment: (
                             <InputAdornment
                               position="start"
@@ -196,4 +211,17 @@ RegisterPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(registerPageStyle)(RegisterPage);
+function mapStateToProps(state) {
+  return {
+    access_token: state.user.access_token,
+    userProfile: state.user.userProfile
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    register: Actions.register
+  }, dispatch);
+}
+
+export default withStyles(registerPageStyle)(withRouter(connect(mapStateToProps, mapDispatchToProps)(RegisterPage)));

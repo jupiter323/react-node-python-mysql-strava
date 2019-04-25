@@ -48,6 +48,7 @@ class UserProfile extends React.Component {
         break;
       case "string":
         convertedValue = value.toString();
+        break;
       default:
         convertedValue = value.toString();
         break;

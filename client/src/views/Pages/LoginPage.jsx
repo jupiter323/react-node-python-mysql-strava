@@ -9,10 +9,10 @@ import connect from 'react-redux/es/connect/connect';
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import Icon from "@material-ui/core/Icon";
 
 // @material-ui/icons
-import Face from "@material-ui/icons/Face";
-
+import Email from "@material-ui/icons/Email";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
@@ -55,22 +55,29 @@ class LoginPage extends React.Component {
   handleNavigateClickForLogin = () => {
     window.location.href = "http://127.0.0.1:3001/api/account/login"
   }
+
+  handleNavigateRegister = () => {
+    window.location = "/pages/register-page";
+  }
   loginFlow = async () => {
-    const {login} = this.props
+    const { login } = this.props
     var url_string = window.location.href
     var url = new URL(url_string);
 
     try {
 
       var code = url.searchParams.get("code");
-      console.log(code, url)
+      var tokenForEmailVerify = url.searchParams.get("tk");
+      console.log(tokenForEmailVerify, code, url)
       if (code) {
-        
-        await login(code);        
+
+        await login(code);
         window.location.href = "/dashboard"
 
+      } else if (tokenForEmailVerify) {
+        // email verify part
       } else {
-        console.log("generall", localStorage.token)        
+        console.log("generall", localStorage.token)
       }
 
     } catch (e) {
@@ -116,20 +123,6 @@ class LoginPage extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CustomInput
-                    labelText="First Name.."
-                    id="firstname"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Face className={classes.inputAdornmentIcon} />
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                  {/* <CustomInput
                     labelText="Email..."
                     id="email"
                     formControlProps={{
@@ -158,9 +151,15 @@ class LoginPage extends React.Component {
                         </InputAdornment>
                       )
                     }}
-                  /> */}
+                  />
                 </CardBody>
                 <CardFooter className={classes.justifyContentCenter}>
+                  <Button color="primary" simple size="lg" block>
+                    Login
+                  </Button>
+                  <Button color="primary" simple size="lg" block onClick={this.handleNavigateRegister}>
+                    Go Register
+                  </Button>
                   <Button color="primary" simple size="lg" block onClick={this.handleNavigateClickForLogin}>
                     Login with STRAVA
                   </Button>
@@ -186,7 +185,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    login: Actions.login  
+    login: Actions.login
   }, dispatch);
 }
 
