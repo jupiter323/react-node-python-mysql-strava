@@ -89,7 +89,7 @@ var getUserById = (projection, id, callback) => {
 }
 var getUser = function (projection, params, callback) {
   if (projection === '') projection = '*'
-  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.userId = user_profile.userId WHERE user.userId = ?', [params.userId], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.clientId = user_profile.clientId WHERE user.clientId = ?', [params.id], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
   });
@@ -102,12 +102,31 @@ var loginEmailUser = (params, callback) => {
     if (!rows.length) {
       return callback(null, true, null); //registered already
     }
-    if (bcrypt.compareSync(password, rows[0]["password"])){      
+    if (bcrypt.compareSync(password, rows[0]["password"])) {
       return callback(null, false, rows[0]) //success
     }
     return callback(null, false, null); //password wrong
 
   })
+}
+
+var setEmailVerified = (id, callback) => {
+  db.query('UPDATE client SET ? WHERE id = ?', [{ verified: true }, id]
+    , function (err) {
+
+      let msg = ''
+
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          // If we somehow generated a duplicate user id, try again
+          return setEmailVerified(id, callback);
+        }
+        msg = Constants.EMAIL_VERIFY_FAILED;
+        return callback(err, msg)
+      }
+      msg = Constants.EMAIL_VERIFY_SUCESS;
+      return callback(err, msg)
+    })
 }
 var registerEmailUser = (params, callback) => {
   var { email, password } = params;
@@ -120,8 +139,9 @@ var registerEmailUser = (params, callback) => {
     }
 
     var encoded_password = bcrypt.hashSync(password);
-    db.query(`INSERT INTO client (email,password) values (?,?)`,
-      [email, encoded_password],
+    var role = email === process.env.ADMIN_EMAIL ? "admin" : "user"
+    db.query(`INSERT INTO client (email,password,role) values (?,?,?)`,
+      [email, encoded_password, role],
       function (err, response) {
         if (err) {
 
@@ -132,7 +152,39 @@ var registerEmailUser = (params, callback) => {
           return callback(err, false, null); // register faild
         }
         // Successfully created user
-        return callback(null, false, response) //success
+        // // create profile
+        var clientId = response.insertId
+        db.query(`INSERT INTO user (clientId) values (?)`,
+          [clientId],
+          function (err) {
+            let msg = ''
+            if (err) {
+
+              if (err.code === 'ER_DUP_ENTRY') {
+                // If we somehow generated a duplicate user id, try again
+                // return insertUser(params, callback);
+              }
+              msg = Constants.USER_REGISTRATION_FAILED
+              return callback(err, false);
+            }
+            // create user_profie
+            db.query(`INSERT INTO user_profile (clientId) values (?)`,
+              [clientId],
+              function (err) {
+                if (err) {
+                  let msg = ''
+                  if (err.code === 'ER_DUP_ENTRY') {
+                    // return insertUserProfile(user, callback);
+                  }
+                  msg = Constants.USER_REGISTRATION_FAILED
+                }
+                msg = Constants.USER_REGISTRATION_OK
+                // Successfully created user
+                return callback(err, false, response) //success               
+              }
+            )
+          }
+        )
       }
     )
 
@@ -253,4 +305,5 @@ exports.registerUser = registerUser
 exports.getUserList = getUserList
 exports.updateUserProfile = updateUserProfile
 exports.getUserById = getUserById
+exports.setEmailVerified = setEmailVerified
 

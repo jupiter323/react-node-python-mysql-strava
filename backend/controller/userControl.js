@@ -3,8 +3,35 @@ const fs = require("fs");
 const UserProfile = require('../model/user_profile')
 const User = require('../model/user')
 const Constants = require('../config/contants')
+const sgMail = require('@sendgrid/mail');
+const jwt = require('jsonwebtoken');
+const config = require('../config/db-config');
+
+function sendEmail(toEmail, html) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    const msg = {
+        to: toEmail,
+        from: 'test@test.com',
+        subject: 'From Strava',
+        text: 'Download finished!',
+        html: html,
+    };
+    sgMail.send(msg);
+}
+
+function sendEmailVerifyLink(user) {
+    const token = jwt.sign(user, config.secret, {
+        expiresIn: '24h' // expires in 24 hours
+    });
+    var sendUrl = `${process.env.EMAIL_VERIFY_EMAIL_HOST}/notifications/?tk=${token}`
+    var html =
+        `<a href="${sendUrl}"><strong>Please verify Email</strong> </a>`
+    sendEmail(user.email, html)
+}
 
 exports.register = (req, res) => {
+    var { email } = req.body;
     User.registerEmailUser(req.body, (err, registered, response) => {
         if (err) {
             res.send({
@@ -21,6 +48,8 @@ exports.register = (req, res) => {
                 msg: Constants.USER_REGISTERED
             })
         } else { // success
+            var user = { id: response.insertId, email, userId: null, verified: false }
+            sendEmailVerifyLink(user)
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: true,
@@ -125,8 +154,20 @@ exports.refreshToken = () => {
 
         });
     })
-
-
+}
+exports.eamilVerify = (req, res) => {
+    var { id, data } = req.body
+    User.setEmailVerified(id, (err, msg) => {
+        if (err) {
+            res.send({
+                status: Constants.SERVER_INTERNAL_ERROR,
+                error: err,
+                msg
+            })
+        } else {
+            res.send(data)
+        }
+    })
 }
 exports.getUserListOptions = function (req, res) {
     let projection = 'userId,username,profile_medium'
@@ -148,7 +189,7 @@ exports.getUserListOptions = function (req, res) {
 }
 exports.getUserOption = function (req, res) {
     let projection = "*"
-    User.getUser(projection, { userId: req.body.stravaId }, (err, users) => {
+    User.getUser(projection, { id: req.body.id }, (err, users) => {
         if (err) {
             res.send({
                 status: Constants.SERVER_INTERNAL_ERROR,

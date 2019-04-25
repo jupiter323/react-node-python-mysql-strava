@@ -4,7 +4,6 @@
 
 'use strict';
 
-// const routeHandler = require('./../handlers/route-handler');
 var authRoutes = require('../routes/auth');
 const userRoutes = require('../routes/user');
 const mainRoutes = require('../routes/main');

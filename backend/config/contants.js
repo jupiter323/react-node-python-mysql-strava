@@ -36,6 +36,8 @@ module.exports.USER_LOGGED_OUT = `User is not logged out.`;
 module.exports.USER_NOT_REGISTERED = `That email is not registered`
 module.exports.USER_PSSWORD_WRONG = `The password is wrong`
 module.exports.CALL_PYTHON_SUCESS = `Python call succeed`
+module.exports.EMAIL_VERIFY_FAILED = `Email verify Faild`
+module.exports.EMAIL_VERIFY_SUCESS = `Email verify success`
 /* Route related constants ends*/
 
 /* loading options  */
