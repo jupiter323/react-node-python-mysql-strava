@@ -57,9 +57,12 @@ class Dashboard extends React.Component {
     this.resizeFunction = this.resizeFunction.bind(this);
   }
   componentWillMount() {
-    const { getUserData, setauth, getUsers } = this.props;
+    const { getUserData, setauth, getUsers, getUserOption } = this.props;
 
     setauth();
+    
+    var user = {userId:31}
+    getUserOption(user);
     getUserData();
     getUsers();
 
@@ -206,7 +209,8 @@ function mapDispatchToProps(dispatch) {
     getUserData: Actions.getUserData,
     setauth: Actions.setauth,
     getUsers: Actions.getUsers,
-    logout: Actions.logout
+    logout: Actions.logout,
+    getUserOption: Actions.getUserOption
   }, dispatch);
 }
 

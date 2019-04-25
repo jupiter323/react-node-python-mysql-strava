@@ -30,7 +30,9 @@ class LoginPage extends React.Component {
     super(props);
     // we use this to make the card to appear after the page has been rendered
     this.state = {
-      cardAnimaton: "cardHidden"
+      cardAnimaton: "cardHidden",
+      email: "",
+      password: "",
     };
   }
   componentWillMount() {
@@ -55,7 +57,17 @@ class LoginPage extends React.Component {
   handleNavigateClickForLogin = () => {
     window.location.href = "http://127.0.0.1:3001/api/account/login"
   }
-
+  onChangeInputValue = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+  handleLogin = async () => {
+    const { emailLogin } = this.props
+    var params = { email: this.state.email, password: this.state.password }
+    await emailLogin(params);
+    window.location.href = "/"
+  }
   handleNavigateRegister = () => {
     window.location = "/pages/register-page";
   }
@@ -76,7 +88,7 @@ class LoginPage extends React.Component {
 
       } else if (tokenForEmailVerify) {
         // email verify part
-        
+
       } else {
         console.log("generall", localStorage.token)
       }
@@ -130,6 +142,8 @@ class LoginPage extends React.Component {
                       fullWidth: true
                     }}
                     inputProps={{
+                      name: "email",
+                      onChange: this.onChangeInputValue,
                       endAdornment: (
                         <InputAdornment position="end">
                           <Email className={classes.inputAdornmentIcon} />
@@ -144,6 +158,8 @@ class LoginPage extends React.Component {
                       fullWidth: true
                     }}
                     inputProps={{
+                      name: "password",
+                      onChange: this.onChangeInputValue,
                       endAdornment: (
                         <InputAdornment position="end">
                           <Icon className={classes.inputAdornmentIcon}>
@@ -155,15 +171,15 @@ class LoginPage extends React.Component {
                   />
                 </CardBody>
                 <CardFooter className={classes.justifyContentCenter}>
-                  <Button color="primary" simple size="lg" block>
+                  <Button color="primary" simple size="lg" block onClick={this.handleLogin}>
                     Login
                   </Button>
                   <Button color="primary" simple size="lg" block onClick={this.handleNavigateRegister}>
                     Go Register
                   </Button>
-                  <Button color="primary" simple size="lg" block onClick={this.handleNavigateClickForLogin}>
+                  {/* <Button color="primary" simple size="lg" block onClick={this.handleNavigateClickForLogin}>
                     Login with STRAVA
-                  </Button>
+                  </Button> */}
                 </CardFooter>
               </Card>
             </form>
@@ -186,7 +202,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    login: Actions.login
+    login: Actions.login,
+    emailLogin: Actions.emailLogin
   }, dispatch);
 }
 
