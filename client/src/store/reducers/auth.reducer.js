@@ -8,7 +8,8 @@ import * as Actions from '../actions';
 const initialState = {
     status: false,
     errorMsg: "",
-    companyData: null
+    companyData: null,
+    fetching: false
 };
 
 const auth = function (state = initialState, action) {
@@ -17,7 +18,8 @@ const auth = function (state = initialState, action) {
             {
                 return {
                     ...initialState,
-                    status: false
+                    status: false,
+                    fetching: true
                 };
             }
         case Actions.LOG_OUT: {
@@ -28,54 +30,67 @@ const auth = function (state = initialState, action) {
         }
         case Actions.LOGIN_SUCCESS:
             {
+                console.log("login success")
                 return {
                     ...initialState,
-                    status: true
+                    status: true,
+                    fetching: false
                 };
             }
         case Actions.LOGIN_ERROR:
             {
+                console.log("login error")
                 return {
                     status: false,
-                    errorMsg: action.errorMsg
+                    errorMsg: action.errorMsg,
+                    fetching: false
                 };
             }
         case Actions.REGISTER:
             {
                 return {
                     ...initialState,
-                    status: false
+                    status: false,
+                    fetching: true
                 }
             }
         case Actions.REGISTER_FAILD:
             {
+                console.log("register error")
                 return {
                     status: false,
-                    errorMsg: action.errorMsg
+                    errorMsg: action.errorMsg,
+                    fetching: false
                 };
             }
         case Actions.REGISTER_SUCCESS:
             {
                 return {
-                    ...initialState
+                    ...state
                 };
             }
         case Actions.EMAIL_VERIFY_SUCCESS:
             {
+                console.log("verify success")
                 return {
-                    ...initialState
+                    ...state,
+                    fetching: false
+
                 };
             }
         case Actions.EMAIL_VERIFY_ERROR:
             {
+                console.log("verify error")
                 return {
-                    ...initialState
+                    ...state,
+                    fetching: false
                 };
             }
         case Actions.EMAIL_VERIFY:
             {
                 return {
-                    ...initialState
+                    ...state,
+                    fetching: true
                 };
             }
         default:

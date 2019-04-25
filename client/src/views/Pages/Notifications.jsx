@@ -54,8 +54,16 @@ class Notifications extends React.Component {
     };
   }
   componentDidMount() {
+    // localStorage.clear()
     this.showNotification("tc")
     this.loginFlow()
+  }
+  componentWillReceiveProps(next) {
+    if (next.fetching === this.props.fetching) return;
+    if (!next.fetching) {
+      console.log("redirect")
+      // window.location.href = "/"
+    }
   }
   // to stop the warning of calling setState of unmounted component
   componentWillUnmount() {
@@ -99,7 +107,6 @@ class Notifications extends React.Component {
       if (tokenForEmailVerify) {
         // email verify part
         await verifyEmail(tokenForEmailVerify);
-        window.location.href = "/"
 
       } else {
 
@@ -178,7 +185,8 @@ class Notifications extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    access_token: state.user.access_token
+    access_token: state.user.access_token,
+    fetching: state.auth.fetching,
   }
 }
 

@@ -42,6 +42,16 @@ class RegisterPage extends React.Component {
     };
     this.handleToggle = this.handleToggle.bind(this);
   }
+  componentWillReceiveProps(next) {
+    if (next.fetching === this.props.fetching) return;
+    if (next.errorMsg) {
+      alert(next.errorMsg);
+      return
+    }
+    if (!next.fetching) {
+      window.location.href = "/"
+    }
+  }
   handleToggle(value) {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(value);
@@ -65,8 +75,7 @@ class RegisterPage extends React.Component {
   handleRegister = async () => {
     const { register } = this.props
     await register({ email: this.state.email, password: this.state.password });
-    console.log(localStorage.token, localStorage.profile)
-    window.location.href = "/"
+    // window.location.href = "/"
   }
   render() {
     const { classes } = this.props;
@@ -216,7 +225,9 @@ RegisterPage.propTypes = {
 function mapStateToProps(state) {
   return {
     access_token: state.user.access_token,
-    userProfile: state.user.userProfile
+    userProfile: state.user.userProfile,
+    fetching: state.auth.fetching,
+    errorMsg: state.auth.errorMsg
   }
 }
 
