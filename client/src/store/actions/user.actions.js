@@ -9,7 +9,6 @@ export const SET_USER_OPTION = '[USER] SET OPTION';
 export const GET_USER_OPTION = '[USER] GET OPTION';
 export const GET_USERS = 'GET_USERS'
 
-
 function makeProfileObject(receivedProfile) {
     var profile = {
         access_token: receivedProfile.access_token,
@@ -55,6 +54,27 @@ function makeProfileObject(receivedProfile) {
     }
     return profile
 }
+
+export function getUserProfile(user) {
+    var userId = user.userId
+    var response = Promise.all([
+        service.getuseroption(userId)
+    ])
+
+    return (dispatch) => {
+        response.then(useroption => {
+            var receivedProfile = useroption[0].data.users[0];
+            var profile = makeProfileObject(receivedProfile)
+            console.log("profile :", profile)
+            dispatch(setUserData(profile))
+            return dispatch({
+                type: GET_USER_OPTION
+
+            })
+        })
+
+    }
+}
 export function getUserOption(user) {
     var userId = user.userId
     var response = Promise.all([
@@ -86,6 +106,7 @@ export function setUserOption(user) {
         })
     }
 }
+
 
 export function setUserData(userProfile) {
     let access_token = userProfile.access_token;

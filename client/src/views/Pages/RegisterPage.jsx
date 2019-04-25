@@ -62,9 +62,11 @@ class RegisterPage extends React.Component {
       [e.target.name]: e.target.value
     })
   }
-  handleRegister = () => {
+  handleRegister = async () => {
     const { register } = this.props
-    register({ email: this.state.email, password: this.state.password })
+    await register({ email: this.state.email, password: this.state.password });
+    console.log(localStorage.token, localStorage.profile)
+    window.location.href = "/"
   }
   render() {
     const { classes } = this.props;

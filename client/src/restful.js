@@ -45,3 +45,24 @@ export function setUserData(profile) {
         profile
     })
 }
+
+export function register(params) {
+    return axios.post(baseUrl + 'auth/emailregister', {
+        ...params
+    })
+}
+export function login(params) {
+    return axios.post(baseUrl + 'auth/login', {
+        ...params
+    })
+}
+export function verifyEmail(token) {
+    console.log({ token })
+    return axios.post(baseUrl + 'auth/emailverify', {
+        token: token
+    })
+}
+
+
+
+

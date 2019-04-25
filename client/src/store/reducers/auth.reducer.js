@@ -60,6 +60,24 @@ const auth = function (state = initialState, action) {
                     ...initialState
                 };
             }
+        case Actions.EMAIL_VERIFY_SUCCESS:
+            {
+                return {
+                    ...initialState
+                };
+            }
+        case Actions.EMAIL_VERIFY_ERROR:
+            {
+                return {
+                    ...initialState
+                };
+            }
+        case Actions.EMAIL_VERIFY:
+            {
+                return {
+                    ...initialState
+                };
+            }
         default:
             {
                 return state

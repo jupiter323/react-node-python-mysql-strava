@@ -76,6 +76,7 @@ class LoginPage extends React.Component {
 
       } else if (tokenForEmailVerify) {
         // email verify part
+        
       } else {
         console.log("generall", localStorage.token)
       }

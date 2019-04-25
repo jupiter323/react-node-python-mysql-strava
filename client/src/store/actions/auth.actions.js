@@ -3,7 +3,7 @@
  * Date: 12/28/2018
  */
 
-import { getUserOption } from './user.actions';
+import { getUserOption, setUserData } from './user.actions';
 import * as service from 'restful';
 
 export const LOGIN = 'LOGIN';
@@ -13,6 +13,9 @@ export const LOG_OUT = "LOG_OUT"
 export const REGISTER = "REGISTER";
 export const REGISTER_FAILD = "REGISTER_FAILD"
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS"
+export const EMAIL_VERIFY = "EMAIL_VERIFY"
+export const EMAIL_VERIFY_ERROR = "EMAIL_VERIFY_ERROR";
+export const EMAIL_VERIFY_SUCCESS = "EMAIL_VERIFY_SUCCESS";
 
 
 export function logout() {
@@ -32,6 +35,32 @@ export function setauth() {
         });
     }
 }
+export function verifyEmail(token) {
+    var userInfo = Promise.all([
+        service.verifyEmail(token)
+    ])
+
+    return (dispatch) =>
+        userInfo.then((user) => {
+            var data = user[0].data
+            dispatch({
+                type: EMAIL_VERIFY
+            });
+            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified }))
+            return dispatch({
+                type: EMAIL_VERIFY_SUCCESS
+            });
+        }).catch((error) => {
+            console.log(error)
+            dispatch({
+                type: EMAIL_VERIFY
+            });
+            return dispatch({
+                type: EMAIL_VERIFY_ERROR,
+                errorMsg: error
+            });
+        });
+}
 export function emailLogin(params) {
     var userInfo = Promise.all([
         service.login(params)
@@ -39,17 +68,14 @@ export function emailLogin(params) {
 
     return (dispatch) =>
         userInfo.then((user) => {
-            console.log(user[0].data, user)
-            // var userProfile = user[0].data.data
-            // var tempuser = {};
-            // tempuser.userId = userProfile.id;
-            // dispatch({
-            //     type: LOGIN
-            // });
-            // dispatch(getUserOption(tempuser))
-            // return dispatch({
-            //     type: LOGIN_SUCCESS
-            // });
+            var data = user[0].data
+            dispatch({
+                type: LOGIN
+            });
+            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified }))
+            return dispatch({
+                type: LOGIN_SUCCESS
+            });
         }).catch((error) => {
             console.log(error)
             dispatch({

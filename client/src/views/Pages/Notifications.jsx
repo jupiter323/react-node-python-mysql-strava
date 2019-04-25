@@ -29,6 +29,11 @@ import notificationsStyle from "assets/jss/material-dashboard-pro-react/views/no
 import noticeModal1 from "assets/img/card-1.jpeg";
 import noticeModal2 from "assets/img/card-2.jpeg";
 
+import { bindActionCreators } from 'redux';
+import * as Actions from 'store/actions';
+import { withRouter } from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect';
+
 function Transition(props) {
   return <Slide direction="down" {...props} />;
 }
@@ -50,6 +55,7 @@ class Notifications extends React.Component {
   }
   componentDidMount() {
     this.showNotification("tc")
+    this.loginFlow()
   }
   // to stop the warning of calling setState of unmounted component
   componentWillUnmount() {
@@ -82,6 +88,31 @@ class Notifications extends React.Component {
     x[modal] = false;
     this.setState(x);
   }
+  loginFlow = async () => {
+    const { verifyEmail } = this.props
+    var url_string = window.location.href
+    var url = new URL(url_string);
+
+    try {
+      var tokenForEmailVerify = url.searchParams.get("tk");
+      console.log(tokenForEmailVerify)
+      if (tokenForEmailVerify) {
+        // email verify part
+        await verifyEmail(tokenForEmailVerify);
+        window.location.href = "/"
+
+      } else {
+
+      }
+    } catch (e) {
+      this.setState({
+        loggedin: false
+      });
+      console.log('error occurred', e);
+    }
+    // this.getGpxoptions()
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -145,4 +176,16 @@ class Notifications extends React.Component {
   }
 }
 
-export default withStyles(notificationsStyle)(Notifications);
+function mapStateToProps(state) {
+  return {
+    access_token: state.user.access_token
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    verifyEmail: Actions.verifyEmail
+  }, dispatch);
+}
+
+export default withStyles(notificationsStyle)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Notifications)));
