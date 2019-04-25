@@ -3,6 +3,7 @@
  * Date: 12/28/2018
  */
 import * as service from "restful"
+import store from 'store.js'
 export const SET_USER_DATA = '[USER] SET DATA';
 export const GET_USER_DATA = '[USER] GET DATA';
 export const SET_USER_OPTION = '[USER] SET OPTION';
@@ -10,8 +11,13 @@ export const GET_USER_OPTION = '[USER] GET OPTION';
 export const GET_USERS = 'GET_USERS'
 
 function makeProfileObject(receivedProfile) {
+    const { access_token, expireTime } = store.getState().user
     var profile = {
-        access_token: receivedProfile.access_token,
+        // access_token: receivedProfile.access_token,
+        // expires_at: receivedProfile.expiretime,
+        access_token: access_token,
+        expires_at: expireTime/1000,
+        verified: receivedProfile.verified,
         athlete: {
             badge_type_id: receivedProfile.badge_type_id,
             id: receivedProfile.userId,
@@ -21,7 +27,6 @@ function makeProfileObject(receivedProfile) {
             lastname: receivedProfile.lastname,
             sex: receivedProfile.sex
         },
-        expires_at: receivedProfile.expiretime,
         refresh_token: receivedProfile.refresh_token,
         role: receivedProfile.role,
         // standard profile

@@ -62,7 +62,7 @@ class Notifications extends React.Component {
     if (next.fetching === this.props.fetching) return;
     if (!next.fetching) {
       console.log("redirect")
-      // window.location.href = "/"
+      window.location.href = "/"
     }
   }
   // to stop the warning of calling setState of unmounted component

@@ -36,16 +36,17 @@ export function setauth() {
     }
 }
 export function verifyEmail(token) {
-    var userInfo = Promise.all([
-        service.verifyEmail(token)
-    ])
 
-    return (dispatch) =>
+
+    return (dispatch) => {
+        dispatch({
+            type: EMAIL_VERIFY
+        });
+        var userInfo = Promise.all([
+            service.verifyEmail(token)
+        ])
         userInfo.then((user) => {
             var data = user[0].data
-            dispatch({
-                type: EMAIL_VERIFY
-            });
             dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified }))
             return dispatch({
                 type: EMAIL_VERIFY_SUCCESS
@@ -60,24 +61,32 @@ export function verifyEmail(token) {
                 errorMsg: error
             });
         });
+    }
 }
 export function emailLogin(params) {
-    var userInfo = Promise.all([
-        service.login(params)
-    ]);
 
-    return (dispatch) =>
+
+    return (dispatch) => {
+        dispatch({
+            type: LOGIN
+        });
+        var userInfo = Promise.all([
+            service.login(params)
+        ]);
         userInfo.then((user) => {
             var data = user[0].data
-            dispatch({
-                type: LOGIN
-            });
+            console.log("login status: ", data)
             dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified }))
+            if (data.msg)
+                return dispatch({
+                    type: LOGIN_ERROR,
+                    errorMsg: data.msg
+                });
             return dispatch({
                 type: LOGIN_SUCCESS
             });
         }).catch((error) => {
-            console.log(error)
+            console.log("login error: ", error)
             dispatch({
                 type: LOGIN
             });
@@ -86,6 +95,7 @@ export function emailLogin(params) {
                 errorMsg: error
             });
         });
+    }
 }
 export function login(code) {
     var userInfo = Promise.all([
@@ -118,26 +128,27 @@ export function login(code) {
 }
 
 export function register(params) {
-    var response = Promise.all([
-        service.register(params)
-    ]);
 
-    return (dispatch) =>
+
+    return (dispatch) => {
+        dispatch({
+            type: REGISTER
+        });
+        var response = Promise.all([
+            service.register(params)
+        ]);
         response.then((res) => {
-            dispatch({
-                type: REGISTER
-            });
             var data = res[0].data
             if (data.success) {
                 dispatch(emailLogin(params));
-                dispatch({
+                return dispatch({
                     type: REGISTER_SUCCESS
                 });
-            }
-            return dispatch({
-                type: REGISTER_FAILD,
-                errorMsg: data.msg
-            });
+            } else
+                return dispatch({
+                    type: REGISTER_FAILD,
+                    errorMsg: data.msg
+                });
         }).catch((error) => {
             console.log(error)
             dispatch({
@@ -148,6 +159,7 @@ export function register(params) {
                 errorMsg: error
             });
         });
+    }
 }
 
 

@@ -32,7 +32,8 @@ const auth = function (state = initialState, action) {
             {
                 console.log("login success")
                 return {
-                    ...initialState,
+                    ...state,
+                    errorMsg: "",
                     status: true,
                     fetching: false
                 };

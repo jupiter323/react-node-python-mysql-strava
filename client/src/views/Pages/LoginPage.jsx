@@ -35,6 +35,12 @@ class LoginPage extends React.Component {
       password: "",
     };
   }
+  componentWillReceiveProps(next) {
+    if (next.errorMsg)
+      alert(next.errorMsg)
+    if (next.status && next.access_token)
+      window.location.href = "/"
+  }
   componentWillMount() {
     console.log(this.props)
     this.loginFlow();
@@ -66,7 +72,7 @@ class LoginPage extends React.Component {
     const { emailLogin } = this.props
     var params = { email: this.state.email, password: this.state.password }
     await emailLogin(params);
-    window.location.href = "/"
+
   }
   handleNavigateRegister = () => {
     window.location = "/pages/register-page";
@@ -196,7 +202,9 @@ LoginPage.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    access_token: state.user.access_token
+    access_token: state.user.access_token,
+    status: state.auth.status,
+    errorMsg: state.auth.errorMsg
   }
 }
 
