@@ -87,9 +87,10 @@ var getUserById = (projection, id, callback) => {
     return callback(err, rows[0]);
   });
 }
+
 var getUser = function (projection, params, callback) {
   if (projection === '') projection = '*'
-  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.clientId = user_profile.clientId WHERE user.clientId = ?', [params.id], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.clientId = user_profile.clientId INNER JOIN client ON user.clientId = client.id WHERE user.clientId = ?', [params.id], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
   });

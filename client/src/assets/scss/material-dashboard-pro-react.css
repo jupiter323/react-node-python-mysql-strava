@@ -2576,12 +2576,6 @@ img {
 .MuiFormLabel-root-526.MuiFormLabel-focused-527 {
   color: orangered !important; }
 
-.Accordion-title-550 {
-  /* color: #3C4858!important;
-    font-size: 1.28571429rem!important; */
-  /* font-weight: 300!important; */
-  /* font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif!important;  */ }
-
 .gpxfile-container {
   position: relative;
   cursor: pointer;
@@ -2598,3 +2592,6 @@ img {
   position: absolute;
   top: 0;
   width: 100%; }
+
+.marginTop {
+  margin-top: 50px; }
