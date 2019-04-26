@@ -34,7 +34,7 @@ function sendPsswordChangeLink(user) {
     const token = jwt.sign(user, config.secret, {
         expiresIn: '24h' // expires in 24 hours
     });
-    var sendUrl = `${process.env.EMAIL_VERIFY_EMAIL_HOST}/pages/login-page/?cptk=${token}`
+    var sendUrl = `${process.env.EMAIL_VERIFY_EMAIL_HOST}/pages/forgotpassword/?cptk=${token}`
     var html =
         `<a href="${sendUrl}"><strong>Please Change your password with this link</strong> </a>`
     sendEmail(user.email, html)
@@ -51,17 +51,15 @@ exports.forgotPasswordRequest = (req, res) => {
                 error: err,
                 msg: Constants.USER_CHANGEPASSWORD_FAILED
             })
-        } else if (!user) {
+        } else if (!user) {          
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: false,
                 error: null,
                 msg: Constants.USER_NOT_REGISTERED
-            })
-
-        } else {
+            })            
+        } else {          
             var userData = { id: user.id, email: user.email, userId: user.userId, verified: user.verified }
-
             sendPsswordChangeLink(userData);
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
@@ -76,7 +74,6 @@ exports.forgotPasswordRequest = (req, res) => {
 exports.forgotpasswordChange = (req, res) => {
     const { newpassword } = req.body
     const { id } = req.user
-    console.log(id, newpassword)
     User.changePassword({ id, newpassword }, (err, nonUser, response) => {
         if (err) {
             res.send({
@@ -86,13 +83,15 @@ exports.forgotpasswordChange = (req, res) => {
                 msg: Constants.USER_CHANGEPASSWORD_FAILED
             })
         } else if (nonUser) { //not registered
+           
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: false,
                 error: null,
                 msg: Constants.USER_NOT_REGISTERED
             })
-        } else { // success         
+        } else { // success   
+           
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: true,
