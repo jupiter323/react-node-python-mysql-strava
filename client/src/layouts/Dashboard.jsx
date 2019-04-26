@@ -83,7 +83,7 @@ class Dashboard extends React.Component {
     const { access_token, logout, expireTime, userProfile, getUsers, gotNewCoreData } = next;
     if (this.props.userProfile !== userProfile)
       getUsers();
-    if (!userProfile.athlete&&gotNewCoreData&&gotNewCoreData!==this.props.gotNewCoreData) this.whenLoggedInProfile(next);
+    if (!userProfile.athlete && gotNewCoreData && gotNewCoreData !== this.props.gotNewCoreData) this.whenLoggedInProfile(next);
     if (!access_token || !expireTime) return;
 
     var checkExpirationTime = () => {

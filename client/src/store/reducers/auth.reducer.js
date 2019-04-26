@@ -56,8 +56,7 @@ const auth = function (state = initialState, action) {
                 }
             }
         case Actions.REGISTER_FAILD:
-            {
-                console.log("register error")
+            {               
                 return {
                     status: false,
                     errorMsg: action.errorMsg,
@@ -71,8 +70,7 @@ const auth = function (state = initialState, action) {
                 };
             }
         case Actions.EMAIL_VERIFY_SUCCESS:
-            {
-                console.log("verify success")
+            {                
                 return {
                     ...state,
                     fetching: false
@@ -80,8 +78,7 @@ const auth = function (state = initialState, action) {
                 };
             }
         case Actions.EMAIL_VERIFY_ERROR:
-            {
-                console.log("verify error")
+            {                
                 return {
                     ...state,
                     fetching: false
@@ -93,6 +90,30 @@ const auth = function (state = initialState, action) {
                     ...state,
                     fetching: true
                 };
+            }
+        case Actions.FORGOT:
+            {               
+                return {
+                    ...state,
+                    fetching: true,
+                    errorMsg: ""
+                }
+            }
+        case Actions.FORGOT_ERROR:
+            {               
+                return {
+                    ...state,
+                    fetching: false,
+                    errorMsg: action.errorMsg
+                }
+            }
+        case Actions.FORGOT_SUCCESS:
+            {               
+                return {
+                    ...state,
+                    fetching: false,
+                    errorMsg: ""
+                }
             }
         default:
             {

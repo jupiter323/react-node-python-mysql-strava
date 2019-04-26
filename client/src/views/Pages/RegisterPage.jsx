@@ -32,13 +32,16 @@ import { bindActionCreators } from 'redux';
 import * as Actions from 'store/actions';
 import { withRouter } from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
+import * as utilities from "utilities"
 class RegisterPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       checked: [],
       email: "",
-      password: ""
+      password: "",
+      emailState: "",
+      passwordState: ""
     };
     this.handleToggle = this.handleToggle.bind(this);
   }
@@ -68,12 +71,50 @@ class RegisterPage extends React.Component {
     });
   }
   onChangeInputValue = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+    var name = e.target.name;
+    var value = e.target.value
+        switch (name) {
+          case "email":
+            if (utilities.verifyEmail(value)) {
+              this.setState({ [name + "State"]: "success" });
+            } else {
+              this.setState({ [name + "State"]: "error" });
+            }
+            break;
+          case "password":
+            if (utilities.verifyLength(value, 1)) {
+              this.setState({ [name + "State"]: "success" });
+            } else {
+              this.setState({ [name + "State"]: "error" });
+            }
+            break;     
+          default:
+            break;
+        }
+
+        this.setState({
+          [name]: value
+        })
+
+  
   }
   handleRegister = async () => {
+
     const { register } = this.props
+    var { emailState, passwordState,email,password } = this.state
+
+    if (emailState === "") {
+      await this.setState({ emailState: "error" });      
+    }
+    if (passwordState === "") {
+     await  this.setState({ passwordState: "error" });
+    }
+
+
+          var { emailState, passwordState } = this.state
+
+    if(emailState==="error"||passwordState==="error") return;
+
     await register({ email: this.state.email, password: this.state.password });
     // window.location.href = "/"
   }
@@ -125,43 +166,50 @@ class RegisterPage extends React.Component {
                     </div>
                     <form className={classes.form}>
                       <CustomInput
+                        success={this.state.emailState === "success"}
+                        error={this.state.emailState === "error"}
+                        id="email"
+                        labelText="Email"
                         formControlProps={{
                           fullWidth: true,
                           className: classes.customFormControlClasses
                         }}
                         inputProps={{
-                          name: "email",
+                          type: "email",
+                          name: "email",                    
                           onChange: this.onChangeInputValue,
-                          startAdornment: (
+                          endAdornment: (
                             <InputAdornment
-                              position="start"
+                              position="end"
                               className={classes.inputAdornment}
                             >
                               <Email className={classes.inputAdornmentIcon} />
                             </InputAdornment>
-                          ),
-                          placeholder: "Email..."
+                          )
                         }}
                       />
                       <CustomInput
+                        success={this.state.passwordState === "success"}
+                        error={this.state.passwordState === "error"}                       
+                        labelText="Password"
+                        id="password"
                         formControlProps={{
                           fullWidth: true,
                           className: classes.customFormControlClasses
                         }}
                         inputProps={{
+                          type: "password",                      
                           name: "password",
                           onChange: this.onChangeInputValue,
-                          startAdornment: (
-                            <InputAdornment
-                              position="start"
-                              className={classes.inputAdornment}
+                         endAdornment: (
+                            <InputAdornment position="end"
+                            className={classes.inputAdornment}
                             >
                               <Icon className={classes.inputAdornmentIcon}>
                                 lock_outline
                               </Icon>
                             </InputAdornment>
-                          ),
-                          placeholder: "Password..."
+                          )
                         }}
                       />
                       <FormControlLabel

@@ -24,7 +24,7 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 
 import loginPageStyle from "assets/jss/material-dashboard-pro-react/views/loginPageStyle.jsx";
-
+import * as utilities from "utilities"
 class Forgotpassword extends React.Component {
   constructor(props) {
     super(props);
@@ -33,6 +33,8 @@ class Forgotpassword extends React.Component {
       cardAnimaton: "cardHidden",
       cnewpassword: "",
       newpassword: "",
+      newpasswordState: "",
+      cnewpasswordState:""
     };
   }
   componentWillReceiveProps(next) {
@@ -67,13 +69,36 @@ class Forgotpassword extends React.Component {
   }
 
   onChangeInputValue = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+    var name = e.target.name;
+    var value = e.target.value
+     
+    if (utilities.verifyLength(value, 1)) {
+      this.setState({ [name + "State"]: "success" });
+    } else {
+      this.setState({ [name + "State"]: "error" });
+    }
+        this.setState({
+          [name]: value
+        })
+   
   }
   handleChangePassword = async () => {
     const { forgotpassword } = this.props
-    var params = { newpassword: this.state.newpassword }
+    var { cnewpasswordState, newpasswordState } = this.state
+
+    if (cnewpasswordState === "") {
+      await this.setState({ cnewpasswordState: "error" });      
+    }
+    if (newpasswordState === "") {
+     await  this.setState({ newpasswordState: "error" });
+    }
+
+
+    var { cnewpasswordState, newpasswordState,newpassword,cnewpassword } = this.state
+
+    if(cnewpasswordState==="error" || newpasswordState==="error") return;
+    if(!utilities.compare(newpassword,cnewpassword))return alert("Please confirm your password correctly")
+    var params = { newpassword }
     await forgotpassword(params);
 
   }
@@ -131,12 +156,15 @@ class Forgotpassword extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CustomInput
+                   success={this.state.newpasswordState === "success"}
+                   error={this.state.newpasswordState === "error"}
                     labelText="New Password..."
                     id="newpassword"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
+                      type:"password",
                       name: "newpassword",
                       onChange: this.onChangeInputValue,
                       endAdornment: (
@@ -147,12 +175,15 @@ class Forgotpassword extends React.Component {
                     }}
                   />
                   <CustomInput
+                   success={this.state.cnewpasswordState === "success"}
+                   error={this.state.cnewpasswordState === "error"}
                     labelText="Confirm new password"
                     id="cnewpassword"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
+                      type:"password",
                       name: "cnewpassword",
                       onChange: this.onChangeInputValue,
                       endAdornment: (

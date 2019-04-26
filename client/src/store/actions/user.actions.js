@@ -89,7 +89,7 @@ export function getUserOption(user) {
 
     return (dispatch) => {
         response.then(useroption => {
-            console.log("received profile+++++++++++++:",receivedProfile);
+            console.log("received profile+++++++++++++:", receivedProfile);
             var receivedProfile = useroption[0].data.users[0];
             var profile = makeProfileObject(receivedProfile)
             dispatch(setUserData(profile))
@@ -119,6 +119,19 @@ export function setUserData(userProfile) {
     localStorage.setItem('token', access_token)
     localStorage.setItem('profile', JSON.stringify(userProfile))
     localStorage.setItem('expireTime', expireTime);
+    return (dispatch) => {
+        dispatch({
+            type: SET_USER_DATA,
+            access_token,
+            userProfile,
+            expireTime
+        })
+    }
+}
+
+export function setToken(userProfile) {
+    let access_token = userProfile.access_token;
+    let expireTime = null
     return (dispatch) => {
         dispatch({
             type: SET_USER_DATA,
