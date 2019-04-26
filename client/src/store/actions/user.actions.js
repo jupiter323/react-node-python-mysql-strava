@@ -89,6 +89,7 @@ export function getUserOption(user) {
 
     return (dispatch) => {
         response.then(useroption => {
+            console.log("received profile+++++++++++++:",receivedProfile);
             var receivedProfile = useroption[0].data.users[0];
             var profile = makeProfileObject(receivedProfile)
             dispatch(setUserData(profile))
@@ -97,7 +98,6 @@ export function getUserOption(user) {
 
             })
         })
-
     }
 }
 

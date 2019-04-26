@@ -47,7 +47,7 @@ export function verifyEmail(token) {
         ])
         userInfo.then((user) => {
             var data = user[0].data
-            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified }))
+            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId:data.id }))
             return dispatch({
                 type: EMAIL_VERIFY_SUCCESS
             });
@@ -64,8 +64,6 @@ export function verifyEmail(token) {
     }
 }
 export function emailLogin(params) {
-
-
     return (dispatch) => {
         dispatch({
             type: LOGIN
