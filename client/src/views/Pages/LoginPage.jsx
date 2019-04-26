@@ -24,7 +24,7 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 
 import loginPageStyle from "assets/jss/material-dashboard-pro-react/views/loginPageStyle.jsx";
-
+import * as utilities from "utilities"
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
@@ -33,6 +33,8 @@ class LoginPage extends React.Component {
       cardAnimaton: "cardHidden",
       email: "",
       password: "",
+      emailState: "",
+      passwordState: ""
     };
   }
   componentWillReceiveProps(next) {
@@ -63,16 +65,55 @@ class LoginPage extends React.Component {
   handleNavigateClickForLogin = () => {
     window.location.href = "http://127.0.0.1:3001/api/account/login"
   }
+
   onChangeInputValue = (e) => {
+    var name = e.target.name;
+    var value = e.target.value
+    switch (name) {
+      case "email":
+        if (utilities.verifyEmail(value)) {
+          this.setState({ [name + "State"]: "success" });
+        } else {
+          this.setState({ [name + "State"]: "error" });
+        }
+        break;
+      case "password":
+        if (utilities.verifyLength(value, 1)) {
+          this.setState({ [name + "State"]: "success" });
+        } else {
+          this.setState({ [name + "State"]: "error" });
+        }
+        break;
+      default:
+        break;
+    }
+
     this.setState({
-      [e.target.name]: e.target.value
+      [name]: value
     })
   }
   handleLogin = async () => {
     const { emailLogin } = this.props
-    var params = { email: this.state.email, password: this.state.password }
+    var { emailState, passwordState, email, password } = this.state
+
+    if (emailState === "") {
+      await this.setState({ emailState: "error" });
+    }
+    if (passwordState === "") {
+      await this.setState({ passwordState: "error" });
+    }
+
+
+    var { emailState, passwordState } = this.state
+
+    if (emailState === "error" || passwordState === "error") return;
+
+    var params = { email, password }
     await emailLogin(params);
 
+  }
+  handleForgotpassword = () => {
+    window.location = "/pages/forgotpasswordrequest";
   }
   handleNavigateRegister = () => {
     window.location = "/pages/register-page";
@@ -85,20 +126,11 @@ class LoginPage extends React.Component {
     try {
 
       var code = url.searchParams.get("code");
-      var tokenForEmailVerify = url.searchParams.get("tk");
-      console.log(tokenForEmailVerify, code, url)
       if (code) {
-
         await login(code);
         window.location.href = "/dashboard"
 
-      } else if (tokenForEmailVerify) {
-        // email verify part
-
-      } else {
-        console.log("generall", localStorage.token)
       }
-
     } catch (e) {
       this.setState({
         loggedin: false
@@ -142,12 +174,15 @@ class LoginPage extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CustomInput
+                    success={this.state.emailState === "success"}
+                    error={this.state.emailState === "error"}
                     labelText="Email..."
                     id="email"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
+                      type: "email",
                       name: "email",
                       onChange: this.onChangeInputValue,
                       endAdornment: (
@@ -158,12 +193,15 @@ class LoginPage extends React.Component {
                     }}
                   />
                   <CustomInput
+                    success={this.state.passwordState === "success"}
+                    error={this.state.passwordState === "error"}
                     labelText="Password"
                     id="password"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
+                      type: "password",
                       name: "password",
                       onChange: this.onChangeInputValue,
                       endAdornment: (
@@ -177,15 +215,24 @@ class LoginPage extends React.Component {
                   />
                 </CardBody>
                 <CardFooter className={classes.justifyContentCenter}>
-                  <Button color="primary" simple size="lg" block onClick={this.handleLogin}>
-                    Login
-                  </Button>
-                  <Button color="primary" simple size="lg" block onClick={this.handleNavigateRegister}>
-                    Go Register
-                  </Button>
-                  {/* <Button color="primary" simple size="lg" block onClick={this.handleNavigateClickForLogin}>
-                    Login with STRAVA
-                  </Button> */}
+                  <GridContainer>
+                    <GridItem xs={12} sm={6} md={6}>
+                      <Button color="primary" size="lg" block onClick={this.handleLogin}>
+                        Login
+                       </Button>
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={6}>
+                      <Button color="primary" size="lg" block onClick={this.handleNavigateRegister}>
+                        Go Register
+                       </Button>
+                    </GridItem>
+                    <Button color="primary" simple size="lg" block onClick={this.handleForgotpassword}>
+                      Forgot Password
+                      </Button>
+                    {/* <Button color="primary" simple size="lg" block onClick={this.handleNavigateClickForLogin}>
+                        Login with STRAVA
+                      </Button> */}
+                  </GridContainer>
                 </CardFooter>
               </Card>
             </form>
@@ -212,6 +259,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     login: Actions.login,
     emailLogin: Actions.emailLogin
+
   }, dispatch);
 }
 
