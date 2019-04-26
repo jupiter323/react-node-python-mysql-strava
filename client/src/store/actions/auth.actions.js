@@ -12,6 +12,10 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOG_OUT = "LOG_OUT"
 export const REGISTER = "REGISTER";
 export const REGISTER_FAILD = "REGISTER_FAILD"
+export const FORGOT_SUCCESS = "FORGOT_SUCCESS"
+export const FORGOT_ERROR = "FORGOT_ERROR"
+export const FORGOT = "FORGOT"
+
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS"
 export const EMAIL_VERIFY = "EMAIL_VERIFY"
 export const EMAIL_VERIFY_ERROR = "EMAIL_VERIFY_ERROR";
@@ -47,7 +51,7 @@ export function verifyEmail(token) {
         ])
         userInfo.then((user) => {
             var data = user[0].data
-            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId:data.id }))
+            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId: data.id }))
             return dispatch({
                 type: EMAIL_VERIFY_SUCCESS
             });
@@ -74,20 +78,18 @@ export function emailLogin(params) {
         userInfo.then((user) => {
             var data = user[0].data
             console.log("login status: ", data)
-            dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId:data.id }))
-            if (data.msg)
+            if(data.success){
+                dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId: data.id }))                
                 return dispatch({
-                    type: LOGIN_ERROR,
-                    errorMsg: data.msg
+                    type: LOGIN_SUCCESS
                 });
+            } else 
             return dispatch({
-                type: LOGIN_SUCCESS
+                type: LOGIN_ERROR,
+                errorMsg: data.msg
             });
         }).catch((error) => {
-            console.log("login error: ", error)
-            dispatch({
-                type: LOGIN
-            });
+            console.log("login error: ", error)          
             return dispatch({
                 type: LOGIN_ERROR,
                 errorMsg: error
@@ -154,6 +156,61 @@ export function register(params) {
             });
             return dispatch({
                 type: REGISTER_FAILD,
+                errorMsg: error
+            });
+        });
+    }
+}
+export function forgotpasswordrequest(params) {
+    return (dispatch) => {
+        dispatch({
+            type: FORGOT
+        });
+        var response = Promise.all([
+            service.forgotpasswordrequest(params)
+        ]);
+        response.then((res) => {
+            var data = res[0].data
+            if (!data.success)
+                return dispatch({
+                    type: FORGOT_ERROR,
+                    errorMsg: data.msg
+                });
+            return dispatch({
+                type: FORGOT_SUCCESS
+            });
+        }).catch((error) => {
+            console.log("login error: ", error)           
+            return dispatch({
+                type: FORGOT_ERROR,
+                errorMsg: error
+            });
+        });
+    }
+}
+
+export function forgotpassword(params) {
+    return (dispatch) => {
+        dispatch({
+            type: FORGOT
+        });
+        var response = Promise.all([
+            service.forgotpassword(params)
+        ]);
+        response.then((res) => {
+            var data = res[0].data
+            if (!data.success)
+                return dispatch({
+                    type: FORGOT_ERROR,
+                    errorMsg: data.msg
+                });
+            return dispatch({
+                type: FORGOT_SUCCESS
+            });
+        }).catch((error) => {
+            console.log("login error: ", error)           
+            return dispatch({
+                type: FORGOT_ERROR,
                 errorMsg: error
             });
         });

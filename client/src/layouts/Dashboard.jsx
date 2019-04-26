@@ -103,6 +103,7 @@ class Dashboard extends React.Component {
   }
 
   whenLoggedInProfile(next) {
+    console.log("when logged in profile++++++")
     const { getUserOption, userProfile } = next;
     var user = { userId: userProfile.clientId }
     getUserOption(user);

@@ -12,6 +12,7 @@ router.post('/login', function (req, res, next) {
     passport.authenticate('local', { session: false }, (err, user, info) => {
         if (err || !user) {
             return res.json({
+                success:false,
                 msg: info ? info.msg : 'Login failed',
                 user
             });
@@ -27,7 +28,7 @@ router.post('/login', function (req, res, next) {
                 expiresIn: '3d' // expires in 24 hours
             });        
             jwt.verify(token, config.secret, function (err, decoded) {
-                return res.json({ ...decoded, token });
+                return res.json({ ...decoded, token,success:true });
             })
         });
     })(req, res);

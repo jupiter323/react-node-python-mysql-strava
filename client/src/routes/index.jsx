@@ -1,6 +1,7 @@
 import Pages from "layouts/Pages.jsx";
 import Dashboard from "layouts/Dashboard.jsx";
 import Notifications from "views/Pages/Notifications.jsx";
+// localStorage.clear()
 var indexRoutes =
   localStorage.token ?
     JSON.parse(localStorage.profile).verified ?
