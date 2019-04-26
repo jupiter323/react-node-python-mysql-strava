@@ -36,7 +36,7 @@ passport.use(new JWTStrategy({
 },
     function (jwtPayload, cb) {
         //find the user in db if needed
-        var projection = "email, userId"
+        var projection = "email, userId, id"
         return User.getUserById(projection, jwtPayload.id, (err, user) => {            
             if (err)
                 return cb(err);

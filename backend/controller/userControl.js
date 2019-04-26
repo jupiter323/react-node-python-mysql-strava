@@ -30,6 +30,80 @@ function sendEmailVerifyLink(user) {
     sendEmail(user.email, html)
 }
 
+function sendPsswordChangeLink(user) {
+    const token = jwt.sign(user, config.secret, {
+        expiresIn: '24h' // expires in 24 hours
+    });
+    var sendUrl = `${process.env.EMAIL_VERIFY_EMAIL_HOST}/pages/login-page/?cptk=${token}`
+    var html =
+        `<a href="${sendUrl}"><strong>Please Change your password with this link</strong> </a>`
+    sendEmail(user.email, html)
+}
+
+exports.forgotPasswordRequest = (req, res) => {
+    const { email } = req.body;
+    var projection = "*"
+    User.getUserByEmail(projection, email, (err, user) => {
+        if (err) {
+            res.send({
+                status: Constants.SERVER_INTERNAL_ERROR,
+                success: false,
+                error: err,
+                msg: Constants.USER_CHANGEPASSWORD_FAILED
+            })
+        } else if (!user) {
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: false,
+                error: null,
+                msg: Constants.USER_NOT_REGISTERED
+            })
+
+        } else {
+            var userData = { id: user.id, email: user.email, userId: user.userId, verified: user.verified }
+
+            sendPsswordChangeLink(userData);
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: true,
+                error: null,
+                msg: Constants.USER_CHANGEPASSWORD_OK,
+                user
+            })
+        }
+    })
+}
+exports.forgotpasswordChange = (req, res) => {
+    const { newpassword } = req.body
+    const { id } = req.user
+    console.log(id, newpassword)
+    User.changePassword({ id, newpassword }, (err, nonUser, response) => {
+        if (err) {
+            res.send({
+                status: Constants.SERVER_INTERNAL_ERROR,
+                success: false,
+                error: err,
+                msg: Constants.USER_CHANGEPASSWORD_FAILED
+            })
+        } else if (nonUser) { //not registered
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: false,
+                error: null,
+                msg: Constants.USER_NOT_REGISTERED
+            })
+        } else { // success         
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: true,
+                error: null,
+                msg: Constants.USER_CHANGEPASSWORD_OK,
+                response
+            })
+        }
+    })
+
+}
 exports.register = (req, res) => {
     var { email } = req.body;
     User.registerEmailUser(req.body, (err, registered, response) => {
@@ -59,6 +133,7 @@ exports.register = (req, res) => {
             })
         }
     })
+
 }
 exports.getToken = function (req, res) {
 

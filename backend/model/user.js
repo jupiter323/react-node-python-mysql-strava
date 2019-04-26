@@ -87,6 +87,14 @@ var getUserById = (projection, id, callback) => {
     return callback(err, rows[0]);
   });
 }
+var getUserByEmail = (projection, email, callback) => {
+  if (projection === '') projection = "*";
+  db.query('SELECT ' + projection + ' FROM client WHERE email = ?', [email], function (err, rows) {
+    if (err) return callback(err)
+    return callback(err, rows[0]);
+  });
+}
+
 
 var getUser = function (projection, params, callback) {
   if (projection === '') projection = '*'
@@ -95,13 +103,36 @@ var getUser = function (projection, params, callback) {
     return callback(err, rows);
   });
 }
+var changePassword = (params, callback) => {
+  const { id, newpassword } = params
+  db.query("SELECT * FROM client WHERE id = ?", [id], (err, rows) => {
+    if (err)
+      return callback(err, null, null);//change faild
+    if (!rows.length) {
+      return callback(null, true, null); //not registered already
+    }
+    // var id = rows[0]["id"];
+    var encoded_password = bcrypt.hashSync(newpassword);
+    db.query("UPDATE client SET ? WHERE id = ?", [{ password: encoded_password }, id], (err, response) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          // If we somehow generated a duplicate user id, try again
+          // return setEmailVerified(id, callback);
+        }
+
+        return callback(err, false)
+      }
+      return callback(err, false, response)
+    })
+  })
+}
 var loginEmailUser = (params, callback) => {
   const { email, password } = params
   db.query("SELECT * FROM client WHERE email = ?", [email], (err, rows) => {
     if (err)
       return callback(err, null, null);//register faild
     if (!rows.length) {
-      return callback(null, true, null); //registered already
+      return callback(null, true, null); //not registered already
     }
     if (bcrypt.compareSync(password, rows[0]["password"])) {
       return callback(null, false, rows[0]) //success
@@ -307,4 +338,6 @@ exports.getUserList = getUserList
 exports.updateUserProfile = updateUserProfile
 exports.getUserById = getUserById
 exports.setEmailVerified = setEmailVerified
+exports.changePassword = changePassword
+exports.getUserByEmail = getUserByEmail
 

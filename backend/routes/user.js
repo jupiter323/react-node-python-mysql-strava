@@ -31,5 +31,6 @@ router.post('/token', UserControl.getToken)
 router.post('/getStrava', StrvaControl.saveStravaData);
 router.post('/checkusersession')
 router.post('/updateprofile', UserControl.updateProfile)
+router.post('/forgotpassword', UserControl.forgotpasswordChange)
 
 module.exports = router;

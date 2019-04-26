@@ -51,6 +51,8 @@ router.post('/emailverify', (req, res) => {
 
 
 router.post('/emailregister', UserControl.register)
+router.post('/forgotpasswordrequest', UserControl.forgotPasswordRequest)
+
 
 
 module.exports = router;

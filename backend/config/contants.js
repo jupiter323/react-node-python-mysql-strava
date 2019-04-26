@@ -38,6 +38,8 @@ module.exports.USER_PSSWORD_WRONG = `The password is wrong`
 module.exports.CALL_PYTHON_SUCESS = `Python call succeed`
 module.exports.EMAIL_VERIFY_FAILED = `Email verify Faild`
 module.exports.EMAIL_VERIFY_SUCESS = `Email verify success`
+module.exports.USER_CHANGEPASSWORD_FAILED = 'Change password faild'
+module.exports.USER_CHANGEPASSWORD_OK = 'Change password success'
 /* Route related constants ends*/
 
 /* loading options  */
