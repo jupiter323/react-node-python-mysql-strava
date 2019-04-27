@@ -4,30 +4,22 @@ import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 import Slide from "@material-ui/core/Slide";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
 
 // @material-ui/icons
 import AddAlert from "@material-ui/icons/AddAlert";
-import Close from "@material-ui/icons/Close";
 
 // core components
 import Heading from "components/Heading/Heading.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
-import Button from "components/CustomButtons/Button.jsx";
 import Snackbar from "components/Snackbar/Snackbar.jsx";
-import Instruction from "components/Instruction/Instruction.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 
 import notificationsStyle from "assets/jss/material-dashboard-pro-react/views/notificationsStyle.jsx";
 
-import noticeModal1 from "assets/img/card-1.jpeg";
-import noticeModal2 from "assets/img/card-2.jpeg";
+
 
 import { bindActionCreators } from 'redux';
 import * as Actions from 'store/actions';
@@ -54,7 +46,6 @@ class Notifications extends React.Component {
     };
   }
   componentDidMount() {
-    // localStorage.clear()
     this.showNotification("tc")
     this.loginFlow()
   }
@@ -100,7 +91,6 @@ class Notifications extends React.Component {
     const { verifyEmail } = this.props
     var url_string = window.location.href
     var url = new URL(url_string);
-
     try {
       var tokenForEmailVerify = url.searchParams.get("tk");
       console.log(tokenForEmailVerify)
@@ -117,7 +107,6 @@ class Notifications extends React.Component {
       });
       console.log('error occurred', e);
     }
-    // this.getGpxoptions()
   }
 
   render() {

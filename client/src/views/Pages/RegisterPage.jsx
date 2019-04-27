@@ -73,47 +73,47 @@ class RegisterPage extends React.Component {
   onChangeInputValue = (e) => {
     var name = e.target.name;
     var value = e.target.value
-        switch (name) {
-          case "email":
-            if (utilities.verifyEmail(value)) {
-              this.setState({ [name + "State"]: "success" });
-            } else {
-              this.setState({ [name + "State"]: "error" });
-            }
-            break;
-          case "password":
-            if (utilities.verifyLength(value, 1)) {
-              this.setState({ [name + "State"]: "success" });
-            } else {
-              this.setState({ [name + "State"]: "error" });
-            }
-            break;     
-          default:
-            break;
+    switch (name) {
+      case "email":
+        if (utilities.verifyEmail(value)) {
+          this.setState({ [name + "State"]: "success" });
+        } else {
+          this.setState({ [name + "State"]: "error" });
         }
+        break;
+      case "password":
+        if (utilities.verifyLength(value, 1)) {
+          this.setState({ [name + "State"]: "success" });
+        } else {
+          this.setState({ [name + "State"]: "error" });
+        }
+        break;
+      default:
+        break;
+    }
 
-        this.setState({
-          [name]: value
-        })
+    this.setState({
+      [name]: value
+    })
 
-  
+
   }
   handleRegister = async () => {
 
     const { register } = this.props
-    var { emailState, passwordState,email,password } = this.state
+    var { emailState, passwordState, email, password } = this.state
 
     if (emailState === "") {
-      await this.setState({ emailState: "error" });      
+      await this.setState({ emailState: "error" });
     }
     if (passwordState === "") {
-     await  this.setState({ passwordState: "error" });
+      await this.setState({ passwordState: "error" });
     }
 
 
-          var { emailState, passwordState } = this.state
+    var { emailState, passwordState } = this.state
 
-    if(emailState==="error"||passwordState==="error") return;
+    if (emailState === "error" || passwordState === "error") return;
 
     await register({ email: this.state.email, password: this.state.password });
     // window.location.href = "/"
@@ -176,7 +176,7 @@ class RegisterPage extends React.Component {
                         }}
                         inputProps={{
                           type: "email",
-                          name: "email",                    
+                          name: "email",
                           onChange: this.onChangeInputValue,
                           endAdornment: (
                             <InputAdornment
@@ -190,7 +190,7 @@ class RegisterPage extends React.Component {
                       />
                       <CustomInput
                         success={this.state.passwordState === "success"}
-                        error={this.state.passwordState === "error"}                       
+                        error={this.state.passwordState === "error"}
                         labelText="Password"
                         id="password"
                         formControlProps={{
@@ -198,12 +198,12 @@ class RegisterPage extends React.Component {
                           className: classes.customFormControlClasses
                         }}
                         inputProps={{
-                          type: "password",                      
+                          type: "password",
                           name: "password",
                           onChange: this.onChangeInputValue,
-                         endAdornment: (
+                          endAdornment: (
                             <InputAdornment position="end"
-                            className={classes.inputAdornment}
+                              className={classes.inputAdornment}
                             >
                               <Icon className={classes.inputAdornmentIcon}>
                                 lock_outline

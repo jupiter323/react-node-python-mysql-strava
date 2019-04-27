@@ -11,22 +11,22 @@ import CardBody from "components/Card/CardBody.jsx";
 import { stories } from "variables/general.jsx";
 
 class TimelinePage extends React.Component {
-  render() {
-    return (
-      <div>
-        <Heading title="Timeline" textAlign="center" />
-        <GridContainer>
-          <GridItem xs={12}>
-            <Card plain>
-              <CardBody plain>
-                <Timeline stories={stories} />
-              </CardBody>
-            </Card>
-          </GridItem>
-        </GridContainer>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <Heading title="Timeline" textAlign="center" />
+                <GridContainer>
+                    <GridItem xs={12}>
+                        <Card plain>
+                            <CardBody plain>
+                                <Timeline stories={stories} />
+                            </CardBody>
+                        </Card>
+                    </GridItem>
+                </GridContainer>
+            </div>
+        );
+    }
 }
 
 export default TimelinePage;

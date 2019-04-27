@@ -24,9 +24,7 @@ router.post('/login', function (req, res, next) {
                 res.send(err);
             }
             var sendUserData = { id: user.id, email: user.email, userId: user.userId, verified: user.verified }
-            const token = jwt.sign(sendUserData, config.secret, {
-                expiresIn: '3d' // expires in 24 hours
-            });        
+            const token = jwt.sign(sendUserData, config.secret);        
             jwt.verify(token, config.secret, function (err, decoded) {
                 return res.json({ ...decoded, token,success:true });
             })

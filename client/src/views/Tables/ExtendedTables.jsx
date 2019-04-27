@@ -49,10 +49,10 @@ class ExtendedTables extends React.Component {
     });
   }
   render() {
-    const { classes } = this.props; 
+    const { classes } = this.props;
     return (
       <GridContainer>
-       <GridItem xs={12}>
+        <GridItem xs={12}>
           <Card>
             <CardHeader color="primary" icon>
               <CardIcon color="primary">

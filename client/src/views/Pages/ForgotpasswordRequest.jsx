@@ -24,14 +24,15 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 
 import loginPageStyle from "assets/jss/material-dashboard-pro-react/views/loginPageStyle.jsx";
-
+import * as utilities from "utilities"
 class ForgotpasswordRequest extends React.Component {
   constructor(props) {
     super(props);
     // we use this to make the card to appear after the page has been rendered
     this.state = {
       cardAnimaton: "cardHidden",
-      email: ""      
+      email: "",
+      emailState: ""      
     };
   }
   componentWillReceiveProps(next) {
@@ -62,12 +63,37 @@ class ForgotpasswordRequest extends React.Component {
   }
 
   onChangeInputValue = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+    var name = e.target.name;
+    var value = e.target.value
+        switch (name) {
+          case "email":
+            if (utilities.verifyEmail(value)) {
+              this.setState({ [name + "State"]: "success" });
+            } else {
+              this.setState({ [name + "State"]: "error" });
+            }
+            break;        
+          default:
+            break;
+        }
+
+        this.setState({
+          [name]: value
+        })
+  
   }
   handleChangePassword = async () => {
+
     const { forgotpasswordrequest } = this.props
+    var { emailState } = this.state
+
+    if (emailState === "") {
+      await this.setState({ emailState: "error" });      
+    }
+          var { emailState,email } = this.state
+
+    if(emailState==="error") return;
+
     var params = { email: this.state.email }
     await forgotpasswordrequest(params);
   }
@@ -105,12 +131,15 @@ class ForgotpasswordRequest extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CustomInput
+                      success={this.state.emailState === "success"}
+                      error={this.state.emailState === "error"}     
                     labelText="Email..."
                     id="email"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
+                      type:"email",
                       name: "email",
                       onChange: this.onChangeInputValue,
                       endAdornment: (
