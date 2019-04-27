@@ -78,18 +78,18 @@ export function emailLogin(params) {
         userInfo.then((user) => {
             var data = user[0].data
             console.log("login status: ", data)
-            if(data.success){
-                dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId: data.id }))                
+            if (data.success) {
+                dispatch(setUserData({ access_token: data.token, expires_at: data.exp, verified: data.verified, clientId: data.id }))
                 return dispatch({
                     type: LOGIN_SUCCESS
                 });
-            } else 
-            return dispatch({
-                type: LOGIN_ERROR,
-                errorMsg: data.msg
-            });
+            } else
+                return dispatch({
+                    type: LOGIN_ERROR,
+                    errorMsg: data.msg
+                });
         }).catch((error) => {
-            console.log("login error: ", error)          
+            console.log("login error: ", error)
             return dispatch({
                 type: LOGIN_ERROR,
                 errorMsg: error
@@ -180,7 +180,7 @@ export function forgotpasswordrequest(params) {
                 type: FORGOT_SUCCESS
             });
         }).catch((error) => {
-            console.log("login error: ", error)           
+            console.log("login error: ", error)
             return dispatch({
                 type: FORGOT_ERROR,
                 errorMsg: error
@@ -208,7 +208,7 @@ export function forgotpassword(params) {
                 type: FORGOT_SUCCESS
             });
         }).catch((error) => {
-            console.log("login error: ", error)           
+            console.log("login error: ", error)
             return dispatch({
                 type: FORGOT_ERROR,
                 errorMsg: error

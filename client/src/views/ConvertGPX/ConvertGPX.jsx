@@ -52,7 +52,7 @@ class ConvertGPX extends React.Component {
       service.getOptions()
     ]);
 
-    var gpxOption = options_res.data.optionsRes  
+    var gpxOption = options_res.data.optionsRes
     this.setState({
       options: gpxOption
     })
@@ -64,8 +64,8 @@ class ConvertGPX extends React.Component {
         fetchingStrava: true
       });
 
-      var profile = this.state.profile;      
-      var stravaId = profile.athlete.id      
+      var profile = this.state.profile;
+      var stravaId = profile.athlete.id
       var fetchResponse = await Promise.all([
         service.gettingStravaData(stravaId, email)
       ]);

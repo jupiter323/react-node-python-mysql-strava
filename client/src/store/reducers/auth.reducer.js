@@ -56,7 +56,7 @@ const auth = function (state = initialState, action) {
                 }
             }
         case Actions.REGISTER_FAILD:
-            {               
+            {
                 return {
                     status: false,
                     errorMsg: action.errorMsg,
@@ -70,7 +70,7 @@ const auth = function (state = initialState, action) {
                 };
             }
         case Actions.EMAIL_VERIFY_SUCCESS:
-            {                
+            {
                 return {
                     ...state,
                     fetching: false
@@ -78,7 +78,7 @@ const auth = function (state = initialState, action) {
                 };
             }
         case Actions.EMAIL_VERIFY_ERROR:
-            {                
+            {
                 return {
                     ...state,
                     fetching: false
@@ -92,7 +92,7 @@ const auth = function (state = initialState, action) {
                 };
             }
         case Actions.FORGOT:
-            {               
+            {
                 return {
                     ...state,
                     fetching: true,
@@ -100,7 +100,7 @@ const auth = function (state = initialState, action) {
                 }
             }
         case Actions.FORGOT_ERROR:
-            {               
+            {
                 return {
                     ...state,
                     fetching: false,
@@ -108,7 +108,7 @@ const auth = function (state = initialState, action) {
                 }
             }
         case Actions.FORGOT_SUCCESS:
-            {               
+            {
                 return {
                     ...state,
                     fetching: false,

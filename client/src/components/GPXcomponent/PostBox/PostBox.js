@@ -112,7 +112,7 @@ class PostBox extends Component {
                         loading={this.state.fetchingStrava}
                     />
                     <Post
-                        profile = {this.state.profile}
+                        profile={this.state.profile}
                         options={this.state.options}
                         ref={this.child}
                         onFileReady={this.onGetFileReady}

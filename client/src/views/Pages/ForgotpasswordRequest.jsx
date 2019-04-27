@@ -32,7 +32,7 @@ class ForgotpasswordRequest extends React.Component {
     this.state = {
       cardAnimaton: "cardHidden",
       email: "",
-      emailState: ""      
+      emailState: ""
     };
   }
   componentWillReceiveProps(next) {
@@ -41,12 +41,12 @@ class ForgotpasswordRequest extends React.Component {
       alert(next.errorMsg)
       return
     }
-    if (!next.fetching && next.fetching !== this.props.fetching){
+    if (!next.fetching && next.fetching !== this.props.fetching) {
       alert("Change password email sent. Plesae confirm your email")
       window.location.href = "/pages/login-page"
     }
 
-  } 
+  }
   componentDidMount() {
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
     this.timeOutFunction = setTimeout(
@@ -65,22 +65,22 @@ class ForgotpasswordRequest extends React.Component {
   onChangeInputValue = (e) => {
     var name = e.target.name;
     var value = e.target.value
-        switch (name) {
-          case "email":
-            if (utilities.verifyEmail(value)) {
-              this.setState({ [name + "State"]: "success" });
-            } else {
-              this.setState({ [name + "State"]: "error" });
-            }
-            break;        
-          default:
-            break;
+    switch (name) {
+      case "email":
+        if (utilities.verifyEmail(value)) {
+          this.setState({ [name + "State"]: "success" });
+        } else {
+          this.setState({ [name + "State"]: "error" });
         }
+        break;
+      default:
+        break;
+    }
 
-        this.setState({
-          [name]: value
-        })
-  
+    this.setState({
+      [name]: value
+    })
+
   }
   handleChangePassword = async () => {
 
@@ -88,11 +88,11 @@ class ForgotpasswordRequest extends React.Component {
     var { emailState } = this.state
 
     if (emailState === "") {
-      await this.setState({ emailState: "error" });      
+      await this.setState({ emailState: "error" });
     }
-          var { emailState,email } = this.state
+    var { emailState, email } = this.state
 
-    if(emailState==="error") return;
+    if (emailState === "error") return;
 
     var params = { email: this.state.email }
     await forgotpasswordrequest(params);
@@ -131,15 +131,15 @@ class ForgotpasswordRequest extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <CustomInput
-                      success={this.state.emailState === "success"}
-                      error={this.state.emailState === "error"}     
+                    success={this.state.emailState === "success"}
+                    error={this.state.emailState === "error"}
                     labelText="Email..."
                     id="email"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
-                      type:"email",
+                      type: "email",
                       name: "email",
                       onChange: this.onChangeInputValue,
                       endAdornment: (
@@ -148,7 +148,7 @@ class ForgotpasswordRequest extends React.Component {
                         </InputAdornment>
                       )
                     }}
-                  />                  
+                  />
                 </CardBody>
                 <CardFooter className={classes.justifyContentCenter}>
                   <Button color="primary" simple size="lg" block onClick={this.handleChangePassword}>

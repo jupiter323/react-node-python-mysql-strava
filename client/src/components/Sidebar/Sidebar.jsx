@@ -82,10 +82,10 @@ class Sidebar extends React.Component {
     st[collapse] = !this.state[collapse];
     this.setState(st);
   }
-  
+
   componentWillReceiveProps(next) {
     if (this.props.userProfile === next.userProfile) return
-    
+
     const { userProfile, setUserOption } = next;
     if (userProfile.athlete) {
       var user = { "userId": userProfile.athlete.id, "username": userProfile.athlete.username, "profile_medium": userProfile.athlete.profile_medium }
@@ -144,7 +144,7 @@ class Sidebar extends React.Component {
       cx({
         [classes.caretRTL]: rtlActive
       });
-  
+
     const photo =
       classes.photo +
       " " +
@@ -215,7 +215,7 @@ class Sidebar extends React.Component {
                     }
                   >
                     <div className={photo}>
-                      <img src={logoutImage} className={classes.avatarImg} alt="..." />                    
+                      <img src={logoutImage} className={classes.avatarImg} alt="..." />
                     </div>
                     <ListItemText
                       primary={rtlActive ? "مستخدم آخر" : "Log Out"}

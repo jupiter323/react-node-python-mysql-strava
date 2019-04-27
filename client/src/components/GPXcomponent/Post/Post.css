@@ -1,20 +1,21 @@
-div, td {
-    font-size:13px;
+div,
+td {
+    font-size: 13px;
 }
 
 table {
-    margin-left:-3px;
+    margin-left: -3px;
 }
 
 body {
-    padding-left:20px;
+    padding-left: 20px;
 }
 
-.block{
-    margin:8px;
+.block {
+    margin: 8px;
 }
 
-.ui.dropdown > .text {
+.ui.dropdown>.text {
     cursor: pointer;
     display: inline-block;
     overflow: hidden;
@@ -24,57 +25,57 @@ body {
     width: 350px;
 }
 
-Select{
-    height:20px;
+Select {
+    height: 20px;
 }
 
-#processing{
-    width:295px;
+#processing {
+    width: 295px;
     border: 1px solid gray;
-    background-color:lightgray;
-    padding:10px;
-    display:none;
+    background-color: lightgray;
+    padding: 10px;
+    display: none;
 }
 
 #butcancel {
-    margin-left:140px;
+    margin-left: 140px;
 }
 
-.hidden{
-    display:none;
+.hidden {
+    display: none;
 }
 
-.visible{
+.visible {
     display: block
 }
 
-.leftTxt{
-    width:200px; 
-    float:left;
+.leftTxt {
+    width: 200px;
+    float: left;
 }
 
-#errors{
-    color:red
+#errors {
+    color: red
 }
 
-#message{
-    color:blue
+#message {
+    color: blue
 }
 
-.param{
-    width:300px;
+.param {
+    width: 300px;
 }
 
-.params{
-    width:400px;
+.params {
+    width: 400px;
 }
 
-.chk{
-    margin-left:0px
+.chk {
+    margin-left: 0px
 }
 
-#inputfile{
-    margin:auto;
+#inputfile {
+    margin: auto;
     /* display: none; */
 }
 
@@ -92,6 +93,6 @@ Select{
     z-index: -1;
 }
 
-.require-label{
+.require-label {
     margin-left: 50% !important
 }
