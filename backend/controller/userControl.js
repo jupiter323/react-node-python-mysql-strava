@@ -12,7 +12,7 @@ function sendEmail(toEmail, html) {
 
     const msg = {
         to: toEmail,
-        from: 'test@test.com',
+        from: 'stravaservice@strava.com',
         subject: 'From Strava',
         text: 'Download finished!',
         html: html,
@@ -280,6 +280,7 @@ exports.getUserOption = function (req, res) {
     })
 }
 exports.updateProfile = (req, res) => {
+    console.log(req.body.profile)
     User.updateUserProfile(req.body.profile, (err, msg) => {
         if (err) {
             res.send({

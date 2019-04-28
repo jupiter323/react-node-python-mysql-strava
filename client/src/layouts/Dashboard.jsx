@@ -98,7 +98,8 @@ class Dashboard extends React.Component {
     }
     if (this.props.userProfile !== userProfile) {
       clearInterval(this.intervalFun);
-      this.callGetActivityListInterval(next);
+      if (userProfile.athlete && userProfile.athlete.id)
+        this.callGetActivityListInterval(next);
     }
   }
 

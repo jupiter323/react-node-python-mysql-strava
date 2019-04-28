@@ -279,8 +279,8 @@ var insertUser = function (params, callback) {
 }
 
 var updateUserProfile = function (profile, callback) {
-  let userId = profile.athlete.id
-  db.query(`UPDATE user_profile SET ? WHERE userId =?`, [new UserProfile(profile), userId],
+  let clientId = profile.clientId
+  db.query(`UPDATE user_profile SET ? WHERE clientId =?`, [new UserProfile(profile), clientId],
     function (err) {
       let msg = ''
       if (err) {
