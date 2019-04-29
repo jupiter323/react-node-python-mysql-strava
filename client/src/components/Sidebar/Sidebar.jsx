@@ -93,7 +93,7 @@ class Sidebar extends React.Component {
     }
   }
   async onChangeSelectUser(user) {
-    
+
     const { getUserOption, setUserOption } = this.props;
     await getUserOption(user);
     await setUserOption(user);
@@ -184,6 +184,7 @@ class Sidebar extends React.Component {
             <Collapse in={this.state.openAvatar} unmountOnExit>
               <List className={classes.list + " " + classes.collapseList}>
                 {////users list
+                  users &&
                   users.map((user) => {
                     return <ListItem key={user.userId} className={classes.collapseItem}>
                       <NavLink
