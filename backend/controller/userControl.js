@@ -182,13 +182,13 @@ exports.getStravaToken = function (req, res) {
 
 
 exports.refreshToken = () => {
-    let projection = 'refresh_token,expiretime, userId, username'
+    let projection = 'refresh_token,expiretime, userId, username,clientId'
     User.getUserList(projection, (err, users) => {
         users.forEach(element => {
             let currTime = Date.now()
 
             if (element.expiretime * 1000 < currTime) {
-                console.log("refreshed 1");
+                console.log("refreshed:   ",element.username);
                 request.post(
                     "https://www.strava.com/oauth/token",
                     {
@@ -202,8 +202,8 @@ exports.refreshToken = () => {
                         if (!error && response.statusCode == 200) {
 
                             // saveStravaConfig(body.access_token)
-                            Object.assign(body, { athlete: { id: element.userId, username: element.username } })
-                            User.registerUser(body, (err, msg) => {
+                            Object.assign(body, { athlete: { id: element.userId, username: element.username, }, user: { id: element.clientId } })
+                            User.stravaRegisterUser(body, (err, msg) => {
                                 let status = ''
                                 if (err) {
                                     status = Constants.SERVER_INTERNAL_ERROR
@@ -263,7 +263,7 @@ exports.getUserListOptions = function (req, res) {
     })
 }
 exports.getUserOption = function (req, res) {
-    let projection = "*"
+    let projection = "*, user.userId"
     User.getUser(projection, { id: req.body.id }, (err, users) => {
         if (err) {
             res.send({

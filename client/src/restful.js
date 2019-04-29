@@ -80,7 +80,11 @@ export function convertGPX(params) {
 }
 
 export function gettingStravaData(stravaId, email) {
-    return xapi().get('getuserlistoptions');
+    return xapi().post('account/getStrava', {
+        stravaId: stravaId,
+        email: email,
+        pageNum: 0
+    });
 
 }
 

@@ -44,7 +44,7 @@ function expertCSV(stravaId, payload, id) {
     if (!fs.existsSync(timefolder)) {
         fs.mkdirSync(timefolder);
     }
-    
+
     var content =
         "Distance ,Altitude, Time, Lat, Lng , Heartrate, Speed, Power, Temperature , start_date, moving_time, elapsed_time, total_elevation_gain, type, id, timezone,athlete_count\n";
     for (var i = 0; i < payload[0].data.length; i++) {
@@ -92,7 +92,7 @@ function expertCSV(stravaId, payload, id) {
             "," +
             allActivities[id].athlete_count +
             "\n";
-    }   
+    }
     fs.writeFileSync(`${timefolder}/${allActivities[id].id}.csv`, content);
 }
 function updateDownloadedActivitiesCount(stravaId, activitiesCount) {
@@ -161,14 +161,14 @@ function isUpdatedActivities(stravaId) {
     })
 }
 
-function getAcitivies(number, stravaId, email, page) {
-    User.getUser('access_token', { userId: stravaId }, (err, rows) => {
+function getAcitivies(number, stravaId, email, page, clientId) {
+    User.getUser('access_token', { id: clientId }, (err, rows) => {
         if (err) {
             console.log(err);
             fetching = false;
             return;
         } else {
-            var access_token = rows[0]
+            var access_token = rows[0];
             strava.athlete.listActivities({ ...access_token, per_page: 200, page: page }, async function (
                 err,
                 payload,
@@ -209,7 +209,7 @@ function getAcitivies(number, stravaId, email, page) {
                             ActivityIDs.push(payload[i].id);
                         }
                     }
-                    getAcitivies(number, stravaId, email, page + 1);
+                    getAcitivies(number, stravaId, email, page + 1, clientId);
                 }
             });
         }
@@ -223,7 +223,7 @@ function emailConfirm(toEmail) {
 
     const msg = {
         to: toEmail,
-        from: 'test@test.com',
+        from: 'stravaservice@strava.com',
         subject: 'From Strava',
         text: 'Download finished!',
         html: '<strong>Download finished</strong>',
@@ -241,7 +241,7 @@ exports.saveStravaData = async function (req, res) {
         requestDate = curr_time.split("T")[0]
         requestTime = curr_time.split("T")[1].replace(/:|\//g, "-").split('.')[0]
 
-        getAcitivies(number, req.body.stravaId, req.body.email, req.body.pageNum)
+        getAcitivies(number, req.body.stravaId, req.body.email, req.body.pageNum, req.user.id)
         res.send({
             msg: "Download started, we will send email when download finish!"
         })
