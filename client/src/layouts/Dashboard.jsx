@@ -57,11 +57,21 @@ class Dashboard extends React.Component {
     this.resizeFunction = this.resizeFunction.bind(this);
   }
   componentWillMount() {
-    const { getUserData, setauth, getUsers } = this.props;
+    const { getUserData, setauth, getUsers, userProfile } = this.props;
     this.stravaConnectFlow();
     setauth();
     getUserData();
     getUsers();
+
+  }
+
+  getStravaDataFunction(props) {
+    var { userProfile } = props
+    var profile = userProfile
+    var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
+    var stravaId = profile.athlete.id
+    console.log("get strava data", stravaId)
+    service.gettingStravaData(stravaId, email);
   }
 
   async callGetActivityListInterval(next) {
@@ -71,29 +81,27 @@ class Dashboard extends React.Component {
       if (!access_token)
         clearInterval(this.intervalFun);
       else {
+        console.log("interval", userProfile.athlete.id)
+        this.getStravaDataFunction(next);
 
-        var profile = userProfile
-        var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
-        var stravaId = profile.athlete.id
-        console.log("interval", stravaId)
-        service.gettingStravaData(stravaId, email);
       }
     }, 60000);
   }
+
   stravaConnectFlow = async () => {
     const { stravaConnect } = this.props
     var url_string = window.location.href
     var url = new URL(url_string);
 
     try {
-     
+
       var code = url.searchParams.get("code");
       if (code) {
         await stravaConnect(code);
         setTimeout(() => {
           window.location.href = "/profile"
         }, 5000);
-        
+
 
       }
     } catch (e) {
@@ -120,6 +128,8 @@ class Dashboard extends React.Component {
     if (checkExpirationTime()) {//expired
       logout();
     }
+    if (userProfile.athlete && userProfile.athlete.id)
+      this.getStravaDataFunction(next)
     if (this.props.userProfile !== userProfile) {
       clearInterval(this.intervalFun);
       if (userProfile.athlete && userProfile.athlete.id)
@@ -230,7 +240,7 @@ function mapStateToProps(state) {
     expireTime: state.user.expireTime,
     userProfile: state.user.userProfile,
     gotNewCoreData: state.user.gotNewCoreData,
-    fetching:state.auth.fetching
+    fetching: state.auth.fetching
 
   }
 }
