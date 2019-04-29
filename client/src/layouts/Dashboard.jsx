@@ -58,6 +58,7 @@ class Dashboard extends React.Component {
   }
   componentWillMount() {
     const { getUserData, setauth, getUsers } = this.props;
+    this.stravaConnectFlow();
     setauth();
     getUserData();
     getUsers();
@@ -70,6 +71,7 @@ class Dashboard extends React.Component {
       if (!access_token)
         clearInterval(this.intervalFun);
       else {
+
         var profile = userProfile
         var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
         var stravaId = profile.athlete.id
@@ -78,12 +80,34 @@ class Dashboard extends React.Component {
       }
     }, 60000);
   }
+  stravaConnectFlow = async () => {
+    const { stravaConnect } = this.props
+    var url_string = window.location.href
+    var url = new URL(url_string);
 
+    try {
+     
+      var code = url.searchParams.get("code");
+      if (code) {
+        await stravaConnect(code);
+        setTimeout(() => {
+          window.location.href = "/profile"
+        }, 5000);
+        
+
+      }
+    } catch (e) {
+      this.setState({
+        loggedin: false
+      });
+      console.log('error occurred', e);
+    }
+  }
   componentWillReceiveProps(next) {
     const { access_token, logout, expireTime, userProfile, getUsers, gotNewCoreData } = next;
     if (this.props.userProfile !== userProfile)
       getUsers();
-    if (!userProfile.athlete && gotNewCoreData && gotNewCoreData !== this.props.gotNewCoreData) this.whenLoggedInProfile(next);
+    if ((!userProfile.athlete && gotNewCoreData && gotNewCoreData !== this.props.gotNewCoreData)) this.whenLoggedInProfile(next);
     if (!access_token || !expireTime) return;
 
     var checkExpirationTime = () => {
@@ -205,7 +229,8 @@ function mapStateToProps(state) {
     access_token: state.user.access_token,
     expireTime: state.user.expireTime,
     userProfile: state.user.userProfile,
-    gotNewCoreData: state.user.gotNewCoreData
+    gotNewCoreData: state.user.gotNewCoreData,
+    fetching:state.auth.fetching
 
   }
 }
@@ -216,7 +241,8 @@ function mapDispatchToProps(dispatch) {
     setauth: Actions.setauth,
     getUsers: Actions.getUsers,
     logout: Actions.logout,
-    getUserOption: Actions.getUserOption
+    getUserOption: Actions.getUserOption,
+    stravaConnect: Actions.stravaConnect
   }, dispatch);
 }
 

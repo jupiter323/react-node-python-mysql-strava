@@ -48,7 +48,7 @@ router.post('/emailverify', (req, res) => {
     })
 })
 
-
+router.get('/login', passport.authenticate('strava', { scope: ['activity:read_all'] }));
 router.post('/emailregister', UserControl.register)
 router.post('/forgotpasswordrequest', UserControl.forgotPasswordRequest)
 

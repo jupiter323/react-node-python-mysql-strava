@@ -51,14 +51,14 @@ exports.forgotPasswordRequest = (req, res) => {
                 error: err,
                 msg: Constants.USER_CHANGEPASSWORD_FAILED
             })
-        } else if (!user) {          
+        } else if (!user) {
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: false,
                 error: null,
                 msg: Constants.USER_NOT_REGISTERED
-            })            
-        } else {          
+            })
+        } else {
             var userData = { id: user.id, email: user.email, userId: user.userId, verified: user.verified }
             sendPsswordChangeLink(userData);
             res.send({
@@ -83,7 +83,7 @@ exports.forgotpasswordChange = (req, res) => {
                 msg: Constants.USER_CHANGEPASSWORD_FAILED
             })
         } else if (nonUser) { //not registered
-           
+
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: false,
@@ -91,7 +91,7 @@ exports.forgotpasswordChange = (req, res) => {
                 msg: Constants.USER_NOT_REGISTERED
             })
         } else { // success   
-           
+
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,
                 success: true,
@@ -134,8 +134,8 @@ exports.register = (req, res) => {
     })
 
 }
-exports.getToken = function (req, res) {
-
+exports.getStravaToken = function (req, res) {
+    var { user } = req
     request.post(
         "https://www.strava.com/oauth/token",
         {
@@ -152,7 +152,7 @@ exports.getToken = function (req, res) {
 
                 // saveStravaConfig(body.access_token)
 
-                User.registerUser(body, (err, msg) => {
+                User.stravaRegisterUser({ ...body, user: req.user }, (err, msg) => {
                     let status = ''
                     if (err) {
                         status = Constants.SERVER_INTERNAL_ERROR
@@ -164,7 +164,8 @@ exports.getToken = function (req, res) {
                         status: status,
                         error: err,
                         message: msg,
-                        data: Object.assign(body, { role })
+                        // data: Object.assign(body, { role })
+                        data: { clientId: user.id }
                     })
                 })
 

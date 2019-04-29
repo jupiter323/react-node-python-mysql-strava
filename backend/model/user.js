@@ -24,7 +24,7 @@ var UserProfile = function (profile) {
   let tempObj = new Object()
   let user = profile.athlete;
   if (profile) {
-    tempObj.userId = user.id
+    // user.id ? tempObj.userId = user.id : null
     tempObj.username = user.username
     tempObj.firstname = user.firstname
     tempObj.lastname = user.lastname
@@ -223,22 +223,22 @@ var registerEmailUser = (params, callback) => {
   })
 }
 
-var registerUser = function (params, callback) {
-  let user = params.athlete
-  db.query('SELECT * FROM user WHERE userId = ? ', [user.id], function (err, rows) {
+var stravaRegisterUser = function (params, callback) {
+  var { user } = params
+  db.query('SELECT * FROM user WHERE clientId = ? ', [user.id], function (err, rows) {
     if (err) {
       callback(err);
     }
     if (rows.length) {
       return updateUser(params, callback);
     }
-    return insertUser(params, callback);
+    return insertUser(params, callback);//optional
   });
 }
 
 var updateUser = function (params, callback) {
-  let user = params.athlete
-  db.query('UPDATE user SET ? WHERE userId = ?', [new User(params), user.id]
+  var { user } = params
+  db.query('UPDATE user SET ? WHERE clientId = ?', [new User(params), user.id]
     , function (err) {
 
       let msg = ''
@@ -279,7 +279,7 @@ var insertUser = function (params, callback) {
 }
 
 var updateUserProfile = function (profile, callback) {
-  let clientId = profile.clientId
+  let clientId = profile.clientId || profile.user.id
   db.query(`UPDATE user_profile SET ? WHERE clientId =?`, [new UserProfile(profile), clientId],
     function (err) {
       let msg = ''
@@ -333,7 +333,7 @@ exports.insertUser = insertUser
 exports.updateUser = updateUser
 exports.getUser = getUser
 exports.registerEmailUser = registerEmailUser
-exports.registerUser = registerUser
+exports.stravaRegisterUser = stravaRegisterUser
 exports.getUserList = getUserList
 exports.updateUserProfile = updateUserProfile
 exports.getUserById = getUserById
