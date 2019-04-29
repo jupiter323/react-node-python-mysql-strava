@@ -64,7 +64,7 @@ class Post extends Component {
     componentWillReceiveProps(nextProps) {
         const { profile, options } = nextProps
         if (!profile) return
-        if (profile.athlete) {
+        if (profile.athlete&&profile.athlete.id) {
             this.setState({ user_id: profile.athlete.id })
         }
         if (!options) return;
