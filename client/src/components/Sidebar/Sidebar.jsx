@@ -93,6 +93,7 @@ class Sidebar extends React.Component {
     }
   }
   async onChangeSelectUser(user) {
+    
     const { getUserOption, setUserOption } = this.props;
     await getUserOption(user);
     await setUserOption(user);
@@ -154,7 +155,7 @@ class Sidebar extends React.Component {
     var user = (
       <div className={userWrapperClass}>
         <div className={photo}>
-          <img src={currentUser.profile_medium} className={classes.avatarImg} alt="..." />
+          <img src={currentUser.profile_medium || "/avatar/athlete/medium.png"} className={classes.avatarImg} alt="..." />
         </div>
         <List className={classes.list}>
           <ListItem className={classes.item + " " + classes.userItem}>
@@ -193,7 +194,7 @@ class Sidebar extends React.Component {
                         }
                       >
                         <div className={photo}>
-                          <img src={user.profile_medium} className={classes.avatarImg} alt="..." />
+                          <img src={user.profile_medium || "/avatar/athlete/medium.png"} className={classes.avatarImg} alt="..." />
                         </div>
 
                         <ListItemText

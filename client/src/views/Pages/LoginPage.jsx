@@ -43,10 +43,7 @@ class LoginPage extends React.Component {
     if (next.status && next.access_token)
       window.location.href = "/"
   }
-  componentWillMount() {
-    console.log(this.props)
-    this.loginFlow();
-  }
+
   componentDidMount() {
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
     this.timeOutFunction = setTimeout(
@@ -62,10 +59,7 @@ class LoginPage extends React.Component {
 
   }
 
-  handleNavigateClickForLogin = () => {
-    window.location.href = "http://127.0.0.1:3001/api/account/login"
-  }
-
+ 
   onChangeInputValue = (e) => {
     var name = e.target.name;
     var value = e.target.value
@@ -118,27 +112,7 @@ class LoginPage extends React.Component {
   handleNavigateRegister = () => {
     window.location = "/pages/register-page";
   }
-  loginFlow = async () => {
-    const { login } = this.props
-    var url_string = window.location.href
-    var url = new URL(url_string);
 
-    try {
-
-      var code = url.searchParams.get("code");
-      if (code) {
-        await login(code);
-        window.location.href = "/dashboard"
-
-      }
-    } catch (e) {
-      this.setState({
-        loggedin: false
-      });
-      console.log('error occurred', e);
-    }
-    // this.getGpxoptions()
-  }
 
   render() {
     const { classes } = this.props;
@@ -229,9 +203,6 @@ class LoginPage extends React.Component {
                     <Button color="primary" simple size="lg" block onClick={this.handleForgotpassword}>
                       Forgot Password
                       </Button>
-                    {/* <Button color="primary" simple size="lg" block onClick={this.handleNavigateClickForLogin}>
-                        Login with STRAVA
-                      </Button> */}
                   </GridContainer>
                 </CardFooter>
               </Card>
@@ -257,9 +228,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    login: Actions.login,
     emailLogin: Actions.emailLogin
-
   }, dispatch);
 }
 

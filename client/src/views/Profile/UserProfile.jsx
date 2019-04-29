@@ -30,7 +30,7 @@ import Accordion from "components/Accordion/Accordion.jsx";
 import userProfileStyles from "assets/jss/material-dashboard-pro-react/views/userProfileStyles.jsx";
 import extendedFormsStyle from "assets/jss/material-dashboard-pro-react/views/extendedFormsStyle.jsx";
 import * as service from "restful"
-import avatar from "assets/img/faces/marc.jpg";
+const avatar = "/avatar/athlete/medium.png";
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -40,6 +40,7 @@ class UserProfile extends React.Component {
       profile
     };
   }
+
   convertValue(typeString, value) {
     var convertedValue;
     switch (typeString) {
@@ -60,11 +61,10 @@ class UserProfile extends React.Component {
     var { profile } = this.state;
     var value = this.convertValue(event.target.type, event.target.value)
     // var value = event.target.value
-    if (event.target.name === "sex") {
+    if (event.target.name === "sex" || event.target.name === "firstname" || event.target.name === "lastname") {
       profile.athlete[event.target.name] = value;
       this.setState({ profile });
-    }
-    else {
+    } else {
       profile[event.target.name] = value
       this.setState({ profile });
     }
@@ -89,6 +89,11 @@ class UserProfile extends React.Component {
     console.log("updated profile:", this.state.profile, response.data.profile);
 
   }
+  handleNavigateClickForLogin = async () => {
+    window.location.href = "http://127.0.0.1:3001/api/auth/login"
+  }
+
+
   render() {
     const { classes, currentUser } = this.props;
     const { profile } = this.state;
@@ -104,6 +109,9 @@ class UserProfile extends React.Component {
                 <h4 className={classes.cardIconTitle}>
                   Edit Profile - <small>Complete your profile</small>
                 </h4>
+                <Button color="primary" className={classes.updateProfileButton} onClick={this.handleNavigateClickForLogin}>
+                  Connect to Strava
+                </Button>
               </CardHeader>
 
               <CardBody>
@@ -121,7 +129,9 @@ class UserProfile extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
-                        disabled: true,
+                        // disabled: true,
+                        name: "firstname",
+                        onChange: this.handleInputValue,
                         value: (profile && profile.athlete && profile.athlete.firstname) || ""
                       }}
                     />
@@ -135,7 +145,9 @@ class UserProfile extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
-                        disabled: true,
+                        // disabled: true,
+                        name: "lastname",
+                        onChange: this.handleInputValue,
                         value: (profile && profile.athlete && profile.athlete.lastname) || ""
                       }}
                     />
@@ -748,7 +760,7 @@ class UserProfile extends React.Component {
             <Card profile>
               <CardAvatar profile>
                 <a href="#pablo" onClick={e => e.preventDefault()}>
-                  <img src={currentUser ? currentUser.profile_medium : avatar} alt="..." />
+                  <img src={currentUser && currentUser.profile_medium || avatar} alt="..." />
                 </a>
               </CardAvatar>
               <CardBody profile>

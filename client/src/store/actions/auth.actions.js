@@ -21,6 +21,9 @@ export const EMAIL_VERIFY = "EMAIL_VERIFY"
 export const EMAIL_VERIFY_ERROR = "EMAIL_VERIFY_ERROR";
 export const EMAIL_VERIFY_SUCCESS = "EMAIL_VERIFY_SUCCESS";
 
+export const STRAVA_GET_TOKEN = "STRAVA_GET_TOKEN";
+export const STRAVA_GET_TOKEN_FAILD = "STRAVA_GET_TOKEN_FAILD";
+export const STRAVA_GET_TOKEN_OK = "STRAVA_GET_TOKEN_OK"
 
 export function logout() {
     localStorage.clear()
@@ -97,34 +100,33 @@ export function emailLogin(params) {
         });
     }
 }
-export function login(code) {
-    var userInfo = Promise.all([
-        service.gettingToken(code)
-    ]);
+export function stravaConnect(code) {
 
-    return (dispatch) =>
+
+    return (dispatch) => {
+        dispatch({
+            type: STRAVA_GET_TOKEN
+        });
+        var userInfo = Promise.all([
+            service.gettingToken(code)
+        ]);
         userInfo.then((user) => {
             console.log(user[0].data.data)
-            var userProfile = user[0].data.data
             var tempuser = {};
-            tempuser.userId = userProfile.athlete.id;
-            dispatch({
-                type: LOGIN
-            });
+            var userProfile = user[0].data.data
+            tempuser.userId = userProfile.clientId;
             dispatch(getUserOption(tempuser))
             return dispatch({
-                type: LOGIN_SUCCESS
+                type: STRAVA_GET_TOKEN_OK
             });
         }).catch((error) => {
-            console.log(error)
-            dispatch({
-                type: LOGIN
-            });
+            console.log(error)            
             return dispatch({
-                type: LOGIN_ERROR,
+                type: STRAVA_GET_TOKEN_FAILD,
                 errorMsg: JSON.parse(error.request.response).error
             });
         });
+    }
 }
 
 export function register(params) {

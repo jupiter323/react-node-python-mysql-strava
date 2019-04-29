@@ -47,6 +47,30 @@ const auth = function (state = initialState, action) {
                     fetching: false
                 };
             }
+        case Actions.STRAVA_GET_TOKEN: {
+            console.log("strava get token")
+            return {
+                ...state,
+                fetching: true,
+                errorMsg: ""
+            };
+        }
+        case Actions.STRAVA_GET_TOKEN_OK: {
+            console.log("strava get token ok")
+            return {
+                ...state,
+                fetching: false,
+                errorMsg: ""
+            };
+        }
+        case Actions.STRAVA_GET_TOKEN_FAILD: {
+            console.log("strava get token faild")
+            return {
+                ...state,
+                fetching: false,
+                errorMsg: action.errorMsg
+            };
+        }
         case Actions.REGISTER:
             {
                 return {

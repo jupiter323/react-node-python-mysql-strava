@@ -51,13 +51,13 @@ export function verifyEmail(token) {
 }
 
 export function GetConnection() {
-    return xapi().get('account/login');
+    return xapi().get('auth/login');
 
 }
 
 
 export function gettingToken(code) {
-    return xapi().post('account/token', {
+    return xapi().post('account/stravatoken', {
         code: code
     });
 

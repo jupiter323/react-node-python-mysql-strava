@@ -61,26 +61,6 @@ function makeProfileObject(receivedProfile) {
     return profile
 }
 
-export function getUserProfile(user) {
-    var userId = user.userId
-    var response = Promise.all([
-        service.getuseroption(userId)
-    ])
-
-    return (dispatch) => {
-        response.then(useroption => {
-            var receivedProfile = useroption[0].data.users[0];
-            var profile = makeProfileObject(receivedProfile)
-            console.log("profile :", profile)
-            dispatch(setUserData(profile))
-            return dispatch({
-                type: GET_USER_OPTION
-
-            })
-        })
-
-    }
-}
 export function getUserOption(user) {
     var userId = user.userId
     var response = Promise.all([
@@ -89,8 +69,9 @@ export function getUserOption(user) {
 
     return (dispatch) => {
         response.then(useroption => {
-            console.log("received profile+++++++++++++:", receivedProfile);
             var receivedProfile = useroption[0].data.users[0];
+            console.log("received profile+++++++++++++:", receivedProfile);
+           
             var profile = makeProfileObject(receivedProfile)
             dispatch(setUserData(profile))
             return dispatch({
