@@ -3,12 +3,11 @@ BACK_END RUNNING
 
 1.	Run xampp as administrator
 
-[like this](https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png)
-https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png
+    [like this](https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png)
 
 2.	Run mysql as start button like below image
  
-[like this](https://www.dropbox.com/s/awzkrcdpz23xqjw/2.png)
+    [like this](https://www.dropbox.com/s/awzkrcdpz23xqjw/2.png)
 
 
 
@@ -21,7 +20,7 @@ https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png
 -	And run start_python.bat(windows)
 So python flask succeed as like below.
 
-[like this](https://www.dropbox.com/s/gvldky8ht3ctt3e/3.png)
+    [like this](https://www.dropbox.com/s/gvldky8ht3ctt3e/3.png)
 
 
 FRONT_END RUNNING
