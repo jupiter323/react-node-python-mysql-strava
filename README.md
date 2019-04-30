@@ -2,7 +2,9 @@
 BACK_END RUNNING
 
 1.	Run xampp as administrator
+
 [like this](https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png)
+https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png
 
 2.	Run mysql as start button like below image
  
