@@ -47,10 +47,8 @@ Please copy securedata.zip on root directory and extra here(storage folder and .
 
 -	And run start_python.bat(windows)
 
-So python flask succeed as like below.
-
+So python flask succeed as like below.    
     [like this](https://www.dropbox.com/s/gvldky8ht3ctt3e/3.png)
-
 
 FRONT_END RUNNING
 
