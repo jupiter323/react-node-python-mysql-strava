@@ -1,42 +1,60 @@
 git clone
 
+MYSQL server install
+
+    Please install mysql server accroding this guid
+
+    [like this](https://tecadmin.net/install-mysql-server-on-debian9-stretch/)
+
+
+Remote connection Setting
+
+    that is different on the Ubuntu setting and Debian
+-   Debian is below 
+
+    [like this](https://www.internalpointers.com/post/enable-remote-mysql-access-debian)
+
+-   Ubuntu is below
+    "sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf"
+    and edit something as follow
+
+    [mysqld]
+    . . .
+    bind-address = 0.0.0.0
+
+    then, please do "sudo systemctl restart mysql"
+    "sudo netstat -plunt | grep mysqld"
+    "sudo ufw allow mysql"
+
+install Sequel pro on os x
+
+    download sequel_pro.dmg file and install.
+
+connect with ssh
+
+-   please connect with ssh as follow
+
+    [like this](https://www.dropbox.com/s/yqp4op6ixqheyx2/1.png)
+
+-   add "stravadb" database as follow 
+
+    [like this](https://www.dropbox.com/s/qt9pvl0d3hs7px9/2.png)
+    [like this](https://www.dropbox.com/s/prtd100nfpu2dvy/3.png)
+
+-   run our database query.
+    open database.sql with any editor such as "sublime text 3"
+    and copy all query on that.
+    [like this](https://www.dropbox.com/s/peurhuxd1a4agih/4.png)
+    and past on the SequelPro query panel, then select all and press run button
+    [like this](https://www.dropbox.com/s/oubapp15m630m5r/5.png)
+    Then will be created our tables in the "stravadb"
+    [like this](https://www.dropbox.com/s/qmc9ax34fhotlyy/6.png)
+
 BACK_END RUNNING
 
-1.	Run xampp as administrator
-
-    [like this](https://www.dropbox.com/s/atv6m7mmiajm4ed/1.png)
-
-2.	Run mysql as start button like below image
- 
-    [like this](https://www.dropbox.com/s/awzkrcdpz23xqjw/2.png)
-
-3. Please create database on mysql
-
--   Run apache as start button like below image
-
-    [like this](https://www.dropbox.com/s/g5pphjk4v7loemd/33.png)
-
--   run phpmyadmin on xampp
-
-    [like this](https://www.dropbox.com/s/7yy95my46yr2jlk/4.png)
-
--   create database as "stravadb"
-
-    [like this](https://www.dropbox.com/s/its5diglhc96raa/5.png)
     
--   database table create
-
-    select "stravadb" and go to import tab and choose file(database.sql I sent you)
-
-    [like this](https://www.dropbox.com/s/t4585zkzopvda83/6.png)
-
-    then press "go" button
-
-    [like this](https://www.dropbox.com/s/v606sa2x2gjiqn9/7.png)
-
-4.	Go to backend folder. 
-
-Please copy securedata.zip on root directory and extra here(storage folder and .env file should be in root directory)
+    "cd backend"
+    Please copy securedata.zip on root directory and extra here(storage folder and .env file should be in root directory)
 
 -	Run “npm i” , then “nodemon server.js”  in new terminal (Linux or mac)
 
