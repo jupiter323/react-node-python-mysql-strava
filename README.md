@@ -3,8 +3,7 @@ git clone
 MYSQL server install
 
     Please install mysql server accroding this guid
-
-    [like this](https://tecadmin.net/install-mysql-server-on-debian9-stretch/)
+ [like this](https://tecadmin.net/install-mysql-server-on-debian9-stretch)
 
 
 Remote connection Setting
@@ -22,8 +21,12 @@ Remote connection Setting
     . . .
     bind-address = 0.0.0.0
 
+    
+
     then, please do "sudo systemctl restart mysql"
+
     "sudo netstat -plunt | grep mysqld"
+
     "sudo ufw allow mysql"
 
 install Sequel pro on os x
