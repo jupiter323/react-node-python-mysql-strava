@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-var storagefolder =[ `storage`,`storage/csv`,`storage/auth_data`, `storage/gpx`];
+var storagefolder =[ `storage`,`storage/csv`, `storage/gpx`];
 
 for (let i in storagefolder){
     if (!fs.existsSync(storagefolder[i])) {

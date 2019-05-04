@@ -1,9 +1,9 @@
 
 var fs = require('fs');
 
-let convert = require('./js/convert')
+let convert = require('./makeCSVforML/convert')
 var exec = require('child_process').exec;
-
+var makecsvML = require('./makeCSVforML')
 var requestTime = ''
 var requestDate = ''
 
@@ -33,17 +33,11 @@ if (!fs.existsSync(folderName)) {
 }
 
 exports.convertgpx = function (req, res) {
-    makedirs()
-    handler(req, res)
-    // let pid = exec('node ./controller/js/run.js ', function (error, stdout, stderr) {
-    //     console.log('stdout: ', stdout);
-    //     console.log('stderr: ', stderr);
-
-    //     if (error !== null) {
-    //         console.log('exec error: ', error);
-    //     }       
-    // });
+    // makedirs()
+    // handler(req, res)
+    makecsvML.processFile()   
 }
+
 
 exports.OptionsToJson = function (req, res) {
     console.log(req.user)
@@ -219,11 +213,13 @@ function handler(req, res) {
 function makedirs() {
     let uploads = 'storage/gpx/uploads/'
     if (!fs.existsSync(uploads)) fs.mkdirSync(uploads)
+
     let outfiles = 'storage/gpx/output-files/'
     if (!fs.existsSync(outfiles)) fs.mkdirSync(outfiles)
 
     let slotfiles = 'storage/gpx/timeslot-files/'
     if (!fs.existsSync(slotfiles)) fs.mkdirSync(slotfiles)
+
     let wfiles = 'storage/gpx/weather-files/'
     if (!fs.existsSync(wfiles)) fs.mkdirSync(wfiles)
 }

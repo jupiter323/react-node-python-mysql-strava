@@ -7,7 +7,7 @@ let waypoints = require('./waypoints')
 let segs    = require('./segments')
 let fs      = require('fs')
 
-var rootdir  = __dirname + "./../../" 
+var rootdir  = __dirname + "./../../storage/gpx"
 function convert(data, params, callback) { // data = ride file content 
 
     let result = ""
