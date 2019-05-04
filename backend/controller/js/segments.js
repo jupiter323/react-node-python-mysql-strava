@@ -3,8 +3,9 @@
 "use strict"
 
 let calcenergy   = require('./power');
-let heartRateCategoryDivision = []
-let slopeCategoryDivision = []
+let waypointsmodule = require('./waypoints')
+//let heartRateCategoryDivision = []
+//let slopeCategoryDivision = []
 let actualWeather = {utc:0, hour:0, spd:0, bearing:0, temp:0, humidity:0}
 let weatherList = [] //{hour:,spd:,dir:,temp:}
 
@@ -24,7 +25,8 @@ function getCategory(value,division,resolution){
 function initCategory(def){
     let division = []
     if (def) {
-        division = def.split("=")[1].split(",") 
+        if (def.indexOf('=') > 0) division = def.split("=")[1].split(",") 
+        else division = def.split(',')
         for (var i=0; i < division.length; i++) division[i] = Number(division[i])
     }
     return division
@@ -57,14 +59,18 @@ function checkIndex(index){
     }
     return false;
 }
+
+
 function buildSegments(params, trackinfo, segsize) {
+    //return buildSegments2(params, trackinfo, segsize)
     let loopcount = 0
     let test = false
     let diffsum = 0
     segsize = Number(segsize)
     let waypoints = trackinfo.waypoints
-    heartRateCategoryDivision = initCategory(params["hr-cat-sel"]) 
-    slopeCategoryDivision = initCategory(params["slope-cat-sel"])
+    let heartRateCategoryDivision = initCategory(params["hr-cat-sel"]) 
+    let slopeCategoryDivision = initCategory(params["slope-cat-sel"])
+    let heartRateCatMult = initCategory(params["hr-cat-mult"])
     let segments = []
     if (waypoints.length == 0) return
     var segment = {dist:0, timedif:0, beats:0, temp:0, ele:0, eledif:0, count:0, error:0, azimuth:0, energy:0, calcenergy:0, lat:0, lon:0}
@@ -76,6 +82,11 @@ function buildSegments(params, trackinfo, segsize) {
     let speed =0
     let cumrealenergy = 0
     let cumestenergy = 0
+    params.cumHrIntScore = 0
+    let nextFraction = 0
+    let fractionToComplete = 0
+    let wp1 = 0
+    let wp2 = 0
 
     do {
         do {
@@ -112,7 +123,7 @@ function buildSegments(params, trackinfo, segsize) {
             remainingLength = 0
         }
 
-        let fractionToComplete =  lengthToComplete / waypointLength        // fraction of the waypoint length to complete the segment
+        fractionToComplete =  lengthToComplete / waypointLength            // fraction of the waypoint length to complete the segment
         segment.dist    += lengthToComplete                                // equivalent to: segment.dist = segsize
         diffsum += segment.dist - segsize                                  // diffsum is used for check, should be zero at the end
         segment.dist = segsize                                             // prevent avelanche numeric errors
@@ -122,14 +133,17 @@ function buildSegments(params, trackinfo, segsize) {
 
         // calc speed + error
         speed = Math.round(segment.dist/segment.timedif * 1000 * 3.6*10)/10 
-        if (speed > 100 || distTooLong ) {
+        if (speed > 100 || distTooLong || segment.timedif == 0) {
             var err = "error"
-            var valid_speed =0  
+            var valid_speed = 0 
+            speed = 0 
         }  else {
             err = "";
             valid_speed = speed
         }
         if (valid_speed < 2) valid_speed = 0 // stopped
+
+        wp2 = fractionToComplete + index
 
         // add item to segments
 
@@ -152,10 +166,13 @@ function buildSegments(params, trackinfo, segsize) {
             cumestenergy += cenergy
             //let hrcat = getCategory(segment.beats/segment.count, heartRateCategoryDivision,0.1)
             let hrcat = getCategory(segment.beats/segment.count, heartRateCategoryDivision,1)
+            let hrIntScore = 0
+            if (hrcat > 0 && hrcat < 12)
+                hrIntScore = hrcat * segment.timedif / 1000 * heartRateCatMult[hrcat-1]
+            params.cumHrIntScore += hrIntScore
             let hrmap = [0,2,2,3,3,5,5,7,8,9]
             if (hrcat > 9) hrcat = 9
-            hrcat = hrmap[hrcat]
-
+            let hrcatadj = hrmap[hrcat]
             segments.push({
                 index:index,   // waypoints index
                 cumdist: Math.round(segcumdist - segsize),
@@ -173,8 +190,11 @@ function buildSegments(params, trackinfo, segsize) {
                 humidity:actualWeather.humidity * 100, // in %
                 meteotemp: actualWeather.temp,
                 hrCategory: Math.round(hrcat),
-                hrCategory1: hrcat,
-                beatcount: Math.round(segment.beats/segment.count/60 * segment.timedif/1000 * 10)/10,
+                hrCatOrg: hrcat,
+                hrCatAdj: hrcatadj,
+                hrIntScore: Math.round(hrIntScore*10)/10,
+                cumHrIntScore : Math.round(params.cumHrIntScore),
+                beatcount: segment.timedif == 0 ? 0 : Math.round(segment.beats/segment.count/60 * segment.timedif/1000 * 10)/10,
                 gpxtimestamp: new Date(waypoints[index].utc * 1000).toISOString().substr(0,19) + 'Z',
                 utctime: waypoints[index].utc,
                 gpxdist:Math.round(waypoints[index].dist),
@@ -184,32 +204,36 @@ function buildSegments(params, trackinfo, segsize) {
                 eledif: Math.round(segment.eledif*100)/100, 
                 energy: Math.round(segment.energy),
                 cumrealenergy: Math.round(cumrealenergy),
-                realpower: Math.round(segment.energy/segment.timedif * 1000),
+                realpower: segment.timedif == 0 ? 0 : Math.round(segment.energy/segment.timedif * 1000),
                 calcenergy: Math.round(cenergy),
                 cumestenergy : Math.round(cumestenergy),
-                estpower: Math.round(cenergy/segment.timedif * 1000),
+                estpower: segment.timedif == 0 ? 0 : Math.round(cenergy/segment.timedif * 1000),
                 estaccelpower : Math.round(accelerationPower),
-                esttotalpower: Math.round(cenergy/segment.timedif * 1000) + Math.round(accelerationPower),
+                esttotalpower: segment.timedif == 0 ? 0 : Math.round(cenergy/segment.timedif * 1000) + Math.round(accelerationPower),
                 lat:waypoints[index].lat, 
-                lon:waypoints[index].lon, 
+                lon:waypoints[index].lon,
+                //wpcount:Math.round((wp2-wp1) * 100) / 100,  // waypoint count
+                //wp1:Math.round(wp1 * 100) / 100,            // waypoint 1
+                //wp2:Math.round(wp2 * 100) / 100,            // waypoint 2
             })
+
+            wp1 = wp2
 
             // prepare the next segment
             loop = false
-            let nextFraction
 
             if (remainingLength >= segsize) {
                 // add another segsize segment
                 nextFraction = segsize/waypointLength
                 remainingLength -=segsize
                 loop = true
+                wp2 += nextFraction
             }
             else {
                 // put remaining in segment
                 nextFraction = remainingLength/waypointLength
                 segment.dist = remainingLength
             }
-            
             // add the other segment data
             segment.timedif = nextFraction * waypoints[index].timedif  
             segment.eledif  = nextFraction * waypoints[index].eledif 
@@ -230,6 +254,169 @@ function buildSegments(params, trackinfo, segsize) {
     } while (index < waypoints.length-1)
     return segments
 }
+////////////////////////////////////////////////////////////////////////////////////////
+//
+//   build segments 2 (not used, better structure, time calculation not yet correct)
+//
+////////////////////////////////////////////////////////////////////////////////////////
+
+function buildSegments2(params, trackinfo, segsize) {
+    segsize = Number(segsize)
+    let waypoints = trackinfo.waypoints
+
+    let segcumdist = segsize
+    let waypointcumdist = 0
+    
+    let split = []  // segment borders {index, waypoint_fraction}
+    for (var i=0; i < waypoints.length; i++){
+        let waypointLength = waypoints[i].dist
+        while (waypointcumdist + waypointLength >= segcumdist) {
+            let lengthToComplete = segcumdist - waypointcumdist          // length to complete the segment 
+            let fractionToComplete =  lengthToComplete / waypointLength  // waypoint fraction to complete the segment
+            split.push({index:i,frac:fractionToComplete})                // waypoint index + waypoint fraction of segment border 
+            segcumdist += segsize
+        }
+        waypointcumdist += waypointLength
+    }
+
+    let heartRateCategoryDivision = initCategory(params["hr-cat-sel"]) 
+    let slopeCategoryDivision = initCategory(params["slope-cat-sel"])
+
+    let segments = []
+
+    let time1 = waypoints[0].utc
+    let ele1 = waypoints[0].ele
+    let wp1 = 0
+    let prev={index:0,frac:0}
+    let err = ''
+    let lat1 = waypoints[0].lat
+    let lon1 = waypoints[0].lon
+    let cumrealenergy = 0
+    let cumestenergy = 0
+    let prevspeed = 0
+
+    for (var i=0; i < split.length; i++) {
+        let index = split[i].index
+        let frac = split[i].frac
+        // time
+        let t1 = waypoints[index].utc      // in sec
+        let t2 = waypoints[index + 1].utc  // in sec
+        let time2 = t1 + (t2-t1) * frac
+        let segtime = time2 - time1
+        // height
+        let e1 = waypoints[index].ele
+        let e2 = waypoints[index + 1].ele
+        let ele2 = e1 + (e2-e1) * frac
+        // speed
+        let speed = 0
+        if (segtime > 0) speed = Math.round(segsize/segtime * 3.6*10)/10   // in km/h
+        if (speed > 100) {
+            err = "error"
+            var valid_speed = 0 
+        }  else {
+            err = "";
+            valid_speed = speed
+        }
+        if (valid_speed < 2) valid_speed = 0 // stopped
+        // waypoint reference
+        let wp2 = index + split[i].frac
+        // segment energy, beats 
+        let realenergy = 0
+        let segbeats = 0
+        for (let j = prev.index + 1; j < index; j++){
+            realenergy += waypoints[j].energy
+            segbeats += waypoints[j].heartbeats
+        }
+        realenergy += waypoints[prev.index].energy * (1 - prev.frac) 
+        realenergy += waypoints[index].energy * frac
+        segbeats += waypoints[prev.index].heartbeats * (1 - prev.frac) 
+        segbeats += waypoints[index].heartbeats * frac
+        cumrealenergy += realenergy
+        // hrcat
+        let hrcat = 0
+        if (segtime > 0) hrcat = getCategory(segbeats/segtime*60, heartRateCategoryDivision,1)
+        let hrmap = [0,2,2,3,3,5,5,7,8,9]
+        if (hrcat > 9) hrcat = 9
+        hrcat = hrmap[hrcat]
+        // azimuth
+        let azimuth = 0
+        let lat2
+        let lon2
+        if (index < waypoints.length - 1) {
+            let lt1 = waypoints[index].lat
+            let lt2 = waypoints[index +1].lat
+            lat2 = lt1 + (lt2-lt1) * frac
+            let ln1 = waypoints[index].lon
+            let ln2 = waypoints[index +1].lon
+            lon2 = ln1 + (ln2-ln1) * frac 
+            azimuth = Math.round(waypointsmodule.azimuthLatLon(lat1, lat2, lon1, lon2))
+        }
+        // weather
+        if (waypoints[index].utc < actualWeather.utc || waypoints[index].utc > actualWeather.utc + 3600 ) getActualWeatherFromUtc(waypoints[index].utc)
+        // calculated energy
+        let accelerationPower = 0
+        let cenergy = 0    
+        if (valid_speed != 0) {
+            cenergy = calcenergy.calc(params, segtime, segsize, ele2-ele1, azimuth, actualWeather.bearing, actualWeather.spd, waypoints[prev.index].temp, ele1)
+            if (params.zeronegativeenergy == "true" && cenergy < 0) cenergy = 0
+            accelerationPower = calcenergy.accelerationPower(params, prevspeed/3.6, speed/3.6, segtime)
+        }
+        cumestenergy += cenergy
+
+        segments.push({
+            index:index,
+            cumdist:  i * segsize,
+            ele: Math.round(ele1*10)/10,
+            time:Math.round(segtime*100)/100,          
+            time1:fmtsec((segtime*100)/100),
+            temp: waypoints[prev.index].temp,
+            beats: segtime == 0 ? 0 : Math.round(segbeats / segtime *600)/10,  
+            speed: speed,
+            dist: segsize,
+            azimuth:azimuth,
+            windload:0,
+            windspd:0,
+            winddir:0,
+            humidity:0,
+            meteotemp:0,
+            hrCategory: Math.round(hrcat),
+            hrCategory1: hrcat,
+            beatcount: Math.round(segbeats*100)/100,
+            gpxtimestamp: new Date(time1 * 1000).toISOString().substr(0,19) + 'Z',
+            utctime: Math.round(time1),
+            gpxdist:Math.round(waypoints[index].dist),
+            valid_speed: valid_speed,
+            slopeCategory : getCategory((ele2-ele1)/segsize * 100, slopeCategoryDivision,1),
+            error:err,
+            eledif: Math.round((ele2-ele1)*10)/10, 
+            energy: Math.round(realenergy),
+            cumrealenergy: Math.round(cumrealenergy),
+            realpower: segtime == 0 ? 0 : Math.round(realenergy/segtime),
+            calcenergy: Math.round(cenergy),
+            cumestenergy : Math.round(cumestenergy),
+            estpower:  segtime == 0 ? 0 : Math.round(cenergy/segtime),
+            estaccelpower : Math.round(accelerationPower),
+            esttotalpower: segtime == 0 ? 0 : Math.round(cenergy/segtime + accelerationPower),
+            lat:waypoints[index].lat, 
+            lon:waypoints[index].lon,
+
+            wpcount:Math.round((wp2-wp1) * 100) / 100,  // waypoint count
+            wp1:Math.round(wp1 * 100) / 100,            // waypoint 1
+            wp2:Math.round(wp2 * 100) / 100,            // waypoint 2
+        })
+
+        prev = split[i]
+        time1 = time2
+        ele1 = ele2
+        wp1 = wp2
+        lat1 = lat2
+        lon1 = lon2
+        prevspeed = speed
+    }
+
+    return segments
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -370,14 +557,16 @@ let colnames = []
 
 function segmentsToCSV(params, trackinfo, segments) {
     if (segments.length==0) return ""
-    colnames = params["output-column-sel"].split('=')[1].split(',')
+    //colnames = params["output-column-sel"].split('=')[1].split(',')
+    colnames = params["output-column-sel"].split(',')
     let distsum = 0
     let timesum = 0
     let beatcountsum = 0
     let windspdsum = 0
     let winddirsum = 0
+    let windloadsum = 0
     var errorsum = 0
-    let energysum = 0
+    let realenergy = 0
     let adata = {}
 
     function calcTotals(){
@@ -389,7 +578,8 @@ function segmentsToCSV(params, trackinfo, segments) {
                 if (index =="error") { if (segments[i][index]=='error') errorsum++}
                 if (index =="windspd") windspdsum += segments[i][index]
                 if (index =="winddir") winddirsum += segments[i][index]
-                if (index =="calcenergy") energysum += segments[i][index]
+                if (index =="calcenergy") realenergy += segments[i][index]
+                if (index =="windload") windloadsum += segments[i][index]
             }
         }        
     }
@@ -416,6 +606,7 @@ function segmentsToCSV(params, trackinfo, segments) {
                     row.push( (adata[name][1]).toString() ) 
                     //else row.push("")   
                 }
+                
                 else row.push('undefined column name')
             }
             rows.push(row)
@@ -458,7 +649,7 @@ function segmentsToCSV(params, trackinfo, segments) {
         toAdata()
         toAdata('name1','total time move/stop', fmtsec(trackinfo.movtime/1000), ' '+fmtsec(trackinfo.stoptime/1000) )
         toAdata('totdist','total distance (km)', Math.round((trackinfo.movdist +trackinfo.stopdist)/100)/10)
-        toAdata('avgspeed','average speed (km/h)', Math.round(trackinfo.movdist *3600 / trackinfo.movtime * 100)/100)
+        toAdata('avgspeed','average speed (km/h)', trackinfo.movtime == 0 ? 0 : Math.round(trackinfo.movdist *3600 / trackinfo.movtime * 100)/100)
         toAdata('name2','errors', (Math.round(errorsum)).toString())
         let start = new Date(trackinfo.waypoints[0].utc * 1000 + params.timeoffset*3600000).toISOString().substr(0,19)
         let end = new Date(trackinfo.waypoints[trackinfo.waypoints.length - 1].utc * 1000 + params.timeoffset*3600000).toISOString().substr(0,19)
@@ -470,9 +661,9 @@ function segmentsToCSV(params, trackinfo, segments) {
         toAdata('avgwinddir','average wind direction (deg)', Math.round(winddirsum/segments.length))
         toAdata('name6','max/min gpx height', trackinfo.maxheight, trackinfo.minheight)
         toAdata('totrealenerg','total real energy (kJ)', Math.round(trackinfo.totalenergy/1000) )
-        toAdata('totestenerg','total estimated energy (kJ)', Math.round(energysum/1000) )
-        toAdata('avgrealpower','average power (W)', Math.round(trackinfo.totalenergy/trackinfo.movtime * 1000))
-        toAdata('avgestpower','average estimated power (W)', Math.round(energysum/trackinfo.movtime * 1000) )
+        toAdata('totestenerg','total estimated energy (kJ)', Math.round(realenergy/1000) )
+        toAdata('avgrealpower','average power (W)',trackinfo.movtime == 0 ? 0 :  Math.round(trackinfo.totalenergy/trackinfo.movtime * 1000))
+        toAdata('avgestpower','average estimated power (W)',trackinfo.movtime == 0 ? 0 :  Math.round(realenergy/trackinfo.movtime * 1000) )
         toAdata('normrealpower','normalized real power (W)', params.timeslotsA.normpower)
         toAdata('normestpower','normalized estimated power (W)', params.timeslotsA.normcalcpower)
         toAdata('ftpreal5min','FTP5min (W)', params.timeslotsA.maxAvgPower )
@@ -481,7 +672,7 @@ function segmentsToCSV(params, trackinfo, segments) {
         toAdata('ftpest10min','FTPEst10min (W)', params.timeslotsB.maxAvgCalcPower)
         toAdata('ftpreal20min','FTP20min (W)', params.timeslotsC.maxAvgPower )
         toAdata('ftpest20min','FTPEst20min (W)', params.timeslotsC.maxAvgCalcPower)
-
+        
         // get the number of participants
         let participants = 0
         if (params.participantdata.length == 1){
@@ -505,6 +696,8 @@ function segmentsToCSV(params, trackinfo, segments) {
         toAdata('numparticipants','number of participants', participants)
         //toAdata('numotherpeople','number of other people', params.otherpeople)
         toAdata('intensityscore','intensity score', params.intensityscore)
+        toAdata('avgwindload','average wind load (1 to -1)', Math.round(windloadsum/segments.length*100)/100)
+        toAdata('cumHrIntScore','cumulative hr intensity score', Math.round(params.cumHrIntScore))
     }
 
     function convertToString(rows) {
@@ -523,7 +716,7 @@ function segmentsToCSV(params, trackinfo, segments) {
     let rows = []
     getColNames(rows)
     addRowData(rows)
-    //addAdata(rows)
+    addAdata(rows)
     let str = convertToString(rows)
     return str;
 }

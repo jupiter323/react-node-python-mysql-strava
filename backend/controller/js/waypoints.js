@@ -288,6 +288,7 @@ function extend_waypoints(waypoints){  // extend waypoints-records with dist, cu
     waypoints[0].dist = 0
     waypoints[0].eledif = 0
     waypoints[0].speed = 0
+    waypoints[0].heartbeats = 0
     waypoints[0]['energy'] = waypoints[0].power * waypoints[0].timedif / 1000 // in Joules
     for (var i=1; i < waypoints.length; i++){
         var lat2 = Number(waypoints[i].lat)*Math.PI/180 
@@ -301,7 +302,7 @@ function extend_waypoints(waypoints){  // extend waypoints-records with dist, cu
         waypoints[i]["timedif"] = ((waypoints[i]['utc'] - waypoints[i-1]['utc'])) * 1000   // in ms units
         waypoints[i]["eledif"] = waypoints[i].ele - waypoints[i-1].ele
         waypoints[i]['energy'] = waypoints[i].power * waypoints[i].timedif / 1000 // in Joules
-        waypoints[i]['heartbeats'] = waypoints[i]["timedif"] * waypoints[i]['hr']
+        waypoints[i]['heartbeats'] = waypoints[i]["timedif"] * waypoints[i]['hr'] / 60000
         if (waypoints[i]['timedif'] == 0) waypoints[i]['speed'] = 0
         else {
             let speed = waypoints[i]['dist'] / waypoints[i]['timedif'] * 1000  // in m/s
@@ -461,7 +462,8 @@ module.exports = {
     waypointsToCsv:waypointsToCsv,
     //fitParser1 : fitParser1,  // from internet
     fitParser2 : fitParser2,   // author jcjk
-    csvParser : csvParser 
+    csvParser : csvParser,
+    azimuthLatLon:azimuthLatLon 
 }  
 
 /* 
@@ -496,7 +498,8 @@ waypoint = {
     azimuth,
     hour,
     eledif,
-    speed
+    speed,
+    energy
 }
 
 */

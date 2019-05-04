@@ -144,9 +144,13 @@ function calcEnergy(params, time, dist, eledif, azimuth, bearing, windspeed, tem
     let f_air = 0.5 * density * vrel * vrel * cw * af;  // (N) density air = 1.29 kg/m3 // P = 0.5 * rho * cw * vrel^2 * v
     let f_rol = mass * 9.81 * crr;       // (N)
     let phi = Math.atan(eledif/dist);
-    let f_slope=mass * 9.81 * Math.sin(phi); // (N)
-    let p = (f_rol + f_air + f_slope) * v; // (W)
-    return p * time // (J)
+    //let f_slope=mass * 9.81 * Math.sin(phi); // (N)
+    //let p = (f_rol + f_air + f_slope) * v; // (W)
+    //let energ1 = p * time // (J)
+    let epot = mass * 9.81 * eledif // potential energy
+    let p = (f_rol + f_air) * v // (W)
+    let energ2 = p * time // + epot // (J)
+    return energ2
 }
 
 function accelerationPower(params, v1, v2, time){ // v1 and v2 in m/s, time in sec

@@ -84,24 +84,6 @@ function onFileReaderData(event) {
 		else value = para[i].value
 		params += ';' + para[i].id + ':' + value
 	}
-		/*
-        params += ';hr-cat-sel:' + document.getElementById('hr-cat-sel').value
-		params += ';slope-cat-sel:' + document.getElementById('slope-cat-sel').value
-		params += ';output-column-sel:' + document.getElementById('output-column-sel').value
-		params += ';user-id:' + document.getElementById('user-id').value
-		params += ';mv:' + document.getElementById('mv').value
-		params += ';gewicht:' + document.getElementById('gewicht').value
-		params += ';leeftijd:' + document.getElementById('leeftijd').value
-		params += ';lengte:' + document.getElementById('lengte').value
-		params += ';conditie:' + document.getElementById('conditie').value
-		params += ';activity-id:' + document.getElementById('activity-id').value
-		params += ';airresistance:' + document.getElementById('airresistance').value
-		params += ';surfacearea:' + document.getElementById('surfacearea').value
-		params += ';rollingresistance:' + document.getElementById('rollingresistance').value
-		params += ';seglen:' + document.getElementById('seglen').value
-		params += ';zeronegativeenergy:' + document.getElementById('+zeronegativeenergy').checked
-		params += ';csvwithcomma:' + document.getElementById('csvwithcomma').checked
-		*/
 	params += '</params>'
 	let data1 = btoa(data).toString()
 	xmlhttp.send(params + data1); // send params + data converted to base64
@@ -151,5 +133,8 @@ function init(){
     addOptions('heart-rate-divisions', "hr-cat-sel")
     addOptions('slope-divisions', "slope-cat-sel")
 	addOptions('output-column-selections', "output-column-sel")
+	addOptions('heart-rate-cat-multiplier', "hr-cat-mult")
+
+	
 	initDefaults()
 }
