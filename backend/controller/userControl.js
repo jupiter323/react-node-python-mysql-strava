@@ -6,7 +6,7 @@ const Constants = require('../config/contants')
 const sgMail = require('@sendgrid/mail');
 const jwt = require('jsonwebtoken');
 const config = require('../config/db-config');
-
+const urlCfg = require("../config/urls-config")
 function sendEmail(toEmail, html) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -24,7 +24,7 @@ function sendEmailVerifyLink(user) {
     const token = jwt.sign(user, config.secret, {
         expiresIn: '24h' // expires in 24 hours
     });
-    var sendUrl = `${process.env.EMAIL_VERIFY_EMAIL_HOST}/notifications/?tk=${token}`
+    var sendUrl = `${urlCfg.EMAIL_VERIFY_EMAIL_HOST}/notifications/?tk=${token}`
     var html =
         `<a href="${sendUrl}"><strong>Please verify Email</strong> </a>`
     sendEmail(user.email, html)
@@ -34,7 +34,7 @@ function sendPsswordChangeLink(user) {
     const token = jwt.sign(user, config.secret, {
         expiresIn: '24h' // expires in 24 hours
     });
-    var sendUrl = `${process.env.EMAIL_VERIFY_EMAIL_HOST}/pages/forgotpassword/?cptk=${token}`
+    var sendUrl = `${urlCfg.EMAIL_VERIFY_EMAIL_HOST}/pages/forgotpassword/?cptk=${token}`
     var html =
         `<a href="${sendUrl}"><strong>Please Change your password with this link</strong> </a>`
     sendEmail(user.email, html)
@@ -303,7 +303,7 @@ exports.updateProfile = (req, res) => {
 function saveStravaConfig(token) {
     fs.writeFileSync(
         Constants.STRAVA_CONFIG_PATH,
-        `{\n"access_token"    :"${token}", \n"client_id"  :  "${process.env.STRAVA_CLIENT_ID}", \n"client_secret" :"${process.env.STRAVA_CLIENT_SECRET}", \n"redirect_uri"  :"${process.env.STRAVA_CALLBACK_URL}"\n}`
+        `{\n"access_token"    :"${token}", \n"client_id"  :  "${process.env.STRAVA_CLIENT_ID}", \n"client_secret" :"${process.env.STRAVA_CLIENT_SECRET}", \n"redirect_uri"  :"${urlCfg.STRAVA_CALLBACK_URL}"\n}`
     );
 }
 

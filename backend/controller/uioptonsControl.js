@@ -1,6 +1,7 @@
 var UIoptionsModel = require('../model/uioption')
 var Constants = require('../config/contants')
 const request = require("request");
+const urlCfg = require("../config/urls-config")
 exports.getOptions = function (req, res) {
     UIoptionsModel.get_all((err, options) => {
         if (err) {
@@ -21,7 +22,7 @@ exports.getOptions = function (req, res) {
     })
 }
 exports.callPythonTrain = (req, res) => {
-    var url = `${process.env.PYTHON_URL}?user=${req.query.user}`
+    var url = `${urlCfg.PYTHON_URL}?user=${req.query.user}`
     request.get(
         url,
         function (error, response, body) {

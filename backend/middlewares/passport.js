@@ -8,11 +8,11 @@ const JWTStrategy = passportJWT.Strategy;
 const config = require('../config/db-config');
 const User = require('../model/user')
 const Constants = require('../config/contants')
-
+const urlCfg = require('../config/urls-config')
 const stravaConfig = {
     clientID: process.env.STRAVA_CLIENT_ID,
     clientSecret: process.env.STRAVA_CLIENT_SECRET,
-    callbackURL: process.env.STRAVA_CALLBACK_URL
+    callbackURL: urlCfg.STRAVA_CALLBACK_URL
 }
 
 passport.use(new LocalStrategy
