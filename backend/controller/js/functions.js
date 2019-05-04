@@ -1,8 +1,9 @@
-var db = require('./db')
+
+'use strict';
 
 const fs = require('fs');
 const cfg = require('./config.js')
-const mysql = require(cfg.mysql)
+const mysql = require('mysql');
 
 let con = null
 
@@ -33,7 +34,10 @@ function getQueryResult(query, callback, transdata) {
                 con = null
                 return;
             }
-            else do_query()
+            else {
+                console.log("db connected for options");
+                do_query()
+            }
         });
     }
     else do_query()
@@ -70,4 +74,3 @@ module.exports = {
     formatDateForSql: formatDateForSql,
     queryPromise: queryPromise,
 }
-

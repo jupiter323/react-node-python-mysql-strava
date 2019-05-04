@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const appConfig = require('./config/app-config');
+var path = require('path');
 require('./config/make-dir');
 const routes = require('./web/routes');
 const cronJob = require('./web/cron')
@@ -32,14 +33,16 @@ class Server {
 
         this.http.listen(port, host, () => {
             console.log(`Listening on http://${host}:${port}`);
-        });
-
+        });  
     }
+ 
 
 }
 
 
-
+global.appRoot = path.resolve(__dirname);
 const app = new Server()
 
+
 app.appExecute();
+

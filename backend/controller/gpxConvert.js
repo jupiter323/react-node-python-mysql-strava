@@ -35,6 +35,14 @@ if (!fs.existsSync(folderName)) {
 exports.convertgpx = function (req, res) {
     makedirs()
     handler(req, res)
+    // let pid = exec('node ./controller/js/run.js ', function (error, stdout, stderr) {
+    //     console.log('stdout: ', stdout);
+    //     console.log('stderr: ', stderr);
+
+    //     if (error !== null) {
+    //         console.log('exec error: ', error);
+    //     }       
+    // });
 }
 
 exports.OptionsToJson = function (req, res) {

@@ -6,7 +6,7 @@ const fs      = require('fs')
 const fn      = require('./../js/functions.js')
 const convert = require('./convert.js')
 
-let rootpath = __dirname +'/..'
+var rootpath = __dirname + "./../../" 
 
 function runconvert(filedata,params){
     return new Promise(function(resolve, reject) {
@@ -18,11 +18,12 @@ function runconvert(filedata,params){
 }
 
 async function processFile(){
+    console.log("process of converter")
     let delay = 2000
     try {
         var query = `SELECT upload_id from  uploads WHERE upload_status = ""`
         let worklist = await fn.queryPromise(query)
-
+        console.log("work list: ",worklist)
         if (worklist.length > 0) { 
             delay=300
             var query = `SELECT * from uploads WHERE upload_id = "${worklist[0].upload_id}"`
@@ -37,7 +38,7 @@ async function processFile(){
             var query = `SELECT sys_settings from  system WHERE sys_id = 1`
             let systemdata = await fn.queryPromise(query)
 
-            let filename = uploaddata[0].upload_filename
+            let filename = uploaddata[0].upload_filename      
             let filedata = fs.readFileSync(rootpath + '/uploads/' + filename)
             let params = prepareparams(userdata[0], systemdata[0], filename)
             let convertresult = await runconvert(filedata,params)
@@ -47,7 +48,7 @@ async function processFile(){
     catch (err) {
         console.log(err)
     }
-    setTimeout(function(){ processFile() }, delay)
+    // setTimeout(function(){ processFile() }, delay)
 }
 
 function prepareparams(user,system,filename) {
@@ -80,7 +81,7 @@ function prepareparams(user,system,filename) {
  }
 
  function checkoutputdir(){
-    let dir = __dirname + '/../output-files'
+    let dir = rootpath + '/output-files'
     if (!fs.existsSync(dir)) fs.mkdirSync(dir);
  }
 

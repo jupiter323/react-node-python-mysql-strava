@@ -7,9 +7,9 @@ let waypoints = require('./waypoints')
 let segs    = require('./segments')
 let fs      = require('fs')
 
-
+var rootdir  = __dirname + "./../../" 
 function convert(data, params, callback) { // data = ride file content 
-    let rootdir  = __dirname + '/..'
+
     let result = ""
     
     function sendres(params,result){
