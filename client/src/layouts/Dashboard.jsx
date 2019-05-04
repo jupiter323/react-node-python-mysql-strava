@@ -223,7 +223,7 @@ class Dashboard extends React.Component {
           ) : (
               <div className={classes.map}>{switchRoutes}</div>
             )}
-          {this.getRoute() ? <Footer fluid /> : null}
+          {/* {this.getRoute() ? <Footer fluid /> : null} */}
         </div>
       </div>
     );

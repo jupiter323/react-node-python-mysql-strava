@@ -183,7 +183,6 @@ class Post extends Component {
         let params = '<params>'
 
         params += 'name:' + this.files[this.filesIndex].name
-
         params += ';hr-cat-sel:' + this.state.hr_cat_sel
         params += ';slope-cat-sel:' + this.state.slope_cat_sel
         params += ';output-column-sel:' + this.state.output_column_sel
@@ -203,7 +202,6 @@ class Post extends Component {
         params += '</params>'
         let data1 = btoa(data).toString()
         params = params + data1
-
         var response = await Promise.all([
             service.convertGPX(params)
         ]);

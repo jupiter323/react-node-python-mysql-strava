@@ -123,12 +123,12 @@ class RegisterPage extends React.Component {
     return (
       <div className={classes.container}>
         <GridContainer justify="center">
-          <GridItem xs={12} sm={12} md={10}>
+          <GridItem xs={12} sm={12} md={12}>
             <Card className={classes.cardSignup}>
               <h2 className={classes.cardTitle}>Register</h2>
               <CardBody>
                 <GridContainer justify="center">
-                  <GridItem xs={12} sm={12} md={5}>
+                  {/* <GridItem xs={12} sm={12} md={5}>
                     <InfoArea
                       title="Training"
                       description="We've created the marketing campaign of the website. It was a very interesting collaboration."
@@ -147,8 +147,8 @@ class RegisterPage extends React.Component {
                       icon={Group}
                       iconColor="info"
                     />
-                  </GridItem>
-                  <GridItem xs={12} sm={8} md={5}>
+                  </GridItem> */}
+                  <GridItem xs={12} sm={12} md={12}>
                     <div className={classes.center}>
                       <Button justIcon round color="twitter">
                         <i className="fab fa-twitter" />

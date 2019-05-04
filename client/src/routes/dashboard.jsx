@@ -13,18 +13,18 @@ import Hotel from "@material-ui/icons/Hotel";
 import Fastfood from "@material-ui/icons/Fastfood";
 import Build from "@material-ui/icons/Build";
 var dashRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: DashboardIcon,
-    component: Dashboard
-  },
-  {
-    path: "/convertgpx",
-    name: "Convert gpx",
-    icon: Build,
-    component: ConvertGPX
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   icon: DashboardIcon,
+  //   component: Dashboard
+  // },
+  // {
+  //   path: "/convertgpx",
+  //   name: "Convert gpx",
+  //   icon: Build,
+  //   component: ConvertGPX
+  // },
   {
     path: "/profile",
     name: "Profile",
@@ -43,12 +43,12 @@ var dashRoutes = [
     icon: Hotel,
     component: TimelinePage
   },     
-  {
-    path: "/users",
-    name: "User list",
-    icon: AssignmentInd,
-    component: ReactTables
-  },  
-  { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
+  // {
+  //   path: "/users",
+  //   name: "User list",
+  //   icon: AssignmentInd,
+  //   component: ReactTables
+  // },  
+  { redirect: true, path: "/", pathTo: "/profile", name: "Profile" }
 ];
 export default dashRoutes;

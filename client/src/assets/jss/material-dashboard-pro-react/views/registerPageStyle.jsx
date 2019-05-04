@@ -18,7 +18,23 @@ const registerPageStyle = {
   container: {
     ...container,
     position: "relative",
-    zIndex: "3"
+    zIndex: "3",
+    "@media (min-width: 768px)": {
+      width: "400px"
+    },
+    "@media (min-width: 992px)": {
+      width: "400px"
+    },
+    "@media (min-width: 1200px)": {
+      width: "400px"
+    },
+    "&:before,&:after": {
+      display: "table",
+      content: '" "'
+    },
+    "&:after": {
+      clear: "both"
+    }
     // paddingTop: "23vh"
   },
   cardSignup: {

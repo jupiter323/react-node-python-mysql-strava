@@ -198,7 +198,7 @@ class Forgotpassword extends React.Component {
                                 </CardBody>
                                 <CardFooter className={classes.justifyContentCenter}>
                                     <Button color="primary" simple size="lg" block onClick={this.handleChangePassword}>
-                                        Send new password
+                                        Save new password
                   </Button>
                                 </CardFooter>
                             </Card>

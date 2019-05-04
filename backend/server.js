@@ -1,12 +1,10 @@
 const express = require('express');
 const http = require('http');
-var fs = require("fs");
-
 const appConfig = require('./config/app-config');
-
+require('./config/make-dir');
 const routes = require('./web/routes');
 const cronJob = require('./web/cron')
-var path = require('path');
+
 
 class Server {
 
@@ -40,15 +38,7 @@ class Server {
 
 }
 
-global.appRoot = path.resolve(__dirname);
 
-var storagefolder =[ `storage`,`storage/csv`,`storage/auth_data`, `storage/gpx`];
-
-for (let i in storagefolder){
-    if (!fs.existsSync(storagefolder[i])) {
-        fs.mkdirSync(storagefolder[i]);
-    }
-}
 
 const app = new Server()
 

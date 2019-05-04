@@ -129,6 +129,7 @@ function getStreamActivities(number, stravaId, email, access_token) {
                 if (payload.message) {
                     console.log(payload.message)
                 } else {
+                    
                     expertCSV(stravaId, payload, id);
                 }
             }

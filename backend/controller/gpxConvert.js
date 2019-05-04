@@ -8,13 +8,13 @@ var requestTime = ''
 var requestDate = ''
 
 var defaultOptions = `
-[heart-rate-divisions]
+[heart_rate_divisions]
 
 default = 0,25,50,75,100,125,150,175,200,225,250
 18-30 year = 0,50,70,90,110,130,150,170,190,210,230,250
 30-40 year = 0,50,60,70,80,90,110,140,170,200,230,280
 
-[output-column-selections]
+[output_column_selections]
 
 default = cumdist,time,time1,temp,speed,dist,azimuth,windload,meteotemp,
     hrCategory,gpxtimestamp,gpxdist,valid_speed,slopeCategory,error
@@ -23,7 +23,7 @@ all = index,cumdist,ele,time,time1,temp,beats,speed,dist,azimuth,windload,
     valid_speed,slopeCategory,error,energy,calcenergy,lat,lon
 selection1 = cumdist,time1
 
-[slope-divisions]
+[slope_divisions]
 default = -3,-1.5,-0.5,0.5,1.5,3.0,5.0,9.0,12.0
 
 `
@@ -47,7 +47,7 @@ exports.OptionsToJson = function (req, res) {
     try {
         text = fs.readFileSync('storage/options.txt', 'utf8')
     }
-    catch (err) { text = defaultOptions }
+    catch (err) {text = defaultOptions }
 
     text = text.replace(/\r/g, ""); // remove return chars
     let list = text.split('\n')
