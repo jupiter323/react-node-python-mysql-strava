@@ -129,7 +129,7 @@ function getStreamActivities(number, stravaId, email, access_token) {
                 if (payload.message) {
                     console.log(payload.message)
                 } else {
-                    
+
                     expertCSV(stravaId, payload, id);
                 }
             }
@@ -233,6 +233,7 @@ function emailConfirm(toEmail) {
 }
 
 exports.saveStravaData = async function (req, res) {
+    const { email } = req.user  
     if (fetching == false) {
         fetching = true
         allActivities = [];
@@ -242,7 +243,7 @@ exports.saveStravaData = async function (req, res) {
         requestDate = curr_time.split("T")[0]
         requestTime = curr_time.split("T")[1].replace(/:|\//g, "-").split('.')[0]
 
-        getAcitivies(number, req.body.stravaId, req.body.email, req.body.pageNum, req.user.id)
+        getAcitivies(number, req.body.stravaId, email, req.body.pageNum, req.user.id)
         res.send({
             msg: "Download started, we will send email when download finish!"
         })

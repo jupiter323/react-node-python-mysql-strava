@@ -33,7 +33,7 @@ if (!fs.existsSync(folderName)) {
 }
 
 exports.convertgpx = function (req, res) {
-    // makedirs()
+    makedirs()
     // handler(req, res)
     makecsvML.processFile()   
 }

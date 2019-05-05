@@ -67,9 +67,9 @@ class Dashboard extends React.Component {
 
   getStravaDataFunction(props) {
     var { userProfile } = props
-    var profile = userProfile
-    var email = localStorage.getItem('getlistemail') || 'joramkolf@gmail.com'
+    var profile = userProfile   
     var stravaId = profile.athlete.id
+    var email = undefined
     console.log("get strava data", stravaId)
     service.gettingStravaData(stravaId, email);
   }

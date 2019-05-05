@@ -71,7 +71,6 @@ class PostBox extends Component {
                 emailError: false
             });
             this.state.onClick('getStravaData', this.state.email);
-            localStorage.setItem('getlistemail', this.state.email);
         } else {
             this.setState({ emailError: true })
             setTimeout(() => {
