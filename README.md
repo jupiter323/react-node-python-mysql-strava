@@ -53,6 +53,8 @@ connect with ssh
     Then will be created our tables in the "stravadb"
     [like this](https://www.dropbox.com/s/qmc9ax34fhotlyy/6.png)
 
+create .env file according .env.example
+
 BACK_END RUNNING
 
     
