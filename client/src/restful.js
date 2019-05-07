@@ -73,10 +73,13 @@ export function getuseroptions() {
 
 }
 
+export function trainDataUpload(params) {
+    console.log(params)
+    return xapi('multipart/form-data').post('gpxfileupload', params);
+}
+
 export function convertGPX(params) {
     return xapi('application/octet-stream').post('gpxfileupload', params);
-
-
 }
 
 export function gettingStravaData(stravaId, email) {

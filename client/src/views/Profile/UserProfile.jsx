@@ -30,6 +30,8 @@ import Accordion from "components/Accordion/Accordion.jsx";
 import userProfileStyles from "assets/jss/material-dashboard-pro-react/views/userProfileStyles.jsx";
 import extendedFormsStyle from "assets/jss/material-dashboard-pro-react/views/extendedFormsStyle.jsx";
 import * as service from "restful"
+import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
+import FormData from 'form-data'
 const avatar = "/avatar/athlete/medium.png";
 class UserProfile extends React.Component {
   constructor(props) {
@@ -56,6 +58,42 @@ class UserProfile extends React.Component {
     }
     return convertedValue;
   }
+
+  onChooseFile = async (event) => {
+
+    let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object", err3 = "This browser does not support the `files` property of the file input."
+
+    if (typeof window.FileReader !== 'function')
+      throw err1;
+    let input = event.target;
+    if (!input)
+      throw err2;
+    if (!input.files)
+      throw err3;
+    if (!input.files[0])
+      return undefined;
+
+    
+    this.files = input.files;
+    const params = new FormData()
+    for (let file of this.files) {
+      params.append('file', file);
+    }
+    var response = await Promise.all([
+      service.trainDataUpload(params)
+    ]);
+    if (response[0].status === 200 || response[0].readyState === 4) {
+      // this.onUploadResponse(response[0].data)
+      console.log("uploaded files")
+    }
+
+
+    if (this.files.length === 0) return;
+    this.filesIndex = -1
+    this.starttime = new Date()
+    this.runprocess = true
+  }
+
   handleInputValue = event => {
     console.log(event.target.name, event.type, event.target.type)
     var { profile } = this.state;
@@ -80,6 +118,9 @@ class UserProfile extends React.Component {
   updateProfile = async () => {
     const { setUserData } = this.props;
     const { profile } = this.state;
+
+
+
     var [response] = await Promise.all([
       service.setUserData(profile)
     ])
@@ -89,6 +130,20 @@ class UserProfile extends React.Component {
     console.log("updated profile:", this.state.profile, response.data.profile);
 
   }
+
+  onUploadResponse(params) {
+
+    let contents = document.getElementById('contents')
+    if (params.hasOwnProperty('parseresult')) {
+
+      if (params.parseresult !== 'ok') var color = 'red'; else color = '#404040'
+      contents.innerHTML = contents.innerHTML + (this.filesIndex + 1) + ' <span style="color:' + color + '">processing ' + params.name + ', result = ' + params.parseresult + '</span><br>'
+      if (params.name === this.files[this.filesIndex].name) this.processNextFile()
+      else console.log('unexpected fault, filenames do not match: ' + params.name + ' and ' + this.files[this.filesIndex].name)
+    } else { contents.innerHTML = contents.innerHTML + '<span style="color:red">Failure, processing aborted</span><br>' }
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
   handleNavigateClickForLogin = async () => {
     window.location.href = "http://127.0.0.1:3001/api/auth/login"
   }
@@ -750,9 +805,20 @@ class UserProfile extends React.Component {
                     />
                   </GridItem>
                 </GridContainer>
-                <Button color="primary" className={classes.updateProfileButton} onClick={this.updateProfile}>
-                  Update Profile
-                </Button>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={2} >
+                    <GPXUpload onChange={this.onChooseFile} accept=".gpx" multiple innerText="Train GPX FIles" />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={2} >
+                    <GPXUpload onChange={this.onChooseFile} accept=".csv" innerText="Test GPX FIle" />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={8} >
+                    <Button color="primary" className={classes.updateProfileButton} onClick={this.updateProfile}>
+                      Update Profile
+                    </Button>
+                  </GridItem>
+                </GridContainer>
+
                 <Clearfix />
               </CardBody>
             </Card>
