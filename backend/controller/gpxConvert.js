@@ -35,7 +35,9 @@ if (!fs.existsSync(folderName)) {
 exports.convertgpx = function (req, res) {
     makedirs()
     // handler(req, res)
-    makecsvML.processFile()   
+    console.log("files: ", req.files)
+    return res.send({ success: true, msg: "ok" })
+    makecsvML.processFile()
 }
 
 
@@ -49,7 +51,7 @@ exports.OptionsToJson = function (req, res) {
     try {
         text = fs.readFileSync('storage/options.txt', 'utf8')
     }
-    catch (err) {text = defaultOptions }
+    catch (err) { text = defaultOptions }
 
     text = text.replace(/\r/g, ""); // remove return chars
     let list = text.split('\n')
@@ -80,8 +82,8 @@ exports.OptionsToJson = function (req, res) {
     })
 }
 
-function handler(req, res) {  
-    
+function handler(req, res) {
+
     function sendres(params, result) {
         res.writeHead(200, { 'content-type': 'text/plain' });
         params.parseresult = result
