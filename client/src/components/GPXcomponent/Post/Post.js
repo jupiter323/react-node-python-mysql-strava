@@ -184,7 +184,7 @@ class Post extends Component {
 
         params += 'name:' + this.files[this.filesIndex].name
         params += ';hr-cat-sel:' + this.state.hr_cat_sel
-        params += ';slope-cat-sel:' + this.state.slope_cat_sel
+        params += ';slope-cat-sel:' + this.state.slope_cat_sel        
         params += ';output-column-sel:' + this.state.output_column_sel
         params += ';user-id:' + this.state.user_id
         params += ';mv:' + this.state.mv
@@ -233,7 +233,7 @@ class Post extends Component {
     }
 
     handleChange = (e, { name, value }) => {
-        this.setState({ [name]: value })
+        this.setState({ [name]: value }) 
     }
 
     render() {

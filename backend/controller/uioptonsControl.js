@@ -55,22 +55,17 @@ function tableToJson(tableData) {
     let item = {}
     let data = []
     try {
-        var heart_rate_divisions = _.filter(tableData, (item) => item.ui_name == "hr_cat")['0']['default_value'];
         var output_column_selections = _.filter(tableData, (item) => item.ui_name == "output_col")['0']['default_value'];
         var slope_divisions = _.filter(tableData, (item) => item.ui_name == "slope_cat")['0']['default_value'];
         var defaults = _.filter(tableData, (item) => item.ui_name == "defaults")['0']['default_value'];
-        text = `[heart_rate_divisions]\n${heart_rate_divisions}\n[output_column_selections]\n${output_column_selections}\n[slope_divisions]\n${slope_divisions}\n[defaults]\n${defaults}`
+        text = `[output_column_selections]\n${output_column_selections}\n[slope_divisions]\n${slope_divisions}\n[defaults]\n${defaults}`
         text = text.replace(/\r/g, ""); // remove return chars
     }
     catch (err) {
-        var text = `
-        [heart_rate_divisions]    
-
-        default = 0,25,50,75,100,125,150,175,200,225,250    
-
+        var text = `   
         [output_column_selections]    
 
-        default = cumdist,time,time1,temp,speed,dist,azimuth,windload,meteotemp    
+        all = index,cumdist,ele,time,time1,temp,beats,speed,dist,azimuth,windload,windspd,winddir,humidity,meteotemp,hrCategory,beatcount,gpxtimestamp,gpxdist,valid_speed,slopeCategory,error,realpower,estpower,estaccelpower,esttotalpower,lat,lon,cumrealenergy,cumestenergy,hrCategory1,numparticipants,intensityscore
 
         [slope_divisions]
 

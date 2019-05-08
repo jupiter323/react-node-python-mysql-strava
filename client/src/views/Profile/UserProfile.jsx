@@ -32,17 +32,66 @@ import extendedFormsStyle from "assets/jss/material-dashboard-pro-react/views/ex
 import * as service from "restful"
 import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
+import _ from 'lodash';
 const avatar = "/avatar/athlete/medium.png";
+
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     let profile = {}
     Object.assign(profile, props.userProfile);
     this.state = {
-      profile
+      profile,
+      slope_cat_sel_options: [{
+        key: '',
+        value: '',
+        text: ''
+      }],
+      output_column_sel_options: [{
+        key: '',
+        value: '',
+        text: ''
+      }],
+
     };
   }
 
+  componentDidMount() {
+    this.getSystemoptions();
+
+  }
+  getSystemoptions = async () => {
+    var [options_res] = await Promise.all([
+      service.getOptions()
+    ]);
+
+    var systemOptions = options_res.data.optionsRes
+
+    if (systemOptions.length !== 0) {
+      await this.setState({
+        slope_cat_sel_options: this.addOptions(systemOptions, 'slope_divisions'),
+        output_column_sel_options: this.addOptions(systemOptions, 'output_column_selections'),
+        loading: false
+      })
+    }
+
+  }
+  addOptions(settings, name) {
+    if (settings.length !== 0) {
+      let data = settings[name]
+      const options = []
+      _.map(data, (sub_value, sub_id) => {
+        let s = ""
+        const option = {}
+        s = sub_value.name + ' = ' + sub_value.values.toString()
+        option.key = sub_value.name
+        option.value = s
+        option.text = s
+        options.push(option)
+      })
+      return options
+    }
+  }
   convertValue(typeString, value) {
     var convertedValue;
     switch (typeString) {
@@ -73,7 +122,7 @@ class UserProfile extends React.Component {
     if (!input.files[0])
       return undefined;
 
-    
+
     this.files = input.files;
     const params = new FormData()
     for (let file of this.files) {
@@ -115,6 +164,8 @@ class UserProfile extends React.Component {
     Object.assign(profile, userProfile);
     this.setState({ profile });
   }
+
+
   updateProfile = async () => {
     const { setUserData } = this.props;
     const { profile } = this.state;
@@ -371,7 +422,7 @@ class UserProfile extends React.Component {
                     />
                   </GridItem>
                 </GridContainer>
-
+                {/* advanced profile */}
                 <p></p>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
@@ -794,6 +845,127 @@ class UserProfile extends React.Component {
                                         >
                                           No
                                         </MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </GridItem>
+                                </GridContainer>
+                              </GridItem>
+                            </GridContainer>
+                        }
+                      ]}
+                    />
+                  </GridItem>
+                </GridContainer>
+                {/* select system option */}
+                <p></p>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <Accordion
+                      // active={0}
+                      collapses={[
+                        {
+                          title: "System Options",
+                          content:
+                            <GridContainer>
+                              <GridItem xs={12} sm={12} md={12}>
+                                <GridContainer>
+                                  {/* slopecat brand and type */}
+                                  <GridItem xs={12} sm={12} md={6}>
+                                    <FormControl
+                                      fullWidth
+                                      className={classes.selectFormControl}
+                                    >
+                                      <InputLabel
+                                        htmlFor="slopecat"
+                                      >
+                                        Slope Cat
+                                      </InputLabel>
+                                      <Select
+                                        MenuProps={{
+                                          className: classes.selectMenu
+                                        }}
+                                        classes={{
+                                          select: classes.select
+                                        }}
+                                        value={profile.slopecat || ""}
+                                        onChange={this.handleInputValue}
+                                        inputProps={{
+                                          name: "slopecat",
+                                          id: "slopecat"
+                                        }}
+                                      >
+                                        <MenuItem
+                                          disabled
+                                          classes={{
+                                            root: classes.selectMenuItem
+                                          }}
+                                        >
+                                          Choose Slope Cat
+                                         </MenuItem>
+                                        {
+                                          this.state.slope_cat_sel_options.map(item => {
+                                            return <MenuItem
+                                              key={item.key}
+                                              classes={{
+                                                root: classes.selectMenuItem,
+                                                selected: classes.selectMenuItemSelected
+                                              }}
+                                              value={item.value}
+                                            >
+                                              {item.key}
+                                            </MenuItem>
+                                          })
+                                        }
+                                      </Select>
+                                    </FormControl>
+                                  </GridItem>
+                                  {/* outputcols brand and type */}
+                                  <GridItem xs={12} sm={12} md={6}>
+                                    <FormControl
+                                      fullWidth
+                                      className={classes.selectFormControl}
+                                    >
+                                      <InputLabel
+                                        htmlFor="outputcols"
+                                      >
+                                        Output Columns
+                                      </InputLabel>
+                                      <Select
+                                        MenuProps={{
+                                          className: classes.selectMenu
+                                        }}
+                                        classes={{
+                                          select: classes.select
+                                        }}
+                                        value={profile.outputcols || ""}
+                                        onChange={this.handleInputValue}
+                                        inputProps={{
+                                          name: "outputcols",
+                                          id: "outputcols"
+                                        }}
+                                      >
+                                        <MenuItem
+                                          disabled
+                                          classes={{
+                                            root: classes.selectMenuItem
+                                          }}
+                                        >
+                                          Choose Output Columns
+                                         </MenuItem>
+                                        {
+                                          this.state.output_column_sel_options.map(item => {
+                                            return <MenuItem
+                                              key={item.key}
+                                              classes={{
+                                                root: classes.selectMenuItem,
+                                                selected: classes.selectMenuItemSelected
+                                              }}
+                                              value={item.value}
+                                            >
+                                              {item.key}
+                                            </MenuItem>
+                                          })
+                                        }
                                       </Select>
                                     </FormControl>
                                   </GridItem>
