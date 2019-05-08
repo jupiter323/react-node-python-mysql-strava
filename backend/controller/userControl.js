@@ -281,7 +281,6 @@ exports.getUserOption = function (req, res) {
     })
 }
 exports.updateProfile = (req, res) => {
-    console.log(req.body.profile)
     User.updateUserProfile(req.body.profile, (err, msg) => {
         if (err) {
             res.send({

@@ -169,9 +169,6 @@ class UserProfile extends React.Component {
   updateProfile = async () => {
     const { setUserData } = this.props;
     const { profile } = this.state;
-
-
-
     var [response] = await Promise.all([
       service.setUserData(profile)
     ])

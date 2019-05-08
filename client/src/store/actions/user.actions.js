@@ -57,6 +57,9 @@ function makeProfileObject(receivedProfile) {
         bikeSelect: receivedProfile.bikeSelect,
         hrsensorSelect: receivedProfile.hrsensorSelect,
         powermeterSelect: receivedProfile.powermeterSelect
+
+        //system profile
+        //    systemsetting
     }
     return profile
 }
@@ -71,7 +74,7 @@ export function getUserOption(user) {
         response.then(useroption => {
             var receivedProfile = useroption[0].data.users[0];
             console.log("received profile+++++++++++++:", receivedProfile);
-           
+
             var profile = makeProfileObject(receivedProfile)
             dispatch(setUserData(profile))
             return dispatch({

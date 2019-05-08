@@ -1,6 +1,0 @@
-{
-"access_token"    :"profile: ", 
-"client_id"  :  "16560", 
-"client_secret" :"952ad2776cfeee810e58edc79b110713605b4e73", 
-"redirect_uri"  :"http://localhost:3000/pages/login-page"
-}

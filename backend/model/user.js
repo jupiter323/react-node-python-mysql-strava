@@ -3,6 +3,7 @@ var crypto = require('crypto')
 var Constants = require('../config/contants')
 
 var db = require('./db');
+var _ = require('lodash')
 // Set up User class
 var User = function (param) {
   let tempObj = new Object();
@@ -68,11 +69,25 @@ var UserProfile = function (profile) {
     profile.bikeSelect ? tempObj.bikeSelect = profile.bikeSelect : null
     profile.hrsensorSelect ? tempObj.hrsensorSelect = profile.hrsensorSelect : null
     profile.powermeterSelect ? tempObj.powermeterSelect = profile.powermeterSelect : null
+
+    profile.slopecat && profile.outputcols ? tempObj.systemsetting = JSON.stringify(systemDataToJson(profile.slopecat, profile.outputcols)) : null
   }
   return tempObj;
 
 }
+var propertyToHr = () => {
+  return "0.7, 0.7, 0.8, 0.8, 1, 1, 1, 1.2, 1.2, 1.4, 1.4, 1.8"
+}
 
+var systemDataToJson = (slopecat, outputcols) => {
+  var tempJson = { slopecat: "", outputcols: "", hrweight: "", airresist: "0.7", rolresist: "0.006", surfarea: "0.5", seglen: "100", negzero: 0, send: "Update system settings" }
+  if (slopecat)
+    tempJson.slopecat = _.split(slopecat, "=")[1].trim();
+  if (outputcols)
+    tempJson.outputcols = _.split(outputcols, "=")[1].trim();
+  tempJson.hrweight = propertyToHr();
+  return tempJson;
+}
 var getUserList = function (projection, callback) {
   if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user', [], function (err, rows) {
@@ -251,6 +266,8 @@ var updateUser = function (params, callback) {
         msg = Constants.USER_REGISTRATION_FAILED;
         return callback(err, msg)
       }
+      msg = Constants.USER_UPDATE_OK
+      return callback(err, msg)
       return updateUserProfile(params, callback);
 
     })
@@ -273,6 +290,8 @@ var insertUser = function (params, callback) {
         return callback(err, msg);
       }
       // Successfully created user
+      msg = Constants.USER_REGISTRATION_OK
+      return callback(err, msg)
       return insertUserProfile(user, callback);
     }
   )
