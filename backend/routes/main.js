@@ -16,13 +16,13 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 router.route('/gpxfileupload')
-    .post(upload.array('file',1000), GpxCvt.convertgpx)
-
-router.route('/options')
-    .get(GpxCvt.OptionsToJson)
+    .post(upload.array('file', 1000), GpxCvt.convertgpx)
 
 router.route('/getoptions')
-    .get(UIoptions.getOptions)
+    .get(UIoptions.getAllOptionsTxt)
+
+router.route('/systemoptions')
+    .get(UIoptions.getSystemOptions)
 
 router.route('/getuserlistoptions')
     .get(UserControl.getUserListOptions)

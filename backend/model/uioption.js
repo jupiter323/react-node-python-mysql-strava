@@ -12,7 +12,7 @@ var UIoptions = function(values){
 }
 
 exports.get_all = function (callback) {
-    db.query('SELECT * FROM ui_options', [], function (err, rows) {
+    db.query('SELECT * FROM system_options', [], function (err, rows) {
       if (err) return callback(err)
       let temp = new UIoptions(rows)
       return callback(null, rows);
