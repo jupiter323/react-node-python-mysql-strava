@@ -64,7 +64,7 @@ export function gettingToken(code) {
 }
 
 export function getOptions() {
-    return xapi().get('options');
+    return xapi().get('systemoptions');
 
 }
 
