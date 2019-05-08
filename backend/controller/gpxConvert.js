@@ -36,8 +36,8 @@ exports.convertgpx = function (req, res) {
     makedirs()
     // handler(req, res)
     console.log("files: ", req.files)
+    makecsvML.processFile();
     return res.send({ success: true, msg: "ok" })
-    makecsvML.processFile()
 }
 
 
