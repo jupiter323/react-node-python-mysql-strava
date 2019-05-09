@@ -8,14 +8,12 @@ var _ = require('lodash')
 var User = function (param) {
   let tempObj = new Object();
   if (param) {
-    let user = param.athlete
-    let userRole = user.id == process.env.ADMIN_ID ? "admin" : "user"
+    let user = param.athlete   
     tempObj.userId = user.id;
     tempObj.username = user.username;
     tempObj.refresh_token = param.refresh_token;
     tempObj.access_token = param.access_token;
-    tempObj.expiretime = param.expires_at;
-    tempObj.role = userRole;
+    tempObj.expiretime = param.expires_at;   
   }
 
   return tempObj;
@@ -103,14 +101,14 @@ var getUserList = function (projection, callback) {
 }
 var getUserById = (projection, id, callback) => {
   if (projection === '') projection = "*";
-  db.query('SELECT ' + projection + ' FROM client WHERE id = ?', [id], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user WHERE id = ?', [id], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows[0]);
   });
 }
 var getUserByEmail = (projection, email, callback) => {
   if (projection === '') projection = "*";
-  db.query('SELECT ' + projection + ' FROM client WHERE email = ?', [email], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user WHERE email = ?', [email], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows[0]);
   });
@@ -124,18 +122,17 @@ var getUserProfileByClientId = (projection, clientId, callback) => {
   });
 }
 
-
-
 var getUser = function (projection, params, callback) {
   if (projection === '') projection = '*'
-  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.clientId = user_profile.clientId INNER JOIN client ON user.clientId = client.id WHERE user.clientId = ?', [params.id], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.id = user_profile.clientId WHERE user.id = ?', [params.id], function (err, rows) {
     if (err) return callback(err)
     return callback(err, rows);
   });
 }
+
 var changePassword = (params, callback) => {
   const { id, newpassword } = params
-  db.query("SELECT * FROM client WHERE id = ?", [id], (err, rows) => {
+  db.query("SELECT * FROM user WHERE id = ?", [id], (err, rows) => {
     if (err)
       return callback(err, null, null);//change faild
     if (!rows.length) {
@@ -143,7 +140,7 @@ var changePassword = (params, callback) => {
     }
     // var id = rows[0]["id"];
     var encoded_password = bcrypt.hashSync(newpassword);
-    db.query("UPDATE client SET ? WHERE id = ?", [{ password: encoded_password }, id], (err, response) => {
+    db.query("UPDATE user SET ? WHERE id = ?", [{ password: encoded_password }, id], (err, response) => {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
           // If we somehow generated a duplicate user id, try again
@@ -156,9 +153,10 @@ var changePassword = (params, callback) => {
     })
   })
 }
+
 var loginEmailUser = (params, callback) => {
   const { email, password } = params
-  db.query("SELECT * FROM client WHERE email = ?", [email], (err, rows) => {
+  db.query("SELECT * FROM user WHERE email = ?", [email], (err, rows) => {
     if (err)
       return callback(err, null, null);//register faild
     if (!rows.length) {
@@ -173,7 +171,7 @@ var loginEmailUser = (params, callback) => {
 }
 
 var setEmailVerified = (id, callback) => {
-  db.query('UPDATE client SET ? WHERE id = ?', [{ verified: true }, id]
+  db.query('UPDATE user SET ? WHERE id = ?', [{ verified: true }, id]
     , function (err) {
 
       let msg = ''
@@ -190,10 +188,11 @@ var setEmailVerified = (id, callback) => {
       return callback(err, msg)
     })
 }
+
 var registerEmailUser = (params, callback) => {
   var { email, password } = params;
 
-  db.query('SELECT * FROM client WHERE email = ?', [email], (err, rows) => {
+  db.query('SELECT * FROM user WHERE email = ?', [email], (err, rows) => {
     if (err)
       return callback(err, false, null);//register faild
     if (rows.length) {
@@ -202,9 +201,9 @@ var registerEmailUser = (params, callback) => {
 
     var encoded_password = bcrypt.hashSync(password);
     var role = email === process.env.ADMIN_EMAIL ? "admin" : "user"
-    db.query(`INSERT INTO client (email,password,role) values (?,?,?)`,
+    db.query(`INSERT INTO user (email,password,role) values (?,?,?)`,
       [email, encoded_password, role],
-      function (err, response) {
+      (err, response) => {
         if (err) {
 
           if (err.code === 'ER_DUP_ENTRY') {
@@ -216,46 +215,31 @@ var registerEmailUser = (params, callback) => {
         // Successfully created user
         // // create profile
         var clientId = response.insertId
-        db.query(`INSERT INTO user (clientId) values (?)`,
+        // create user_profie
+        db.query(`INSERT INTO user_profile (clientId) values (?)`,
           [clientId],
-          function (err) {
-            let msg = ''
+          (err) => {
             if (err) {
-
+              let msg = ''
               if (err.code === 'ER_DUP_ENTRY') {
-                // If we somehow generated a duplicate user id, try again
-                // return insertUser(params, callback);
+                // return insertUserProfile(user, callback);
               }
               msg = Constants.USER_REGISTRATION_FAILED
               return callback(err, false);
             }
-            // create user_profie
-            db.query(`INSERT INTO user_profile (clientId) values (?)`,
-              [clientId],
-              function (err) {
-                if (err) {
-                  let msg = ''
-                  if (err.code === 'ER_DUP_ENTRY') {
-                    // return insertUserProfile(user, callback);
-                  }
-                  msg = Constants.USER_REGISTRATION_FAILED
-                }
-                msg = Constants.USER_REGISTRATION_OK
-                // Successfully created user
-                return callback(err, false, response) //success               
-              }
-            )
+            msg = Constants.USER_REGISTRATION_OK
+            // Successfully created user
+            return callback(err, false, response) //success               
           }
         )
       }
     )
-
   })
 }
 
 var stravaRegisterUser = function (params, callback) {
   var { user } = params
-  db.query('SELECT * FROM user WHERE clientId = ? ', [user.id], function (err, rows) {
+  db.query('SELECT * FROM user WHERE id = ? ', [user.id], function (err, rows) {
     if (err) {
       callback(err);
     }
@@ -268,7 +252,7 @@ var stravaRegisterUser = function (params, callback) {
 
 var updateUser = function (params, callback) {
   var { user } = params
-  db.query('UPDATE user SET ? WHERE clientId = ?', [new User(params), user.id]
+  db.query('UPDATE user SET ? WHERE id = ?', [new User(params), user.id]
     , function (err) {
 
       let msg = ''
@@ -290,9 +274,8 @@ var updateUser = function (params, callback) {
 
 var insertUser = function (params, callback) {
   let user = params.athlete
-  let userRole = user.id == process.env.ADMIN_ID ? "admin" : "user"
-  db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime,role) values (?,?,?,?,?,?)`,
-    [user.id, user.username, params.access_token, params.refresh_token, params.expires_at, userRole],
+  db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime) values (?,?,?,?,?,?)`,
+    [user.id, user.username, params.access_token, params.refresh_token, params.expires_at],
     function (err) {
       let msg = ''
       if (err) {
@@ -330,7 +313,7 @@ var updateUserProfile = function (profile, callback) {
   )
 }
 
-var insertUserProfile = function (user, callback) {
+var insertUserProfile = function (user, callback) { //optional
 
   db.query(`INSERT INTO user_profile (userId, username, firstname, lastname, badge_type_id, premium, resource_state, summit, sex, profile, profile_medium, city ,country,follower, friend, created_at, updated_at ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     [user.id, user.username, user.firstname, user.lastname, user.badge_type_id, user.premium, user.resource_state, user.summit, user.sex, user.profile, user.profile_medium, user.city, user.country, user.follower, user.friend, user.created_at, user.updated_at],
@@ -352,7 +335,7 @@ var insertUserProfile = function (user, callback) {
 
 var deleteUser = function (username, callback) {
 
-  db.query('DELETE FROM client WHERE username = ?',
+  db.query('DELETE FROM user WHERE username = ?',
     [username]
     , function (err) {
       return callback(err);

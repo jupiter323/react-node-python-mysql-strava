@@ -158,13 +158,11 @@ exports.getStravaToken = function (req, res) {
                         status = Constants.SERVER_INTERNAL_ERROR
                     } else {
                         status = Constants.SERVER_OK_HTTP_CODE
-                    }
-                    let role = process.env.ADMIN_ID == body.athlete.id ? "admin" : "user"
+                    }                   
                     res.send({
                         status: status,
                         error: err,
-                        message: msg,
-                        // data: Object.assign(body, { role })
+                        message: msg,                      
                         data: { clientId: user.id }
                     })
                 })
@@ -263,7 +261,7 @@ exports.getUserListOptions = function (req, res) {
     })
 }
 exports.getUserOption = function (req, res) {
-    let projection = "*, user.userId"
+    let projection = "*"
     User.getUser(projection, { id: req.body.id }, (err, users) => {
         if (err) {
             res.send({

@@ -42,7 +42,7 @@ const user = function (state = initialState, action) {
             }
         case Actions.SET_USER_DATA:
             {
-                console.log("set user data", action.clientId)
+                console.log("set user data")
                 return {
                     ...state,
                     access_token: action.access_token,
