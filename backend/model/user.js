@@ -76,39 +76,12 @@ var UserProfile = function (profile) {
 
 }
 
-var propertyToHrCat = (profile) => {
-  var hrCat;
-  try {
-    hrCat = `${profile.hrzone0min},${0.75 * profile.hrzone0max},${profile.hrzone0max},${0.5 * profile.hrzone1max},${profile.hrzone1max},${0.5 * profile.hrzone2max},${profile.hrzone2max},${0.5 * profile.hrzone3max},${profile.hrzone3max},${0.5 * profile.hrzone4max},${profile.hrzone4max},${0.5 * profile.hrzone5max},${profile.hrzone5max}`
-  } catch (err) {
-    hrCat = "80,100,110,120,130,140,150,160,170,180,190,200,200"
-  }
-  return hrCat
-}
+
 
 var propertyToHrWeight = (profile) => {
   return "0.7, 0.7, 0.8, 0.8, 1, 1, 1, 1.2, 1.2, 1.4, 1.4, 1.8"
 }
-var propertyToUserDataJson = (profile) => {
-  const { athlete, weight, age } = profile;
-  var tempJson = { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings" }
 
-  var hrcat = propertyToHrCat(profile);
-  try {
-    tempJson.firstname = athlete.firstname;
-    tempJson.lastname = athlete.lastname;
-    tempJson.gender = athlete.sex;
-    tempJson.weight = "" + weight;
-    tempJson.age = "" + age;
-    tempJson.length = "1.80";
-    tempJson.shape = "na"
-    tempJson.hrcat = hrcat;
-    tempJson.send = "Update user settings"
-  } catch (err) {
-    console.log(err)
-  }
-  return tempJson
-}
 
 var systemDataToJson = (profile) => {
   var { slopecat, outputcols } = profile
@@ -142,6 +115,15 @@ var getUserByEmail = (projection, email, callback) => {
     return callback(err, rows[0]);
   });
 }
+
+var getUserProfileByClientId = (projection, clientId, callback) => {
+  if (projection === '') projection = "*";
+  db.query('SELECT ' + projection + ' FROM user_profile WHERE clientId = ?', [clientId], function (err, rows) {
+    if (err) return callback(err)
+    return callback(err, rows[0]);
+  });
+}
+
 
 
 var getUser = function (projection, params, callback) {
@@ -379,6 +361,7 @@ var deleteUser = function (username, callback) {
 
 }
 
+
 exports.loginEmailUser = loginEmailUser
 exports.insertUserProfile = insertUserProfile
 exports.insertUser = insertUser
@@ -392,4 +375,6 @@ exports.getUserById = getUserById
 exports.setEmailVerified = setEmailVerified
 exports.changePassword = changePassword
 exports.getUserByEmail = getUserByEmail
+exports.getUserProfileByClientId = getUserProfileByClientId
+
 

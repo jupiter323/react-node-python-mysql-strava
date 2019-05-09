@@ -18,11 +18,6 @@ async function processFile() {
     checkoutputdir()
     console.log('background process gpxconvert started')
     let delay = 2000
-    var query = `SELECT sys_settings from  system WHERE sys_id = 1`
-    let systemdata = await fn.queryPromise(query)
-    var query = `SELECT * from users WHERE user_id = "1"`
-    let userdata = await fn.queryPromise(query)
-
     try {
         var query = `SELECT upload_id from  uploads WHERE upload_status = ""`
         let worklist = await fn.queryPromise(query)

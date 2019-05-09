@@ -4,18 +4,51 @@ var fs = require('fs');
 let convert = require('./makeCSVforML/convert')
 var exec = require('child_process').exec;
 var makecsvML = require('./makeCSVforML')
-
+var Uploads = require('../model/uploads')
+const Constants = require('../config/contants')
 var folderName = `storage/gpx/`;
+var _ = require('lodash')
 if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName);
 }
 
 exports.convertgpx = function (req, res) {
+    const { files } = req;
+    var uploadedCount = files.length
     makedirs()
     // handler(req, res)
-    console.log("files: ", req.files)
-    makecsvML.processFile();
-    return res.send({ success: true, msg: "ok" })
+    Uploads.insertFileRow(req, (err, nonUser) => {
+        if (err) {
+            console.log(err)
+            res.send({
+                status: Constants.SERVER_INTERNAL_ERROR,
+                success: false,
+                error: err
+            })
+        } else if (nonUser) {
+            console.log("non user...")
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: false,
+                error: null
+            })
+        } else { //success
+            console.log("processing convert...")
+            let delay = 2000
+
+            for (let i = 0; i < uploadedCount; i++) {
+                if (i == 0) makecsvML.processFile();
+                else
+                    setTimeout(() => { makecsvML.processFile(); }, delay)
+            }
+
+            res.send({
+                status: Constants.SERVER_OK_HTTP_CODE,
+                success: true,
+                error: null
+            })
+        }
+    })
 }
 
 

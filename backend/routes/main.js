@@ -10,7 +10,7 @@ var storage = multer.diskStorage({
         cb(null, 'storage/gpx/uploads')
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}${file.originalname}`)
+        cb(null, `${file.originalname}`)
     }
 });
 var upload = multer({ storage: storage })
