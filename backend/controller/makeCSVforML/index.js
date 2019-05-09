@@ -30,15 +30,19 @@ async function processFile() {
             var query = `UPDATE uploads SET upload_status = "ready" WHERE upload_id = "${uploaddata[0].upload_id}"`
             let updatedata = await fn.queryPromise(query)
 
-            var query = `SELECT * from users WHERE user_id = "${uploaddata[0].upload_user_id}"`
-            let userdata = await fn.queryPromise(query)
+            // var query = `SELECT * from users WHERE user_id = "${uploaddata[0].upload_user_id}"`
+            // let userdata = await fn.queryPromise(query)
 
-            var query = `SELECT sys_settings from  system WHERE sys_id = 1`
-            let systemdata = await fn.queryPromise(query)
-
+            // var query = `SELECT sys_settings from  system WHERE sys_id = 1`
+            // let systemdata = await fn.queryPromise(query)
+        
+            let userdata = uploaddata[0]["upload_user_settings"]
+            let systemdata = uploaddata[0]["upload_system_settings"]
+            let uploadUserId = uploaddata[0]["upload_user_id"];
+            var sendparams = { userdata, systemdata, uploadUserId }            
             let filename = uploaddata[0].upload_filename
             let filedata = fs.readFileSync(rootpath + '/uploads/' + filename)
-            let params = prepareparams(userdata[0], systemdata[0], filename)
+            let params = prepareparams(sendparams, filename)
             let convertresult = await runconvert(filedata, params)
             console.log(convertresult)
         }
@@ -49,10 +53,10 @@ async function processFile() {
     // setTimeout(function(){ processFile() }, delay)
 }
 
-function prepareparams(user, system, filename) {
+function prepareparams(receivedParams, filename) {
     let params = {}
-    let usersettings = JSON.parse(user.user_settings)
-    let systemsettings = JSON.parse(system.sys_settings)
+    let usersettings = JSON.parse(receivedParams.userdata)
+    let systemsettings = JSON.parse(receivedParams.systemdata)
     params['name'] = filename
     params['hr-cat-sel'] = usersettings.hrcat
     params['hr-cat-mult'] = systemsettings.hrweight
@@ -62,7 +66,7 @@ function prepareparams(user, system, filename) {
     params['savetimeslotfiles'] = "false"
     params['saveweatherfiles'] = "false"
     params['loadweatherfromdarksky'] = "true"
-    params['user-id'] = user.user_id
+    params['user-id'] = receivedParams.uploadUserId
     params['mv'] = usersettings.gender
     params['gewicht'] = usersettings.weight
     params['leeftijd'] = usersettings.age

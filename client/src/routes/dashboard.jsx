@@ -19,12 +19,12 @@ var dashRoutes = [
   //   icon: DashboardIcon,
   //   component: Dashboard
   // },
-  {
-    path: "/convertgpx",
-    name: "Convert gpx",
-    icon: Build,
-    component: ConvertGPX
-  },
+  // {
+  //   path: "/convertgpx",
+  //   name: "Convert gpx",
+  //   icon: Build,
+  //   component: ConvertGPX
+  // },
   {
     path: "/profile",
     name: "Profile",

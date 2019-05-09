@@ -40,8 +40,10 @@ class UserProfile extends React.Component {
     super(props);
     let profile = {}
     Object.assign(profile, props.userProfile);
+
     this.state = {
       profile,
+      // completed: false,
       slope_cat_sel_options: [{
         key: '',
         value: '',
@@ -54,10 +56,13 @@ class UserProfile extends React.Component {
       }],
 
     };
+
   }
 
   componentDidMount() {
+    const { checkCompleteProfile } = this.props;
     this.getSystemoptions();
+    checkCompleteProfile();
 
   }
   getSystemoptions = async () => {
@@ -163,11 +168,13 @@ class UserProfile extends React.Component {
     var { profile } = this.state
     Object.assign(profile, userProfile);
     this.setState({ profile });
+    const { checkCompleteProfile } = this.props;
+    checkCompleteProfile();
+
   }
 
-
   updateProfile = async () => {
-    const { setUserData } = this.props;
+    const { setUserData, checkCompleteProfile } = this.props;
     const { profile } = this.state;
     var [response] = await Promise.all([
       service.setUserData(profile)
@@ -175,6 +182,7 @@ class UserProfile extends React.Component {
     if (!response.data.error)
       alert("profile update success!");
     await setUserData(this.state.profile);
+    checkCompleteProfile();
     console.log("updated profile:", this.state.profile, response.data.profile);
 
   }
@@ -198,7 +206,7 @@ class UserProfile extends React.Component {
 
 
   render() {
-    const { classes, currentUser } = this.props;
+    const { classes, currentUser, profileCompleted } = this.props;
     const { profile } = this.state;
     return (
       <div>
@@ -213,7 +221,7 @@ class UserProfile extends React.Component {
                 <h4 className={classes.cardIconTitle}>
                   Edit Profile - <small>Complete your profile</small>
                 </h4>
-                <Button color="primary" className={classes.updateProfileButton} onClick={this.handleNavigateClickForLogin}>
+                <Button color="primary" disabled={!profileCompleted} className={classes.updateProfileButton} onClick={this.handleNavigateClickForLogin}>
                   Connect to Strava
                 </Button>
               </CardHeader>
@@ -976,10 +984,10 @@ class UserProfile extends React.Component {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={2} >
-                    <GPXUpload onChange={this.onChooseFile} accept=".gpx" multiple innerText="Train GPX FIles" />
+                    {profileCompleted && <GPXUpload onChange={this.onChooseFile} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
                   </GridItem>
                   <GridItem xs={12} sm={12} md={2} >
-                    <GPXUpload onChange={this.onChooseFile} accept=".csv" innerText="Test GPX FIle" />
+                    {profileCompleted && <GPXUpload onChange={this.onChooseFile} accept=".gpx, .csv, .fit" innerText="Test GPX FIle" />}
                   </GridItem>
                   <GridItem xs={12} sm={12} md={8} >
                     <Button color="primary" className={classes.updateProfileButton} onClick={this.updateProfile}>
@@ -1023,14 +1031,16 @@ class UserProfile extends React.Component {
 function mapStateToProps(state) {
   return {
     userProfile: state.user.userProfile,
-    currentUser: state.user.currentUser
+    currentUser: state.user.currentUser,
+    profileCompleted: state.user.profileCompleted
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     logout: Actions.logout,
-    setUserData: Actions.setUserData
+    setUserData: Actions.setUserData,
+    checkCompleteProfile: Actions.checkCompleteProfile
   }, dispatch);
 }
 

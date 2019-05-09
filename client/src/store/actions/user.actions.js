@@ -4,17 +4,20 @@
  */
 import * as service from "restful"
 import store from 'store.js'
+import _ from "lodash"
 export const SET_USER_DATA = '[USER] SET DATA';
 export const GET_USER_DATA = '[USER] GET DATA';
 export const SET_USER_OPTION = '[USER] SET OPTION';
 export const GET_USER_OPTION = '[USER] GET OPTION';
 export const GET_USERS = 'GET_USERS'
+export const CHECK_PROFILE_COMPLETION = "CHECK_PROFILE_COMPLETION"
 
 function makeProfileObject(receivedProfile) {
     const { access_token, expireTime } = store.getState().user
     var profile = {
         // access_token: receivedProfile.access_token,
         // expires_at: receivedProfile.expiretime,
+
         access_token: access_token,
         expires_at: expireTime / 1000,
         verified: receivedProfile.verified,
@@ -62,6 +65,21 @@ function makeProfileObject(receivedProfile) {
         //    systemsetting
     }
     return profile
+}
+
+export function checkCompleteProfile() {
+    const { userProfile } = store.getState().user;
+    var { firstname, lastname, sex } = userProfile.athlete ? userProfile.athlete : {};
+    var completed = !_.values(_.omit(userProfile, ["refresh_token", "expires_at"])).some(x => !x) && firstname && lastname && sex
+    console.log("profile complete status: ", completed)
+    return (dispatch) => {
+
+        dispatch({
+            type: CHECK_PROFILE_COMPLETION,
+            payload: { key: "profileCompleted", value: completed }
+
+        })
+    }
 }
 
 export function getUserOption(user) {

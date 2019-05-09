@@ -34,13 +34,13 @@ exports.convertgpx = function (req, res) {
             })
         } else { //success
             console.log("processing convert...")
-            let delay = 2000
-
-            for (let i = 0; i < uploadedCount; i++) {
-                if (i == 0) makecsvML.processFile();
-                else
-                    setTimeout(() => { makecsvML.processFile(); }, delay)
-            }
+            let delay = 1000
+            var index = 0
+            makecsvML.processFile();
+            var intervalFun = setInterval(() => {
+                if (index++ >= uploadedCount) clearInterval(intervalFun);
+                makecsvML.processFile();
+            }, delay)
 
             res.send({
                 status: Constants.SERVER_OK_HTTP_CODE,

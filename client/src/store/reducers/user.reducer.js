@@ -12,11 +12,20 @@ const initialState = {
     gotNewCoreData: false,
 
     users: [],
-    currentUser: {}
+    currentUser: {},
+
+    profileCompleted: false
 };
 
 const user = function (state = initialState, action) {
     switch (action.type) {
+        case Actions.CHECK_PROFILE_COMPLETION:
+            {
+                return {
+                    ...state,
+                    [action.payload.key]: action.payload.value
+                }
+            }
         case Actions.GET_USER_OPTION:
             {
                 return {
