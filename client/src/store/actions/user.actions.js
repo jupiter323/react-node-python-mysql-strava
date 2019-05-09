@@ -62,7 +62,7 @@ function makeProfileObject(receivedProfile) {
         powermeterSelect: receivedProfile.powermeterSelect
 
         //system profile
-        //    systemsetting
+        //    systemsetting=> slopecat,outputcols
     }
     return profile
 }
@@ -70,7 +70,7 @@ function makeProfileObject(receivedProfile) {
 export function checkCompleteProfile() {
     const { userProfile } = store.getState().user;
     var { firstname, lastname, sex } = userProfile.athlete ? userProfile.athlete : {};
-    var completed = !_.values(_.omit(userProfile, ["refresh_token", "expires_at"])).some(x => !x) && firstname && lastname && sex
+    var completed = !_.values(_.omit(userProfile, ["refresh_token", "expires_at"])).some(x => !x) && firstname && lastname && userProfile.slopecat && userProfile.outputcols  && sex 
     console.log("profile complete status: ", completed)
     return (dispatch) => {
 
