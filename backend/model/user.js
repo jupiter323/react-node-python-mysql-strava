@@ -352,7 +352,7 @@ var insertUserProfile = function (user, callback) {
 
 var deleteUser = function (username, callback) {
 
-  db.query('DELETE FROM users WHERE username = ?',
+  db.query('DELETE FROM client WHERE username = ?',
     [username]
     , function (err) {
       return callback(err);

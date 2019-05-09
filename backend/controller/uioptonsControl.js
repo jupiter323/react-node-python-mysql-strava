@@ -37,7 +37,7 @@ exports.getSystemOptions = function (req, res) {
 
             })
         } else {
-            var optionsRes = tableToJson(options)
+            var optionsRes = OptionTableStringToJson(options)
             res.send({
                 status: 200,
                 error: null,
@@ -48,7 +48,7 @@ exports.getSystemOptions = function (req, res) {
     })
 }
 
-function tableToJson(tableData) {
+OptionTableStringToJson = (tableData) => {
     var text = ``
     let settings = {}
     let groupname = "undefined"
@@ -139,3 +139,4 @@ exports.callPythonTrain = (req, res) => {
         }
     );
 }
+exports.OptionTableStringToJson = OptionTableStringToJson
