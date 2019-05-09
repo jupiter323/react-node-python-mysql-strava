@@ -70,24 +70,57 @@ var UserProfile = function (profile) {
     profile.hrsensorSelect ? tempObj.hrsensorSelect = profile.hrsensorSelect : null
     profile.powermeterSelect ? tempObj.powermeterSelect = profile.powermeterSelect : null
 
-    profile.slopecat && profile.outputcols ? tempObj.systemsetting = JSON.stringify(systemDataToJson(profile.slopecat, profile.outputcols)) : null
+    profile.slopecat && profile.outputcols ? tempObj.systemsetting = JSON.stringify(systemDataToJson(profile)) : null
   }
   return tempObj;
 
 }
-var propertyToHr = () => {
-  return "0.7, 0.7, 0.8, 0.8, 1, 1, 1, 1.2, 1.2, 1.4, 1.4, 1.8"
+
+var propertyToHrCat = (profile) => {
+  var hrCat;
+  try {
+    hrCat = `${profile.hrzone0min},${0.75 * profile.hrzone0max},${profile.hrzone0max},${0.5 * profile.hrzone1max},${profile.hrzone1max},${0.5 * profile.hrzone2max},${profile.hrzone2max},${0.5 * profile.hrzone3max},${profile.hrzone3max},${0.5 * profile.hrzone4max},${profile.hrzone4max},${0.5 * profile.hrzone5max},${profile.hrzone5max}`
+  } catch (err) {
+    hrCat = "80,100,110,120,130,140,150,160,170,180,190,200,200"
+  }
+  return hrCat
 }
 
-var systemDataToJson = (slopecat, outputcols) => {
+var propertyToHrWeight = (profile) => {
+  return "0.7, 0.7, 0.8, 0.8, 1, 1, 1, 1.2, 1.2, 1.4, 1.4, 1.8"
+}
+var propertyToUserDataJson = (profile) => {
+  const { athlete, weight, age } = profile;
+  var tempJson = { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings" }
+
+  var hrcat = propertyToHrCat(profile);
+  try {
+    tempJson.firstname = athlete.firstname;
+    tempJson.lastname = athlete.lastname;
+    tempJson.gender = athlete.sex;
+    tempJson.weight = "" + weight;
+    tempJson.age = "" + age;
+    tempJson.length = "1.80";
+    tempJson.shape = "na"
+    tempJson.hrcat = hrcat;
+    tempJson.send = "Update user settings"
+  } catch (err) {
+    console.log(err)
+  }
+  return tempJson
+}
+
+var systemDataToJson = (profile) => {
+  var { slopecat, outputcols } = profile
   var tempJson = { slopecat: "", outputcols: "", hrweight: "", airresist: "0.7", rolresist: "0.006", surfarea: "0.5", seglen: "100", negzero: 0, send: "Update system settings" }
   if (slopecat)
     tempJson.slopecat = _.split(slopecat, "=")[1].trim();
   if (outputcols)
     tempJson.outputcols = _.split(outputcols, "=")[1].trim();
-  tempJson.hrweight = propertyToHr();
+  tempJson.hrweight = propertyToHrWeight(profile);
   return tempJson;
 }
+
 var getUserList = function (projection, callback) {
   if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user', [], function (err, rows) {
