@@ -1,25 +1,24 @@
 var bcrypt = require('bcrypt-nodejs')
-var crypto = require('crypto')
 var Constants = require('../config/contants')
-
+var Uioption = require('./uioption')
 var db = require('./db');
 var _ = require('lodash')
 // Set up User class
 var User = function (param) {
   let tempObj = new Object();
   if (param) {
-    let user = param.athlete   
+    let user = param.athlete
     tempObj.userId = user.id;
     tempObj.username = user.username;
     tempObj.refresh_token = param.refresh_token;
     tempObj.access_token = param.access_token;
-    tempObj.expiretime = param.expires_at;   
+    tempObj.expiretime = param.expires_at;
   }
 
   return tempObj;
 };
 
-var UserProfile = function (profile) {
+var UserProfile = function (profile, cb) {
   let tempObj = new Object()
   let user = profile.athlete;
   if (profile) {
@@ -68,9 +67,13 @@ var UserProfile = function (profile) {
     profile.hrsensorSelect ? tempObj.hrsensorSelect = profile.hrsensorSelect : null
     profile.powermeterSelect ? tempObj.powermeterSelect = profile.powermeterSelect : null
 
-    profile.slopecat && profile.outputcols ? tempObj.systemsetting = JSON.stringify(systemDataToJson(profile)) : null
-  }
-  return tempObj;
+    console.log("update profile")
+    systemDataToJson(profile, (systemsetting) => {
+      tempObj.systemsetting = JSON.stringify(systemsetting)
+      console.log("update profile");
+      return cb(tempObj)
+    })
+  } else return cb(tempObj);
 
 }
 
@@ -81,15 +84,20 @@ var propertyToHrWeight = (profile) => {
 }
 
 
-var systemDataToJson = (profile) => {
-  var { slopecat, outputcols } = profile
-  var tempJson = { slopecat: "", outputcols: "", hrweight: "", airresist: "0.7", rolresist: "0.006", surfarea: "0.5", seglen: "100", negzero: 0, send: "Update system settings" }
-  if (slopecat)
-    tempJson.slopecat = _.split(slopecat, "=")[1].trim();
-  if (outputcols)
-    tempJson.outputcols = _.split(outputcols, "=")[1].trim();
-  tempJson.hrweight = propertyToHrWeight(profile);
-  return tempJson;
+var systemDataToJson = (profile, cb) => {
+  Uioption.fromSystemTableToSlopAndOutcol((err, data) => {
+    if (err) console.log(err);
+    var { slopecat, outputcols, defaults } = data;
+    console.log(slopecat, outputcols, defaults);
+
+    var tempJson = { slopecat: "", outputcols: "", hrweight: "", airresist: "0.7", rolresist: "0.006", surfarea: "0.5", seglen: "100", negzero: 0, send: "Update system settings" }
+    if (slopecat)
+      tempJson.slopecat = _.split(slopecat, "=")[1].trim();
+    if (outputcols)
+      tempJson.outputcols = _.split(outputcols, "=")[1].trim();
+    tempJson.hrweight = propertyToHrWeight(profile);
+    return cb(tempJson);
+  });
 }
 
 var getUserList = function (projection, callback) {
@@ -113,7 +121,6 @@ var getUserByEmail = (projection, email, callback) => {
     return callback(err, rows[0]);
   });
 }
-
 var getUserProfileByClientId = (projection, clientId, callback) => {
   if (projection === '') projection = "*";
   db.query('SELECT ' + projection + ' FROM user_profile WHERE clientId = ?', [clientId], function (err, rows) {
@@ -297,20 +304,22 @@ var insertUser = function (params, callback) {
 
 var updateUserProfile = function (profile, callback) {
   let clientId = profile.clientId || profile.user.id
-  db.query(`UPDATE user_profile SET ? WHERE clientId =?`, [new UserProfile(profile), clientId],
-    function (err) {
-      let msg = ''
-      if (err) {
-        if (err.code === 'ER_DUP_ENTRY') {
-          return updateUserProfile(profile, callback);
-        }
-        msg = Constants.USER_UPDATE_FAILED
-      } else
-        msg = Constants.USER_UPDATE_OK
-      // Successfully created user
-      return callback(err, msg);
-    }
-  )
+  new UserProfile(profile, formedProfile => {
+    db.query(`UPDATE user_profile SET ? WHERE clientId =?`, [formedProfile, clientId],
+      function (err) {
+        let msg = ''
+        if (err) {
+          if (err.code === 'ER_DUP_ENTRY') {
+            return updateUserProfile(profile, callback);
+          }
+          msg = Constants.USER_UPDATE_FAILED
+        } else
+          msg = Constants.USER_UPDATE_OK
+        // Successfully created user
+        return callback(err, msg);
+      }
+    )
+  })
 }
 
 var insertUserProfile = function (user, callback) { //optional
