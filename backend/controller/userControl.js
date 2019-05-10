@@ -158,11 +158,11 @@ exports.getStravaToken = function (req, res) {
                         status = Constants.SERVER_INTERNAL_ERROR
                     } else {
                         status = Constants.SERVER_OK_HTTP_CODE
-                    }                   
+                    }
                     res.send({
                         status: status,
                         error: err,
-                        message: msg,                      
+                        message: msg,
                         data: { clientId: user.id }
                     })
                 })
@@ -180,13 +180,13 @@ exports.getStravaToken = function (req, res) {
 
 
 exports.refreshToken = () => {
-    let projection = 'refresh_token,expiretime, userId, username,clientId'
+    let projection = 'refresh_token,expiretime, userId, username,id'
     User.getUserList(projection, (err, users) => {
         users.forEach(element => {
             let currTime = Date.now()
 
             if (element.expiretime * 1000 < currTime) {
-                console.log("refreshed:   ",element.username);
+                console.log("refreshed:   ", element.username);
                 request.post(
                     "https://www.strava.com/oauth/token",
                     {
@@ -196,11 +196,12 @@ exports.refreshToken = () => {
                             grant_type: "refresh_token",
                             refresh_token: element.refresh_token
                         }
-                    }, function (error, response, body) {
+                    }, (error, response, body) => {
                         if (!error && response.statusCode == 200) {
 
                             // saveStravaConfig(body.access_token)
-                            Object.assign(body, { athlete: { id: element.userId, username: element.username, }, user: { id: element.clientId } })
+                            Object.assign(body, { athlete: { id: element.userId, username: element.username, }, user: { id: element.id } })
+                            console.log(element)
                             User.stravaRegisterUser(body, (err, msg) => {
                                 let status = ''
                                 if (err) {
