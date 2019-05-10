@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
         this.getStravaDataFunction(next);
 
       }
-    }, 60000);
+    }, 600000);
   }
 
   stravaConnectFlow = async () => {
