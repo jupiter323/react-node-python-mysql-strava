@@ -176,9 +176,6 @@ exports.getStravaToken = function (req, res) {
         }
     );
 }
-
-
-
 exports.refreshToken = () => {
     let projection = 'refresh_token,expiretime, userId, username,id'
     User.getUserList(projection, (err, users) => {
