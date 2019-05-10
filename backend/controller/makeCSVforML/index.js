@@ -35,13 +35,13 @@ async function processFile() {
 
             // var query = `SELECT sys_settings from  system WHERE sys_id = 1`
             // let systemdata = await fn.queryPromise(query)
-        
+
             let userdata = uploaddata[0]["upload_user_settings"]
             let systemdata = uploaddata[0]["upload_system_settings"]
             let uploadUserId = uploaddata[0]["upload_user_id"];
-            var sendparams = { userdata, systemdata, uploadUserId }            
+            var sendparams = { userdata, systemdata, uploadUserId }
             let filename = uploaddata[0].upload_filename
-            let filedata = fs.readFileSync(rootpath + '/uploads/' + filename)
+            let filedata = fs.readFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}`)
             let params = prepareparams(sendparams, filename)
             let convertresult = await runconvert(filedata, params)
             console.log(convertresult)

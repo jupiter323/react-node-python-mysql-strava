@@ -79,6 +79,43 @@ var insertFileRow = function (req, callback) {
     })
 
 }
+var insertFileRowForStrava = function (params, callback) {
+    var { clientId, fileName } = params;
+
+    var upload_user_id = clientId;
+    var upload_filename = fileName;
+    var upload_user_settings;
+    var upload_system_settings;
+
+    User.getUserProfileByClientId("*", clientId, (err, userprofile) => {
+        if (err) {
+            return callback(err)
+        } else {
+            if (!userprofile)
+                return callback(null, true);
+            else {
+
+                upload_system_settings = userprofile.systemsetting;
+                upload_user_settings = JSON.stringify(propertyToUserDataJson(userprofile));
+           
+                db.query(`INSERT INTO uploads (upload_user_id,upload_filename,upload_user_settings,upload_system_settings) values (?,?,?,?)`,
+                    [upload_user_id, upload_filename, upload_user_settings, upload_system_settings],
+                    function (err, response) {
+                        if (err) {
+                            if (err.code === 'ER_DUP_ENTRY') {
+                                // If we somehow generated a duplicate user id, try again
+                            }
+                            return callback(err)
+                        }
+                        return callback(null, false); // success
+                    })
+            }
+        }
+
+    })
+
+}
+
 
 exports.insertFileRow = insertFileRow
-
+exports.insertFileRowForStrava = insertFileRowForStrava

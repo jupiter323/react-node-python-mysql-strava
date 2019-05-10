@@ -1,8 +1,8 @@
 var db = require('./db');
 var Constants = require('../config/contants')
 
-exports.getactivityCountByUsername = function (stravaId, callback) {
-    db.query('SELECT * FROM activity WHERE username = ?', [stravaId], function (err, rows) {
+exports.getactivityCountByUsername = function (clientId, callback) {
+    db.query('SELECT * FROM activity WHERE username = ?', [clientId], function (err, rows) {
         if (err) {
             callback(err);
         }
@@ -13,9 +13,9 @@ exports.getactivityCountByUsername = function (stravaId, callback) {
     });
 }
 exports.activitiesUpdate = function (params, callback) {
-    var stravaId = params.stravaId;
+    var clientId = params.clientId;
     var activitiesCount = params.activitiesCount;
-    db.query('SELECT * FROM activity WHERE username = ?', [stravaId], function (err, rows) {
+    db.query('SELECT * FROM activity WHERE username = ?', [clientId], function (err, rows) {
         if (err) {
             callback(err);
         }
@@ -27,9 +27,9 @@ exports.activitiesUpdate = function (params, callback) {
 }
 
 var updateActivityCount = function (params, callback) {
-    var stravaId = params.stravaId;
+    var clientId = params.clientId;
     var activitiesCount = params.activitiesCount;
-    db.query('UPDATE activity SET ? WHERE username = ?', [{ username: stravaId, count: activitiesCount }, stravaId]
+    db.query('UPDATE activity SET ? WHERE username = ?', [{ username: clientId, count: activitiesCount }, clientId]
         , function (err) {
 
             let msg = ''
@@ -41,10 +41,10 @@ var updateActivityCount = function (params, callback) {
 }
 
 var insertActivityCount = function (params, callback) {
-    var stravaId = params.stravaId;
+    var clientId = params.clientId;
     var activitiesCount = params.activitiesCount;
     db.query(`INSERT INTO activity (username,count) values (?,?)`,
-        [stravaId, activitiesCount],
+        [clientId, activitiesCount],
         function (err) {
             let msg = ''
             if (err) {

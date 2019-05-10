@@ -7,7 +7,8 @@ const UserControl = require('../controller/userControl')
 var multer = require('multer')
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'storage/gpx/uploads')
+
+        cb(null, `storage/gpx/uploads/${req.user.id}`)
     },
     filename: (req, file, cb) => {
         cb(null, `${file.originalname}`)
