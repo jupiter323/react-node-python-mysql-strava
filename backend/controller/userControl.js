@@ -186,7 +186,7 @@ exports.refreshToken = () => {
             let currTime = Date.now()
 
             if (element.expiretime * 1000 < currTime) {
-                console.log("refreshed:   ", element.username);
+                
                 request.post(
                     "https://www.strava.com/oauth/token",
                     {
@@ -201,13 +201,13 @@ exports.refreshToken = () => {
 
                             // saveStravaConfig(body.access_token)
                             Object.assign(body, { athlete: { id: element.userId, username: element.username, }, user: { id: element.id } })
-                            console.log(element)
                             User.stravaRegisterUser(body, (err, msg) => {
                                 let status = ''
                                 if (err) {
                                     status = Constants.SERVER_INTERNAL_ERROR
                                 } else {
-                                    status = Constants.SERVER_OK_HTTP_CODE
+                                    status = Constants.SERVER_OK_HTTP_CODE;
+                                    console.log("refreshed:   ", element.username);
                                 }
                                 return ({
                                     error: err,
