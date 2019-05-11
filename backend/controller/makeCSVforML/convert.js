@@ -8,7 +8,7 @@ let segs = require('./segments')
 let fs = require('fs')
 
 var rootdir = __dirname + "./../../storage/gpx"
-function convert(data, params, callback) { // data = ride file content 
+var convert = (data, params, callback) => { // data = ride file content 
 
     var outputdir = `${rootdir}/output-files/${params['user-id']}/`;
     checkoutputdir(outputdir)
