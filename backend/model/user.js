@@ -100,7 +100,7 @@ var systemDataToJson = (profile, cb) => {
   });
 }
 
-var getUserList = function (projection, callback) {
+var getUserList = (projection, callback) => {
   if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user', [], function (err, rows) {
     if (err) return callback(err)
@@ -129,7 +129,7 @@ var getUserProfileByClientId = (projection, clientId, callback) => {
   });
 }
 
-var getUser = function (projection, params, callback) {
+var getUser = (projection, params, callback) => {
   if (projection === '') projection = '*'
   db.query('SELECT ' + projection + ' FROM user INNER JOIN user_profile ON user.id = user_profile.clientId WHERE user.id = ?', [params.id], function (err, rows) {
     if (err) return callback(err)
@@ -244,7 +244,7 @@ var registerEmailUser = (params, callback) => {
   })
 }
 
-var stravaRegisterUser = function (params, callback) {
+var stravaRegisterUser = (params, callback) => {
   var { user } = params
   db.query('SELECT * FROM user WHERE id = ? ', [user.id], function (err, rows) {
     if (err) {
@@ -257,7 +257,7 @@ var stravaRegisterUser = function (params, callback) {
   });
 }
 
-var updateUser = function (params, callback) {
+var updateUser = (params, callback) => {
   var { user } = params
   db.query('UPDATE user SET ? WHERE id = ?', [new User(params), user.id]
     , function (err) {
@@ -279,7 +279,7 @@ var updateUser = function (params, callback) {
     })
 }
 
-var insertUser = function (params, callback) {
+var insertUser = (params, callback) => {
   let user = params.athlete
   db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime) values (?,?,?,?,?,?)`,
     [user.id, user.username, params.access_token, params.refresh_token, params.expires_at],
@@ -302,7 +302,7 @@ var insertUser = function (params, callback) {
   )
 }
 
-var updateUserProfile = function (profile, callback) {
+var updateUserProfile = (profile, callback) => {
   let clientId = profile.clientId || profile.user.id
   new UserProfile(profile, formedProfile => {
     db.query(`UPDATE user_profile SET ? WHERE clientId =?`, [formedProfile, clientId],
@@ -322,7 +322,7 @@ var updateUserProfile = function (profile, callback) {
   })
 }
 
-var insertUserProfile = function (user, callback) { //optional
+var insertUserProfile = (user, callback) => { //optional
 
   db.query(`INSERT INTO user_profile (userId, username, firstname, lastname, badge_type_id, premium, resource_state, summit, sex, profile, profile_medium, city ,country,follower, friend, created_at, updated_at ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     [user.id, user.username, user.firstname, user.lastname, user.badge_type_id, user.premium, user.resource_state, user.summit, user.sex, user.profile, user.profile_medium, user.city, user.country, user.follower, user.friend, user.created_at, user.updated_at],
@@ -342,11 +342,11 @@ var insertUserProfile = function (user, callback) { //optional
 }
 
 
-var deleteUser = function (username, callback) {
+var deleteUser = (username, callback) => {
 
   db.query('DELETE FROM user WHERE username = ?',
     [username]
-    , function (err) {
+    , (err) => {
       return callback(err);
     });
 

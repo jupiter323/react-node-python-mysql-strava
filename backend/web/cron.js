@@ -7,7 +7,7 @@ class CronJob {
     }
 
     cronJobs() {
-        cron.schedule('* * * * *', async function () {
+        cron.schedule('* * * * *', async () => {
             const refresh = await Promise.resolve(
                 userControl.refreshToken()
             )
