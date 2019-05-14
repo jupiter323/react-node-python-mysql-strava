@@ -108,7 +108,7 @@ function expertCSV(payload, id, clientId) {
             return;
         } else { //success
             console.log("processing convert...")
-            makecsvML.processFile();
+            makecsvML.processFile(false);
             return
         }
     })

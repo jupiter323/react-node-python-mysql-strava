@@ -9,7 +9,8 @@ if (!fs.existsSync(folderName)) {
 }
 
 exports.convertgpx = (req, res) => {
-    const { files } = req;
+    const { files, body } = req;
+    var { isTestData } = body
     var uploadedCount = files.length
     makedirs()
     // handler(req, res)
@@ -32,10 +33,10 @@ exports.convertgpx = (req, res) => {
             console.log("processing convert...")
             let delay = 1000
             var index = 0
-            makecsvML.processFile();
+            makecsvML.processFile(isTestData);
             var intervalFun = setInterval(() => {
                 if (index++ >= uploadedCount) clearInterval(intervalFun);
-                makecsvML.processFile();
+                makecsvML.processFile(isTestData);
             }, delay)
 
             res.send({

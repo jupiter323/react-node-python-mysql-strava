@@ -8,10 +8,12 @@ let segs = require('./segments')
 let fs = require('fs')
 
 var rootdir = __dirname + "./../../storage/gpx"
-var convert = (data, params, callback) => { // data = ride file content 
+var convert = (data, params, isTestData, callback) => { // data = ride file content 
 
     var outputdir = `${rootdir}/output-files/${params['user-id']}/`;
-    checkoutputdir(outputdir)
+    let test_folder = `${outputdir}test data/`;
+    let train_folder = `${outputdir}train data/`;
+    checkoutputdir(outputdir, test_folder, train_folder)
     let result = ""
 
     function sendres(params, result) {
@@ -203,7 +205,9 @@ var convert = (data, params, callback) => { // data = ride file content
                             if (params.csvwithcomma == "true") csv = csv.replace(/\./g, ',')
                         }
                         try {
-                            fs.writeFileSync(outputdir + savealias + '.csv', csv)
+                            console.log("test data flag+++++++++++++++++", isTestData);
+                            let saveFolder = isTestData ? test_folder : train_folder
+                            fs.writeFileSync(saveFolder + savealias + '.csv', csv)
                             let warning = ""
                             if (weatherresult.warning != "") sendres(params, weatherresult.warning)
                             else sendres(params, params.name + ': ok')
@@ -221,8 +225,10 @@ var convert = (data, params, callback) => { // data = ride file content
     }
     else sendres(params, 'missing name parameter')
 }
-function checkoutputdir(outputdir) {
+function checkoutputdir(outputdir, test_folder, train_folder) {
     if (!fs.existsSync(outputdir)) fs.mkdirSync(outputdir);
+    if (!fs.existsSync(test_folder)) fs.mkdirSync(test_folder);
+    if (!fs.existsSync(train_folder)) fs.mkdirSync(train_folder);
 }
 
 

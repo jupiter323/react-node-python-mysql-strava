@@ -5,16 +5,16 @@ const convert = require('./convert.js')
 
 var rootpath = __dirname + "./../../storage/gpx"
 
-function runconvert(filedata, params) {
+function runconvert(filedata, params, isTestData) {
     return new Promise(function (resolve, reject) {
-        convert.convert(filedata, params, function (result) {
+        convert.convert(filedata, params, isTestData, function (result) {
             resolve(result.parseresult)
             // if (err) reject(err)   // no error result         
         })
     })
 }
 
-async function processFile() {
+async function processFile(isTestData) {
     checkoutputdir()
     console.log('background process gpxconvert started')
     let delay = 2000
@@ -43,7 +43,7 @@ async function processFile() {
             let filename = uploaddata[0].upload_filename
             let filedata = fs.readFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}`)
             let params = prepareparams(sendparams, filename)
-            let convertresult = await runconvert(filedata, params)
+            let convertresult = await runconvert(filedata, params, isTestData)
             console.log(convertresult)
         }
     }

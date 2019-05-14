@@ -113,7 +113,7 @@ class UserProfile extends React.Component {
     return convertedValue;
   }
 
-  onChooseFile = async (event) => {
+  onChooseFile = async (isTestData, event) => {
 
     let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object", err3 = "This browser does not support the `files` property of the file input."
 
@@ -130,11 +130,12 @@ class UserProfile extends React.Component {
 
     this.files = input.files;
     const params = new FormData()
+    params.append('isTestData', isTestData)
     for (let file of this.files) {
       params.append('file', file);
     }
     var response = await Promise.all([
-      service.trainDataUpload(params)
+      service.trainAndTestDataUpload(params)
     ]);
     if (response[0].status === 200 || response[0].readyState === 4) {
       // this.onUploadResponse(response[0].data)
@@ -984,10 +985,10 @@ class UserProfile extends React.Component {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={2} >
-                    {profileCompleted && <GPXUpload onChange={this.onChooseFile} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
+                    {profileCompleted && <GPXUpload onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
                   </GridItem>
                   <GridItem xs={12} sm={12} md={2} >
-                    {profileCompleted && <GPXUpload onChange={this.onChooseFile} accept=".gpx, .csv, .fit" innerText="Test GPX FIle" />}
+                    {profileCompleted && <GPXUpload onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="Test GPX FIle" />}
                   </GridItem>
                   <GridItem xs={12} sm={12} md={8} >
                     <Button color="primary" className={classes.updateProfileButton} onClick={this.updateProfile}>

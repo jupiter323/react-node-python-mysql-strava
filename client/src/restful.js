@@ -73,8 +73,7 @@ export function getuseroptions() {
 
 }
 
-export function trainDataUpload(params) {
-    console.log(params)
+export function trainAndTestDataUpload(params) {
     return xapi('multipart/form-data').post('gpxfileupload', params);
 }
 
