@@ -4,7 +4,7 @@ var Uioption = require('./uioption')
 var db = require('./db');
 var _ = require('lodash')
 // Set up User class
-var User = function (param) {
+var User = (param) => {
   let tempObj = new Object();
   if (param) {
     let user = param.athlete
@@ -18,7 +18,7 @@ var User = function (param) {
   return tempObj;
 };
 
-var UserProfile = function (profile, cb) {
+var UserProfile = (profile, cb) => {
   let tempObj = new Object()
   let user = profile.athlete;
   if (profile) {
@@ -102,14 +102,14 @@ var systemDataToJson = (profile, cb) => {
 
 var getUserList = (projection, callback) => {
   if (projection === '') projection = '*'
-  db.query('SELECT ' + projection + ' FROM user', [], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user', [], (err, rows) => {
     if (err) return callback(err)
     return callback(err, rows);
   });
 }
 var getUserById = (projection, id, callback) => {
   if (projection === '') projection = "*";
-  db.query('SELECT ' + projection + ' FROM user WHERE id = ?', [id], function (err, rows) {
+  db.query('SELECT ' + projection + ' FROM user WHERE id = ?', [id], (err, rows) => {
     if (err) return callback(err)
     return callback(err, rows[0]);
   });

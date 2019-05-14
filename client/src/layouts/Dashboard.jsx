@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
 
   getStravaDataFunction(props) {
     var { userProfile } = props
-    var profile = userProfile   
+    var profile = userProfile
     var stravaId = profile.athlete.id
     var email = undefined
     console.log("get strava data", stravaId)
@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
         this.getStravaDataFunction(next);
 
       }
-    }, 600000);
+    }, 60000);
   }
 
   stravaConnectFlow = async () => {

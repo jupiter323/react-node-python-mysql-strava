@@ -27,7 +27,7 @@ var propertyToUserDataJson = (profile) => {
                 tempJson.gender = sex;
                 tempJson.weight = "" + weight;
                 tempJson.age = "" + age;
-                tempJson.length = seglen;                
+                tempJson.length = seglen;
                 tempJson.hrcat = hrcat;
                 tempJson.shape = "na" //there is not values in defaults
                 tempJson.send = "Update user settings" //there is not values in defaults
@@ -69,7 +69,7 @@ var insertFileRow = (req, callback) => {
                 }
                 db.query(`INSERT INTO uploads (upload_user_id,upload_filename,upload_user_settings,upload_system_settings) values ${valueFiledsString}`,
                     valueArray,
-                    function (err, response) {
+                    (err, response) => {
 
                         if (err) {
 
@@ -87,7 +87,7 @@ var insertFileRow = (req, callback) => {
     })
 
 }
-var insertFileRowForStrava = function (params, callback) {
+var insertFileRowForStrava = (params, callback) => {
     var { clientId, fileName } = params;
 
     var upload_user_id = clientId;
