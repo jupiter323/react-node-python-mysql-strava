@@ -6,6 +6,7 @@ const User = require('../model/user')
 const Uploads = require('../model/uploads')
 var makecsvML = require('./makeCSVforML')
 var ActivityIDs = [];
+var userControl = require('./../controller/userControl')
 // var number = 0;
 var allActivities = [];
 var requestTime = ''
@@ -197,6 +198,10 @@ function getAcitivies(number, email, page, clientId) {
                 console.log("----->> Start list activities");
                 if (payload.length === undefined) {
                     console.log(payload);
+                    if (payload.errors)
+                        await Promise.resolve(
+                            userControl.refreshTokenAbsoultely(clientId)
+                        )
                     fetching = false;
                     return;
                 }

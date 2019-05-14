@@ -176,14 +176,59 @@ exports.getStravaToken = function (req, res) {
         }
     );
 }
-exports.refreshToken = () => {
+exports.refreshTokenAbsoultely = (clientId) => {
+    let projection = 'refresh_token,expiretime, userId, username,id'
+    User.getUserList(projection, (err, users) => {
+        users.forEach(element => {            
+            if (clientId == element.id)
+                request.post(
+                    "https://www.strava.com/oauth/token",
+                    {
+                        json: {
+                            client_id: process.env.STRAVA_CLIENT_ID,
+                            client_secret: process.env.STRAVA_CLIENT_SECRET,
+                            grant_type: "refresh_token",
+                            refresh_token: element.refresh_token
+                        }
+                    }, (error, response, body) => {
+                        if (!error && response.statusCode == 200) {
+
+                            // saveStravaConfig(body.access_token)
+                            Object.assign(body, { athlete: { id: element.userId, username: element.username, }, user: { id: element.id } })
+                            User.stravaRegisterUser(body, (err, msg) => {
+                                let status = ''
+                                if (err) {
+                                    status = Constants.SERVER_INTERNAL_ERROR
+                                } else {
+                                    status = Constants.SERVER_OK_HTTP_CODE;
+                                    console.log("refreshed:   ", element.username);
+                                }
+                                return ({
+                                    error: err,
+                                    message: msg,
+                                    data: body
+                                })
+                            })
+
+                        } else {
+                            return ({
+                                success: false,
+                                message: error
+                            })
+                        }
+                    }
+                );
+
+        });
+    })
+}
+exports.refreshCheckingToken = () => {
     let projection = 'refresh_token,expiretime, userId, username,id'
     User.getUserList(projection, (err, users) => {
         users.forEach(element => {
             let currTime = Date.now()
 
             if (element.expiretime * 1000 < currTime) {
-                
                 request.post(
                     "https://www.strava.com/oauth/token",
                     {

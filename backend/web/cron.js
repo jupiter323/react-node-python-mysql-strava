@@ -9,7 +9,7 @@ class CronJob {
     cronJobs() {
         cron.schedule('* * * * *', async () => {
             const refresh = await Promise.resolve(
-                userControl.refreshToken()
+                userControl.refreshCheckingToken()
             )
             console.log('Token refresh every minute', refresh);
         }, {

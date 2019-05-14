@@ -259,7 +259,7 @@ var stravaRegisterUser = (params, callback) => {
 
 var updateUser = (params, callback) => {
   var { user } = params
-  db.query('UPDATE user SET ? WHERE id = ?', [new User(params), user.id]
+  db.query('UPDATE user SET ? WHERE id = ?', [User(params), user.id]
     , function (err) {
 
       let msg = ''
