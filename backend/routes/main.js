@@ -1,14 +1,17 @@
 var express = require('express');
 var router = express.Router();
-
+var fs = require("fs");
 const GpxCvt = require('../controller/gpxConvert')
 const UIoptions = require('../controller/uioptonsControl')
 const UserControl = require('../controller/userControl')
 var multer = require('multer')
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-
-        cb(null, `storage/gpx/uploads/${req.user.id}`)
+        var userfolder = `storage/gpx/uploads/${req.user.id}`
+        if (!fs.existsSync(userfolder)) {
+            fs.mkdirSync(userfolder);
+        }
+        cb(null, userfolder)
     },
     filename: (req, file, cb) => {
         cb(null, `${file.originalname}`)

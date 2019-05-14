@@ -691,7 +691,7 @@ function segmentsToCSV(params, trackinfo, segments) {
         }
         
         // select params.otherpeople if participants = 0
-
+   
         if (participants == 0) participants = params.otherpeople
         toAdata('numparticipants','number of participants', participants)
         //toAdata('numotherpeople','number of other people', params.otherpeople)

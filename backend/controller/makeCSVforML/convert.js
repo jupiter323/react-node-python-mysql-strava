@@ -204,10 +204,13 @@ var convert = (data, params, isTestData, callback) => { // data = ride file cont
                         if (params.hasOwnProperty('csvwithcomma')) {
                             if (params.csvwithcomma == "true") csv = csv.replace(/\./g, ',')
                         }
+
                         try {
                             console.log("test data flag+++++++++++++++++", isTestData);
-                            let saveFolder = isTestData ? test_folder : train_folder
-                            fs.writeFileSync(saveFolder + savealias + '.csv', csv)
+                            if (isTestData == "true" || isTestData == true)
+                                fs.writeFileSync(test_folder + savealias + '.csv', csv)
+                            else
+                                fs.writeFileSync(train_folder + savealias + '.csv', csv)
                             let warning = ""
                             if (weatherresult.warning != "") sendres(params, weatherresult.warning)
                             else sendres(params, params.name + ': ok')
