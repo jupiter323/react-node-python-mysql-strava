@@ -13,7 +13,7 @@ var propertyToHrCat = (profile) => {
 }
 
 var propertyToUserDataJson = (profile) => {
-    const { firstname, lastname, sex, weight, age } = profile;
+    const { firstname, lastname, sex, weight, age, height } = profile;
     var tempJson = { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings" }
     return new Promise((resolve, reject) => {
         Uioption.fromSystemTableToSlopAndOutcol((err, data) => {
@@ -27,7 +27,7 @@ var propertyToUserDataJson = (profile) => {
                 tempJson.gender = sex;
                 tempJson.weight = "" + weight;
                 tempJson.age = "" + age;
-                tempJson.length = seglen;
+                tempJson.length = height;
                 tempJson.hrcat = hrcat;
                 tempJson.shape = "na" //there is not values in defaults
                 tempJson.send = "Update user settings" //there is not values in defaults

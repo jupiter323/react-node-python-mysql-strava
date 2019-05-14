@@ -39,8 +39,8 @@ def Process(user='Test'):
     """ set config data """
     main_path = "../storage/gpx/output-files/" + user
     # user = 'User 2 - 100 meter - added variables - traintest - new/User 2'
-    train_data_path = "/Train data/"
-    test_data_path = "/Test data/"
+    train_data_path = "/train data/"
+    test_data_path = "/test data/"
 
     # create directories
     creatDir('user_combinations_models')
@@ -60,7 +60,7 @@ def Process(user='Test'):
     #### get all training files and show
     all_training_files = glob.glob(main_path + train_data_path + "*.csv")
     all_training_files = [
-        s.replace( main_path + "/Train data/", "") for s in
+        s.replace( main_path + "/train data/", "") for s in
         all_training_files]
     print('Training Files : \n', all_training_files)
 

@@ -304,7 +304,7 @@ var insertUser = (params, callback) => {
 
 var updateUserProfile = (profile, callback) => {
   let clientId = profile.clientId || profile.user.id
-  new UserProfile(profile, formedProfile => {
+  UserProfile(profile, formedProfile => {
     db.query(`UPDATE user_profile SET ? WHERE clientId =?`, [formedProfile, clientId],
       function (err) {
         let msg = ''
