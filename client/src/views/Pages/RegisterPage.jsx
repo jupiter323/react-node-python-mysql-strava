@@ -9,6 +9,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Icon from "@material-ui/core/Icon";
 
 // @material-ui/icons
+import Timeline from "@material-ui/icons/Timeline";
+import Code from "@material-ui/icons/Code";
+import Group from "@material-ui/icons/Group";
 import Email from "@material-ui/icons/Email";
 // import LockOutline from "@material-ui/icons/LockOutline";
 import Check from "@material-ui/icons/Check";
@@ -18,6 +21,7 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
+import InfoArea from "components/InfoArea/InfoArea.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 
@@ -97,16 +101,17 @@ class RegisterPage extends React.Component {
   handleRegister = async () => {
 
     const { register } = this.props
-    var { emailState, passwordState } = this.state
+    var { emailState, passwordState, email, password } = this.state
 
     if (emailState === "") {
       await this.setState({ emailState: "error" });
-      return
     }
     if (passwordState === "") {
       await this.setState({ passwordState: "error" });
-      return
     }
+
+
+    var { emailState, passwordState } = this.state
 
     if (emailState === "error" || passwordState === "error") return;
 
