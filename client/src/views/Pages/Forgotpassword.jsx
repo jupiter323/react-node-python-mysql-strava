@@ -56,7 +56,7 @@ class Forgotpassword extends React.Component {
     componentDidMount() {
         // we add a hidden class to the card and after 700 ms we delete it and the transition appears
         this.timeOutFunction = setTimeout(
-            function() {
+            function () {
                 this.setState({ cardAnimaton: "" });
             }.bind(this),
             700
@@ -84,17 +84,16 @@ class Forgotpassword extends React.Component {
     }
     handleChangePassword = async () => {
         const { forgotpassword } = this.props
-        var { cnewpasswordState, newpasswordState } = this.state
+        var { cnewpasswordState, newpasswordState, newpassword, cnewpassword } = this.state
 
         if (cnewpasswordState === "") {
             await this.setState({ cnewpasswordState: "error" });
+            return
         }
         if (newpasswordState === "") {
             await this.setState({ newpasswordState: "error" });
+            return
         }
-
-
-        var { cnewpasswordState, newpasswordState, newpassword, cnewpassword } = this.state
 
         if (cnewpasswordState === "error" || newpasswordState === "error") return;
         if (!utilities.compare(newpassword, cnewpassword)) return alert("Please confirm your password correctly")

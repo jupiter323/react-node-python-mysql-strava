@@ -1,6 +1,5 @@
 import axios from 'axios';
 import store from './store.js';
-import * as Actions from 'store/actions';
 var baseUrl = 'http://127.0.0.1:3001/api/'
 export const xapi = (optional) => {
     let token = null;

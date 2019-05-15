@@ -89,8 +89,8 @@ class ForgotpasswordRequest extends React.Component {
 
     if (emailState === "") {
       await this.setState({ emailState: "error" });
+      return
     }
-    var { emailState, email } = this.state
 
     if (emailState === "error") return;
 
