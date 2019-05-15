@@ -18,6 +18,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 // core components
 import Header from "components/Header/Header.jsx";
+import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 
 import dashboardRoutes from "routes/dashboard.jsx";
@@ -56,7 +57,7 @@ class Dashboard extends React.Component {
     this.resizeFunction = this.resizeFunction.bind(this);
   }
   componentWillMount() {
-    const { getUserData, setauth, getUsers } = this.props;
+    const { getUserData, setauth, getUsers, userProfile } = this.props;
     this.stravaConnectFlow();
     setauth();
     getUserData();

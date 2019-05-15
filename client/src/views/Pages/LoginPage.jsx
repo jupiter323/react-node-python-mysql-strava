@@ -92,12 +92,13 @@ class LoginPage extends React.Component {
 
     if (emailState === "") {
       await this.setState({ emailState: "error" });
-      return
     }
     if (passwordState === "") {
       await this.setState({ passwordState: "error" });
-      return
     }
+
+
+    var { emailState, passwordState } = this.state
 
     if (emailState === "error" || passwordState === "error") return;
 
