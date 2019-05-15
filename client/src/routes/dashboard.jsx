@@ -1,4 +1,3 @@
-import ConvertGPX from "views/ConvertGPX/ConvertGPX.jsx";
 import Dashboard from "views/Dashboard/Dashboard.jsx";
 import ExtendedTables from "views/Tables/ExtendedTables.jsx";
 import ReactTables from "views/Tables/ReactTables.jsx";
