@@ -24,7 +24,6 @@ import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
-import CardAvatar from "components/Card/CardAvatar.jsx";
 import Accordion from "components/Accordion/Accordion.jsx";
 
 import userProfileStyles from "assets/jss/material-dashboard-pro-react/views/userProfileStyles.jsx";
@@ -33,7 +32,6 @@ import * as service from "restful"
 import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
 import _ from 'lodash';
-const avatar = "/avatar/athlete/medium.png";
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -207,7 +205,7 @@ class UserProfile extends React.Component {
 
 
   render() {
-    const { classes, currentUser, profileCompleted } = this.props;
+    const { classes, profileCompleted } = this.props;
     const { profile } = this.state;
     return (
       <div>
