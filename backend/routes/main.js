@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require("fs");
 const GpxCvt = require('../controller/gpxConvert')
 const UIoptions = require('../controller/uioptonsControl')
+const TrainTest = require('../controller/trainTest')
 const UserControl = require('../controller/userControl')
 var multer = require('multer')
 var storage = multer.diskStorage({
@@ -34,6 +35,6 @@ router.route('/getuserlistoptions')
 router.route('/getuseroption')
     .post(UserControl.getUserOption)
 router.route('/pythontrain')
-    .get(UIoptions.callPythonTrain)
+    .get(TrainTest.callPythonTrainForHost)
 
 module.exports = router;

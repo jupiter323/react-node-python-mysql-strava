@@ -6,7 +6,7 @@ let power = require('./power')
 let waypoints = require('./waypoints')
 let segs = require('./segments')
 let fs = require('fs')
-
+const TrainTest = require('../../controller/trainTest')
 var rootdir = __dirname + "./../../storage/gpx"
 var convert = (data, params, isTestData, callback) => { // data = ride file content 
 
@@ -168,7 +168,7 @@ var convert = (data, params, isTestData, callback) => { // data = ride file cont
 
                 // get hourly weather 
 
-                segs.getDarkSkyData(params, trackinfo, (weatherresult) => {
+                segs.getDarkSkyData(params, trackinfo, async (weatherresult) => {
                     if (weatherresult.error != '') {
                         sendres(params, weatherresult.error)
                         return
@@ -207,8 +207,13 @@ var convert = (data, params, isTestData, callback) => { // data = ride file cont
 
                         try {
                             console.log("test data flag+++++++++++++++++", isTestData);
-                            if (isTestData == "true" || isTestData == true)
-                                fs.writeFileSync(test_folder + savealias + '.csv', csv)
+                            if (isTestData == "true" || isTestData == true) {
+                                fs.writeFileSync(test_folder + savealias + '.csv', csv);
+
+                                // train python
+                                var res = await TrainTest.callPythonTrainAndTest(params['user-id'])
+                                console.log("python result: ", res.message)
+                            }
                             else
                                 fs.writeFileSync(train_folder + savealias + '.csv', csv)
                             let warning = ""
