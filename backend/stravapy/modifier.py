@@ -43,12 +43,12 @@ def Process(user='Test'):
     test_data_path = "/test data/"
 
     # create directories
-    creatDir('user_combinations_models')
-    path = 'user_combinations_models/' + user
+    creatDir(main_path+'/user_combinations_models')
+    path = main_path+'/user_combinations_models' 
     creatDir(path)
 
-    creatDir('user_combinations_predictions')
-    saving_path = 'user_combinations_predictions/' + user + '/'
+    creatDir(main_path+'/user_combinations_predictions')
+    saving_path = main_path+'/user_combinations_predictions/' 
     creatDir(saving_path)
     creatDir(saving_path + 'best_predictions')
     ##########################################################################################################
