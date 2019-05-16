@@ -41,7 +41,18 @@ var propertyToUserDataJson = (profile) => {
 
 }
 
-
+var checkExistInRow = (upload_filename, upload_user_id) => {
+    return new Promise((resolve, reject) => {
+        db.query("SELECT * FROM uploads WHERE upload_filename = ? and upload_user_id= ?", [upload_filename, upload_user_id],
+            (err, response) => {
+                if (err) reject(err)
+                else {
+                    if (response)
+                        resolve(response.length)
+                }
+            })
+    })
+}
 var insertFileRow = (req, callback) => {
     var { user, files } = req;
     var upload_user_id = user.id;
@@ -63,24 +74,36 @@ var insertFileRow = (req, callback) => {
                 var valueFiledsString = '';
                 var valueArray = [];
                 for (let i = 0; i < files.length; i++) {
-                    valueFiledsString += i + 1 == files.length ? "(?,?,?,?)" : "(?,?,?,?),"
                     upload_filename = files[i]["originalname"];
-                    valueArray.push(upload_user_id, upload_filename, upload_user_settings, upload_system_settings)
+                    var duplicated = await checkExistInRow(upload_filename, user.id)
+
+                    if (!duplicated) {
+                        valueFiledsString += "(?,?,?,?),"
+                        valueArray.push(upload_user_id, upload_filename, upload_user_settings, upload_system_settings)
+                    } else {
+                        console.log("not inserted on uploads because there is ", duplicated)
+                    }
+                    if (i + 1 == files.length && valueFiledsString.length) {
+                        valueFiledsString = valueFiledsString.slice(0, valueFiledsString.length - 1);                       
+                    }
+                  
                 }
-                db.query(`INSERT INTO uploads (upload_user_id,upload_filename,upload_user_settings,upload_system_settings) values ${valueFiledsString}`,
-                    valueArray,
-                    (err, response) => {
 
-                        if (err) {
+                if (valueArray.length)
+                    db.query(`INSERT INTO uploads (upload_user_id,upload_filename,upload_user_settings,upload_system_settings) values ${valueFiledsString}`,
+                        valueArray,
+                        (err, response) => {
 
-                            if (err.code === 'ER_DUP_ENTRY') {
-                                // If we somehow generated a duplicate user id, try again
+                            if (err) {
+
+                                if (err.code === 'ER_DUP_ENTRY') {
+                                    // If we somehow generated a duplicate user id, try again
+                                }
+                                return callback(err)
+
                             }
-                            return callback(err)
-
-                        }
-                        return callback(null, false); // success
-                    })
+                            return callback(null, false); // success
+                        })
             }
         }
 
@@ -105,18 +128,23 @@ var insertFileRowForStrava = (params, callback) => {
 
                 upload_system_settings = userprofile.systemsetting;
                 upload_user_settings = JSON.stringify(await propertyToUserDataJson(userprofile));
+                var duplicated = await checkExistInRow(upload_filename, clientId)
 
-                db.query(`INSERT INTO uploads (upload_user_id,upload_filename,upload_user_settings,upload_system_settings) values (?,?,?,?)`,
-                    [upload_user_id, upload_filename, upload_user_settings, upload_system_settings],
-                    function (err, response) {
-                        if (err) {
-                            if (err.code === 'ER_DUP_ENTRY') {
-                                // If we somehow generated a duplicate user id, try again
+                if (!duplicated) {
+                    db.query(`INSERT INTO uploads (upload_user_id,upload_filename,upload_user_settings,upload_system_settings) values (?,?,?,?)`,
+                        [upload_user_id, upload_filename, upload_user_settings, upload_system_settings],
+                        function (err, response) {
+                            if (err) {
+                                if (err.code === 'ER_DUP_ENTRY') {
+                                    // If we somehow generated a duplicate user id, try again
+                                }
+                                return callback(err)
                             }
-                            return callback(err)
-                        }
-                        return callback(null, false); // success
-                    })
+                            return callback(null, false); // success
+                        })
+                } else {
+                    console.log("not inserted on uploads because there is ", duplicated)
+                }
             }
         }
 
