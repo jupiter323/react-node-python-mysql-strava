@@ -54,11 +54,13 @@ def Process(user='Test'):
     ##########################################################################################################
     #### get all file names of train dir
     all_files = glob.glob(main_path + train_data_path + "*.csv")
+    all_files = [file.replace("\\", '/') for file in all_files]
     print(all_files)
 
     ##########################################################################################################
     #### get all training files and show
     all_training_files = glob.glob(main_path + train_data_path + "*.csv")
+    all_training_files = [file.replace("\\", '/') for file in all_training_files]
     all_training_files = [
         s.replace( main_path + "/train data/", "") for s in
         all_training_files]
@@ -154,11 +156,17 @@ def Process(user='Test'):
     all_accuracy_ = []
     rows_in = []
     for file__ in glob.glob( path + '/' + "*final_tuned_model.pkl"):
+        file__ = file__.replace('\\', '/')
         with open(file__, 'rb') as fid:
             _model = cPickle.load(fid)
         model = _model
 
         for file in glob.glob(main_path + test_data_path + "*.csv"):
+            file = file.replace('\\', '/')
+
+            csvfilepath = saving_path + str(file__).split('/')[-1].split('.')[0] + file[-4:]
+            print(csvfilepath)
+
             try:
                 testDF = pd.read_table(file, sep=';').drop("Unnamed: 57", axis=1)
             except KeyError:
@@ -191,10 +199,10 @@ def Process(user='Test'):
 
             testDF_copy['hrCategory'] = preds
 
-            best_model_.append(str(saving_path + str(file__)[32:-4] + file[-4:]))
-            best_model__.append(str(saving_path + str(file__)[32:-4] + file[-4:]))
+            best_model_.append(csvfilepath)
+            best_model__.append(csvfilepath)
 
-            testDF_copy.to_csv(saving_path + str(file__)[32:-4] + file[-4:], index=False)
+            testDF_copy.to_csv(csvfilepath, index=False)
             # testDF_copy.to_csv(saving_path + 'FILE' + file[-20:-4] + 'MODEL' + str(file__)[32:-4] + file[-4:],index=False)
 
     acc_df = pd.DataFrame({'Model': best_model_, "Accuracy": all_accuracy_, "Num Rows": rows_in})

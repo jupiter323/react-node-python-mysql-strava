@@ -59,7 +59,7 @@ class UserProfile extends React.Component {
 
   componentDidMount() {
     const { checkCompleteProfile } = this.props;
-    this.getSystemoptions();
+    // this.getSystemoptions();
     checkCompleteProfile();
 
   }
@@ -860,127 +860,7 @@ class UserProfile extends React.Component {
                     />
                   </GridItem>
                 </GridContainer>
-                {/* select system option */}
-                <p></p>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <Accordion
-                      // active={0}
-                      collapses={[
-                        {
-                          title: "System Options",
-                          content:
-                            <GridContainer>
-                              <GridItem xs={12} sm={12} md={12}>
-                                <GridContainer>
-                                  {/* slopecat brand and type */}
-                                  <GridItem xs={12} sm={12} md={6}>
-                                    <FormControl
-                                      fullWidth
-                                      className={classes.selectFormControl}
-                                    >
-                                      <InputLabel
-                                        htmlFor="slopecat"
-                                      >
-                                        Slope Cat
-                                      </InputLabel>
-                                      <Select
-                                        MenuProps={{
-                                          className: classes.selectMenu
-                                        }}
-                                        classes={{
-                                          select: classes.select
-                                        }}
-                                        value={profile.slopecat || ""}
-                                        onChange={this.handleInputValue}
-                                        inputProps={{
-                                          name: "slopecat",
-                                          id: "slopecat"
-                                        }}
-                                      >
-                                        <MenuItem
-                                          disabled
-                                          classes={{
-                                            root: classes.selectMenuItem
-                                          }}
-                                        >
-                                          Choose Slope Cat
-                                         </MenuItem>
-                                        {
-                                          this.state.slope_cat_sel_options.map(item => {
-                                            return <MenuItem
-                                              key={item.key}
-                                              classes={{
-                                                root: classes.selectMenuItem,
-                                                selected: classes.selectMenuItemSelected
-                                              }}
-                                              value={item.value}
-                                            >
-                                              {item.key}
-                                            </MenuItem>
-                                          })
-                                        }
-                                      </Select>
-                                    </FormControl>
-                                  </GridItem>
-                                  {/* outputcols brand and type */}
-                                  <GridItem xs={12} sm={12} md={6}>
-                                    <FormControl
-                                      fullWidth
-                                      className={classes.selectFormControl}
-                                    >
-                                      <InputLabel
-                                        htmlFor="outputcols"
-                                      >
-                                        Output Columns
-                                      </InputLabel>
-                                      <Select
-                                        MenuProps={{
-                                          className: classes.selectMenu
-                                        }}
-                                        classes={{
-                                          select: classes.select
-                                        }}
-                                        value={profile.outputcols || ""}
-                                        onChange={this.handleInputValue}
-                                        inputProps={{
-                                          name: "outputcols",
-                                          id: "outputcols"
-                                        }}
-                                      >
-                                        <MenuItem
-                                          disabled
-                                          classes={{
-                                            root: classes.selectMenuItem
-                                          }}
-                                        >
-                                          Choose Output Columns
-                                         </MenuItem>
-                                        {
-                                          this.state.output_column_sel_options.map(item => {
-                                            return <MenuItem
-                                              key={item.key}
-                                              classes={{
-                                                root: classes.selectMenuItem,
-                                                selected: classes.selectMenuItemSelected
-                                              }}
-                                              value={item.value}
-                                            >
-                                              {item.key}
-                                            </MenuItem>
-                                          })
-                                        }
-                                      </Select>
-                                    </FormControl>
-                                  </GridItem>
-                                </GridContainer>
-                              </GridItem>
-                            </GridContainer>
-                        }
-                      ]}
-                    />
-                  </GridItem>
-                </GridContainer>
+               
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={2} >
                     {profileCompleted && <GPXUpload onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
