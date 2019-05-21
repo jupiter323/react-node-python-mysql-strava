@@ -282,17 +282,15 @@ exports.saveStravaData = async function (req, res) {
     const { email, id } = req.user
     var stravaId = req.body.stravaId;
 
-    User.getUser('access_token', { id }, async (err, rows) => {
-        if (err) {
-            console.log(err);
-            fetching = false;
-            return;
-        } else {
-            var access_token = rows[0];
-            var stravaCount = await getCountStravaAvtivityCount(stravaId, access_token.access_token);
-            console.log(stravaCount)
-        }
-    })
+    // User.getUser('access_token', { id }, async (err, rows) => {
+    //     if (err) {
+    //         console.log(err);
+    //     } else {
+    //         var access_token = rows[0];
+    //         var stravaCount = await getCountStravaAvtivityCount(stravaId, access_token.access_token);
+    //         console.log(stravaCount)
+    //     }
+    // })
 
     if (fetching == false) {
         fetching = true
