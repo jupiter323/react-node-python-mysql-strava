@@ -84,7 +84,7 @@ export function gettingStravaData(stravaId, email) {
     return xapi().post('account/getStrava', {
         stravaId: stravaId,
         email: email,
-        pageNum: 0
+        pageNum: 1
     });
 
 }

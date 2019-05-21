@@ -12,7 +12,7 @@ var allActivities = [];
 var requestTime = ''
 var requestDate = ""
 var fetching = false
-
+const request = require("request");
 
 var folderName = `storage/gpx/uploads/`;
 
@@ -212,6 +212,7 @@ function getAcitivies(number, email, page, clientId) {
                         return callback(err);
                     }
                     console.log(" <<----- End list activities");
+                    console.log(allActivities.length);
                     //check updated status
                     isUpdatedActivities(clientId).then((updatedStatus) => {
                         if (updatedStatus[0])
@@ -229,11 +230,12 @@ function getAcitivies(number, email, page, clientId) {
 
                     // filter "type": "Ride"
                     for (var i = 0; i < payload.length; i++) {
-                        if (payload[i].type === "Ride") {
+                        if (payload[i].type === "VirtualRide" || payload[i].type === "Ride") {
                             allActivities.push(payload[i]);
                             ActivityIDs.push(payload[i].id);
                         }
                     }
+
                     getAcitivies(number, email, page + 1, clientId);
                 }
             });
@@ -255,10 +257,43 @@ function emailConfirm(toEmail) {
     };
     sgMail.send(msg);
 }
+exports.getCountStravaAvtivityCount = getCountStravaAvtivityCount = (userID, token) => {
+    userID = 2501580
+    let url = `https://www.strava.com/api/v3/athletes/${userID}/stats`
+    return new Promise((resolve, reject) => {
+        request.get(
+            url,
+            {
+                'auth': {
+                    'bearer': token
+                }
+            },
+            function (error, response, body) {
+                if (error) reject(error);
+                resolve(JSON.parse(body)["all_ride_totals"]["count"]);
 
+            }
+        );
+    })
+
+
+}
 exports.saveStravaData = async function (req, res) {
-    const { email } = req.user
+    const { email, id } = req.user
     var stravaId = req.body.stravaId;
+
+    User.getUser('access_token', { id }, async (err, rows) => {
+        if (err) {
+            console.log(err);
+            fetching = false;
+            return;
+        } else {
+            var access_token = rows[0];
+            var stravaCount = await getCountStravaAvtivityCount(stravaId, access_token.access_token);
+            console.log(stravaCount)
+        }
+    })
+
     if (fetching == false) {
         fetching = true
         allActivities = [];
@@ -268,7 +303,7 @@ exports.saveStravaData = async function (req, res) {
         requestDate = curr_time.split("T")[0]
         requestTime = curr_time.split("T")[1].replace(/:|\//g, "-").split('.')[0]
 
-        getAcitivies(number, email, req.body.pageNum, req.user.id)
+        getAcitivies(number, email, req.body.pageNum, id)
         res.send({
             msg: "Download started, we will send email when download finish!"
         })
