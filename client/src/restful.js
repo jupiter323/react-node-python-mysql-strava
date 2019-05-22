@@ -111,6 +111,11 @@ export function forgotpasswordrequest(params) {
     });
 }
 
+export function eraseProfile() {
+    return xapi().get('account/eraseprofile');
+}
+
+
 
 
 

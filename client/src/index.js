@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import store from 'store';
 
 import "assets/scss/material-dashboard-pro-react.css?v=1.4.0";
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import 'semantic-ui-css/semantic.min.css';
 const hist = createBrowserHistory();
 

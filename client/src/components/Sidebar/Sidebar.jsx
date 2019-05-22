@@ -26,6 +26,9 @@ import Icon from "@material-ui/core/Icon";
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import sidebarStyle from "assets/jss/material-dashboard-pro-react/components/sidebarStyle.jsx";
 import logoutImage from "assets/img/logout.png"
+import * as service from "restful.js"
+import { confirmAlert } from 'react-confirm-alert'; // Import
+
 var ps;
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
@@ -99,7 +102,35 @@ class Sidebar extends React.Component {
     await setUserOption(user);
     // window.location.href = "/profile";
   }
+  eraseProfile = ()=>{
+    var {logout} = this.props
+    confirmAlert({
+      title: 'Confirm to close your account',
+      message: 'Are you sure to close your account.',
+      buttons: [
+        {
+          label: 'Agree',
+          onClick: () => {
+              var response = Promise.all([
+                service.eraseProfile()
+              ])
+              response.then(res => {
+                var data = res[0].data;
+                alert(data.msg);
+                if(data.success)
+                  logout();
+                console.log(data);
+            })
+          }
+        },
+        {
+          label: 'Cancel',
+          onClick: () => {}
+        }
+      ]
+    });
 
+  }
   render() {
     const {
       classes,
@@ -207,6 +238,24 @@ class Sidebar extends React.Component {
                     </ListItem>
                   })
                 }
+                <ListItem className={classes.collapseItem}>
+                  <NavLink
+                    to="/"
+                    onClick={this.eraseProfile}
+                    className={
+                      classes.itemLink + " " + classes.userCollapseLinks
+                    }
+                  >
+                    <div className={photo}>
+                      <img src={logoutImage} className={classes.avatarImg} alt="..." />
+                    </div>
+                    <ListItemText
+                      primary={rtlActive ? "مستخدم آخر" : "Erase Profile"}
+                      disableTypography={true}
+                      className={collapseItemText}
+                    />
+                  </NavLink>
+                </ListItem>
 
                 <ListItem className={classes.collapseItem}>
                   <NavLink
