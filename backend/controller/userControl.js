@@ -59,15 +59,24 @@ exports.forgotPasswordRequest = (req, res) => {
                 msg: Constants.USER_NOT_REGISTERED
             })
         } else {
-            var userData = { id: user.id, email: user.email, userId: user.userId, verified: user.verified }
-            sendPsswordChangeLink(userData);
-            res.send({
-                status: Constants.SERVER_OK_HTTP_CODE,
-                success: true,
-                error: null,
-                msg: Constants.USER_CHANGEPASSWORD_OK,
-                user
-            })
+            if (user['closed'])
+                res.send({
+                    status: Constants.SERVER_OK_HTTP_CODE,
+                    success: false,
+                    error: null,
+                    msg: Constants.USER_CLOSED
+                })
+            else {
+                var userData = { id: user.id, email: user.email, userId: user.userId, verified: user.verified }
+                sendPsswordChangeLink(userData);
+                res.send({
+                    status: Constants.SERVER_OK_HTTP_CODE,
+                    success: true,
+                    error: null,
+                    msg: Constants.USER_CHANGEPASSWORD_OK,
+                    user
+                })
+            }
         }
     })
 }
@@ -179,7 +188,7 @@ exports.getStravaToken = function (req, res) {
 exports.refreshTokenAbsoultely = (clientId) => {
     let projection = 'refresh_token,expiretime, userId, username,id'
     User.getUserList(projection, (err, users) => {
-        users.forEach(element => {            
+        users.forEach(element => {
             if (clientId == element.id)
                 request.post(
                     "https://www.strava.com/oauth/token",
@@ -339,6 +348,21 @@ exports.updateProfile = (req, res) => {
         }
     })
 
+}
+exports.eraseProfile = (req, res) => {
+    var { user } = req
+    User.eraseUser({ user }, (err, msg) => {
+        if (err)
+            res.send({
+                success: false,
+                msg
+            })
+        else
+            res.send({
+                success: true,
+                msg
+            })
+    })
 }
 function saveStravaConfig(token) {
     fs.writeFileSync(
