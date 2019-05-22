@@ -18,8 +18,10 @@ const stravaConfig = {
 passport.use(new LocalStrategy
     ({ usernameField: 'email', passwordField: 'password' }, (email, password, cb) => {
         //Assume there is a DB module pproviding a global UserModel
-        return User.loginEmailUser({ email, password }, (err, nonUser, user) => {
+        return User.loginEmailUser({ email, password }, (err, nonUser, user, closed) => {
             if (err) return cb(err);
+            if (closed)
+                return cb(null, null, { msg: Constants.USER_CLOSED })
             if (nonUser)
                 return cb(null, null, { msg: Constants.USER_NOT_REGISTERED });
             if (!user) {

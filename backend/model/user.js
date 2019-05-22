@@ -164,11 +164,14 @@ var changePassword = (params, callback) => {
 var loginEmailUser = (params, callback) => {
   const { email, password } = params
   db.query("SELECT * FROM user WHERE email = ?", [email], (err, rows) => {
+
     if (err)
       return callback(err, null, null);//register faild
     if (!rows.length) {
       return callback(null, true, null); //not registered already
     }
+    if (!rows[0]["password"] && rows[0]['closed'] === 1)
+      return callback(null, false, null, true) // account was closed
     if (bcrypt.compareSync(password, rows[0]["password"])) {
       return callback(null, false, rows[0]) //success
     }
@@ -279,6 +282,37 @@ var updateUser = (params, callback) => {
     })
 }
 
+var eraseUser = (params, callback) => {
+  var { user } = params;
+  var eraseTemplate = {
+    password: "",
+    verified: 0,
+    userId: null,
+    username: null,
+    refresh_token: null,
+    access_token: null,
+    expiretime: null,
+    loggedIn: null,
+    closed: 1
+  }
+  db.query('UPDATE user SET ? WHERE id = ?', [eraseTemplate, user.id]
+    , function (err) {
+
+      let msg = ''
+
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          // If we somehow generated a duplicate user id, try again
+          return eraseUser(params, callback);
+        }
+        msg = Constants.USER_REGISTRATION_FAILED;
+        return callback(err, msg)
+      }
+      msg = Constants.USER_UPDATE_OK
+      return callback(err, msg)
+    })
+}
+
 var insertUser = (params, callback) => {
   let user = params.athlete
   db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime) values (?,?,?,?,?,?)`,
@@ -368,5 +402,5 @@ exports.setEmailVerified = setEmailVerified
 exports.changePassword = changePassword
 exports.getUserByEmail = getUserByEmail
 exports.getUserProfileByClientId = getUserProfileByClientId
-
+exports.eraseUser = eraseUser
 
