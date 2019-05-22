@@ -77,10 +77,12 @@ class Dashboard extends React.Component {
     const { access_token, userProfile } = next
     this.intervalFun = setInterval(() => {
 
-      if (!access_token)
+      if (!access_token) {
         clearInterval(this.intervalFun);
+      }
       else {
         console.log("interval", userProfile.athlete.id)
+
         this.getStravaDataFunction(next);
 
       }
@@ -110,7 +112,9 @@ class Dashboard extends React.Component {
       console.log('error occurred', e);
     }
   }
+
   componentWillReceiveProps(next) {
+    console.log("receive++")
     const { access_token, logout, expireTime, userProfile, getUsers, gotNewCoreData } = next;
     if (this.props.userProfile !== userProfile)
       getUsers();
@@ -127,12 +131,15 @@ class Dashboard extends React.Component {
     if (checkExpirationTime()) {//expired
       logout();
     }
-    if (userProfile.athlete && userProfile.athlete.id)
+    if (userProfile.athlete && userProfile.athlete.id) {
       this.getStravaDataFunction(next)
+    }
     if (this.props.userProfile !== userProfile) {
+      console.log("reload")
       clearInterval(this.intervalFun);
-      if (userProfile.athlete && userProfile.athlete.id)
+      if (userProfile.athlete && userProfile.athlete.id) {
         this.callGetActivityListInterval(next);
+      }
     }
   }
 
@@ -161,6 +168,15 @@ class Dashboard extends React.Component {
     window.removeEventListener("resize", this.resizeFunction);
   }
   componentDidUpdate(e) {
+    console.log("now===")
+    const { userProfile } = e;
+    if (userProfile.athlete && userProfile.athlete.id) {
+      this.getStravaDataFunction(e)
+      console.log("first load")
+      clearInterval(this.intervalFun);
+      this.callGetActivityListInterval(e);
+
+    }
     if (e.history.location.pathname !== e.location.pathname) {
       this.refs.mainPanel.scrollTop = 0;
       if (this.state.mobileOpen) {
