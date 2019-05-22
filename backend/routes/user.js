@@ -7,5 +7,5 @@ router.post('/getStrava', StrvaControl.saveStravaData);
 router.post('/checkusersession')
 router.post('/updateprofile', UserControl.updateProfile)
 router.post('/forgotpassword', UserControl.forgotpasswordChange)
-
+router.get('/eraseprofile', UserControl.eraseProfile)
 module.exports = router;
