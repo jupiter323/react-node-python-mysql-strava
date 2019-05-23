@@ -1,7 +1,7 @@
 var db = require('./db');
 var Constants = require('../config/contants')
 
-exports.getactivityCountByUsername = function (clientId, callback) {
+exports.getactivityCountByUsername =  (clientId, callback)=> {
     db.query('SELECT * FROM activity WHERE username = ?', [clientId], function (err, rows) {
         if (err) {
             callback(err);
