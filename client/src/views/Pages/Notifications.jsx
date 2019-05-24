@@ -114,7 +114,7 @@ class Notifications extends React.Component {
     return (
       <div className="marginTop">
         <Heading
-          title="Notifications"
+          title="Please open verification email send and click on link"
           textAlign="center"
 
           category={
@@ -133,7 +133,7 @@ class Notifications extends React.Component {
             </span>
           }
         />
-        <GridContainer justify="center">
+        {/* <GridContainer justify="center">
 
           <GridItem xs={12} sm={12} md={12} >
             <Card>
@@ -166,7 +166,7 @@ class Notifications extends React.Component {
               </GridContainer>
             </div>
           </GridItem>
-        </GridContainer>
+        </GridContainer> */}
       </div>
     );
   }
