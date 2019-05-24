@@ -1,7 +1,8 @@
 // Copyright (c) j.c. jansen klomp. All rights reserved.
 const fs = require('fs')
-const fn = require('./functions.js')
+// const fn = require('./functions.js')
 const convert = require('./convert.js')
+var db = require('../../model/db');
 
 var rootpath = __dirname + "./../../storage/gpx"
 
@@ -14,27 +15,40 @@ function runconvert(filedata, params, isTestData) {
     })
 }
 
+var queryPromise = (query, params) => {
+    return new Promise((resolve, reject) => {
+        db.query(query, params, (err, rows) => {
+            if (err) {
+                reject(err);
+            }
+            if (rows.length) {
+                resolve(rows)
+            }
+        });
+    })
+}
+
 async function processFile(isTestData) {
     checkoutputdir()
     console.log('background process gpxconvert started')
     let delay = 2000
     try {
         var query = `SELECT upload_id from  uploads WHERE upload_status = ""`
-        let worklist = await fn.queryPromise(query)
+        let worklist = await queryPromise(query, [])
         console.log("work list: ", worklist)
         if (worklist.length > 0) {
             delay = 300
             var query = `SELECT * from uploads WHERE upload_id = "${worklist[0].upload_id}"`
-            let uploaddata = await fn.queryPromise(query)
+            let uploaddata = await queryPromise(query, [])
 
             var query = `UPDATE uploads SET upload_status = "ready" WHERE upload_id = "${uploaddata[0].upload_id}"`
-            let updatedata = await fn.queryPromise(query)
+            let updatedata = await queryPromise(query, [])
 
             // var query = `SELECT * from users WHERE user_id = "${uploaddata[0].upload_user_id}"`
-            // let userdata = await fn.queryPromise(query)
+            // let userdata = await queryPromise(query, [])
 
             // var query = `SELECT sys_settings from  system WHERE sys_id = 1`
-            // let systemdata = await fn.queryPromise(query)
+            // let systemdata = await queryPromise(query, [])
 
             let userdata = uploaddata[0]["upload_user_settings"]
             let systemdata = uploaddata[0]["upload_system_settings"]
@@ -43,7 +57,7 @@ async function processFile(isTestData) {
             let filename = uploaddata[0].upload_filename
             let filedata = fs.readFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}`)
             let params = prepareparams(sendparams, filename)
-            fs.writeFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}-convertparams.json`,JSON.stringify(params,"",3))
+            fs.writeFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}-convertparams.json`, JSON.stringify(params, "", 3))
             let convertresult = await runconvert(filedata, params, isTestData)
             console.log(convertresult)
         }
