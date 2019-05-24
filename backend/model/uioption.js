@@ -13,7 +13,7 @@ exports.get_all = function (callback) {
 exports.fromSystemTableToSlopAndOutcol = (cb) => {
   var outputcolIndex = 0;
   var slopecatIndex = 0
-  db.query('SELECT * FROM system_options', [], function (err, rows) {
+  db.query('SELECT * FROM system_options', [],  (err, rows)=> {
     var exceptionData = {
       slopecat: "default = -3,-1.5,-0.5,0.5,1.5,3.0,5.0,9.0,12.0",
       outputcols: "all = index,cumdist,ele,time,time1,temp,beats,speed,dist,azimuth,windload,windspd,winddir,humidity,meteotemp,hrCategory,beatcount,gpxtimestamp,gpxdist,valid_speed,slopeCategory,error,realpower,estpower,estaccelpower,esttotalpower,lat,lon,cumrealenergy,cumestenergy,hrCategory1,numparticipants,intensityscore",

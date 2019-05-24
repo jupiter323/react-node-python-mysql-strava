@@ -11,7 +11,7 @@ pool.getConnection(function (err, conn) {
 });
 
 // Returns a connection to the db
-var getConnection = function (callback) {
+var getConnection = (callback) => {
   pool.getConnection(function (err, conn) {
     callback(err, conn);
   });

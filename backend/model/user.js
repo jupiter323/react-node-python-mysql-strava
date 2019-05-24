@@ -263,7 +263,7 @@ var stravaRegisterUser = (params, callback) => {
 var updateUser = (params, callback) => {
   var { user } = params
   db.query('UPDATE user SET ? WHERE id = ?', [User(params), user.id]
-    , function (err) {
+    , (err) => {
 
       let msg = ''
 
@@ -317,7 +317,7 @@ var insertUser = (params, callback) => {
   let user = params.athlete
   db.query(`INSERT INTO user (userId,username,access_token,refresh_token,expiretime) values (?,?,?,?,?,?)`,
     [user.id, user.username, params.access_token, params.refresh_token, params.expires_at],
-    function (err) {
+    (err) => {
       let msg = ''
       if (err) {
 
