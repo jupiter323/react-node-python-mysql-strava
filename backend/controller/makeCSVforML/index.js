@@ -21,9 +21,10 @@ var queryPromise = (query, params) => {
             if (err) {
                 reject(err);
             }
-            if (rows.length) {
-                resolve(rows)
-            }
+            resolve(rows)
+            // if (rows.length) {
+            //     resolve(rows)
+            // }
         });
     })
 }
@@ -57,7 +58,7 @@ async function processFile(isTestData) {
             let filename = uploaddata[0].upload_filename
             let filedata = fs.readFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}`)
             let params = prepareparams(sendparams, filename)
-            fs.writeFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}-convertparams.json`, JSON.stringify(params, "", 3))
+            // fs.writeFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}-convertparams.json`, JSON.stringify(params, "", 3))
             let convertresult = await runconvert(filedata, params, isTestData)
             console.log(convertresult)
         }
