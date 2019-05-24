@@ -7,7 +7,7 @@ const sgMail = require('@sendgrid/mail');
 const jwt = require('jsonwebtoken');
 const config = require('../config/db-config');
 const urlCfg = require("../config/urls-config")
-var sendEmail = (toEmail, html) => {
+function sendEmail(toEmail, html) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     const msg = {
@@ -20,7 +20,7 @@ var sendEmail = (toEmail, html) => {
     sgMail.send(msg);
 }
 
-var sendEmailVerifyLink = (user) => {
+function sendEmailVerifyLink(user) {
     const token = jwt.sign(user, config.secret, {
         expiresIn: '24h' // expires in 24 hours
     });

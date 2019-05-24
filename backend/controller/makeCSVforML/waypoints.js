@@ -223,7 +223,7 @@ function fitParser2A(content) {
 function parseCsv(data){
     let cells    
     let waypoints = []
-    let result = {'waypoints' : waypoints, 'time' : "", 'name' : "", 'err' : ''}
+    let result = {'waypoints' : waypoints, 'time' : "", 'name' : "", 'err' : '', 'athletecount' : 0}
 
     let lines = data.split('\n')
     if (lines.length > 0) {
@@ -245,6 +245,7 @@ function parseCsv(data){
                 if (cells.length < 16) continue
                 // 2019-02-18T16:24:24Z
                 let utc = new Date(cells[9]).valueOf() / 1000 // in s
+                result.athletecount = celval(16)
                 waypoints.push( {
                     lat   : celval(3),
                     lon   : celval(4),
@@ -452,6 +453,7 @@ function csvParser(csv_data,callback){
     let trackinfo =  waypointsSummary(waypoints)
     trackinfo.name = trackdata.name
     trackinfo.time = trackdata.time
+    trackinfo.athletecount = trackdata.athletecount
     trackinfo.error = error
     trackinfo.waypoints = waypoints
     callback(trackinfo)

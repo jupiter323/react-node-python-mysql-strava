@@ -20,7 +20,7 @@ if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName);
 }
 
-var getValue = (payload, name, num) => {
+function getValue(payload, name, num) {
     for (var i = 0; i < payload.length; i++) {
         if (payload[i].type === name) {
             return payload[i].data[num];
@@ -29,7 +29,7 @@ var getValue = (payload, name, num) => {
     return "";
 }
 
-var expertCSV = (payload, id, clientId) => {
+function expertCSV(payload, id, clientId) {
 
     var userfolder = folderName + clientId + '/'
     // var datefolder = userfolder + requestDate + '/'
@@ -115,7 +115,7 @@ var expertCSV = (payload, id, clientId) => {
     })
 
 }
-var updateDownloadedActivitiesCount = (clientId, activitiesCount) => {
+function updateDownloadedActivitiesCount(clientId, activitiesCount) {
     var params = { clientId, activitiesCount }
     Activity.activitiesUpdate(params, (err, msg) => {
         console.log(msg);
@@ -128,7 +128,7 @@ var updateDownloadedActivitiesCount = (clientId, activitiesCount) => {
     })
 
 }
-var getStreamActivities = (number, email, access_token, clientId) => {
+function getStreamActivities(number, email, access_token, clientId) {
     const activitiesCount = ActivityIDs.length
     id = activitiesCount - number - 1;
     number++;
@@ -140,7 +140,7 @@ var getStreamActivities = (number, email, access_token, clientId) => {
             types:
                 "heartrate,distance,latlng,time,altitude,watts,temp,velocity_smooth"
         },
-        (err, payload, limits) => {
+        function (err, payload, limits) {
             console.log(` ${number}----->> streams segment ${ActivityIDs[id]}`);
             if (err) {
                 fetching = false;

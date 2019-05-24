@@ -2,7 +2,7 @@ var UIoptionsModel = require('../model/uioption')
 var Constants = require('../config/contants')
 var Utils = require('./../web/utils.js')
 
-exports.getAllOptionsTxt =  (req, res)=> {
+exports.getAllOptionsTxt = function (req, res) {
     UIoptionsModel.get_all((err, options) => {
         if (err) {
             res.send({

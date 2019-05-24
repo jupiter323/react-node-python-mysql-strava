@@ -43,6 +43,7 @@ async function processFile(isTestData) {
             let filename = uploaddata[0].upload_filename
             let filedata = fs.readFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}`)
             let params = prepareparams(sendparams, filename)
+            fs.writeFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}-convertparams.json`,JSON.stringify(params,"",3))
             let convertresult = await runconvert(filedata, params, isTestData)
             console.log(convertresult)
         }
@@ -74,7 +75,8 @@ function prepareparams(receivedParams, filename) {
     params['conditie'] = usersettings.shape
     params['activity-id'] = ""
     params['airresistance'] = systemsettings.airresist
-    params['surfacearea'] = systemsettings.surfacearea
+    //params['surfacearea'] = systemsettings.surfacerea
+    params['surfacearea'] = systemsettings.surfarea
     params['rollingresistance'] = systemsettings.rolresist
     params['seglen'] = systemsettings.seglen
     params['zeronegativeenergy'] = systemsettings.negzero && systemsettings.negzero == 'checked' ? 'true' : 'false'

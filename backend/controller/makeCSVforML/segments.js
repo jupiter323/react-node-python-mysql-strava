@@ -675,7 +675,11 @@ function segmentsToCSV(params, trackinfo, segments) {
         
         // get the number of participants
         let participants = 0
-        if (params.participantdata.length == 1){
+
+        if (trackinfo.hasOwnProperty('athletecount')) { // from strava csv
+            participants = trackinfo['athletecount']
+        }
+        else if (params.participantdata.length == 1){
             participants = params.participantdata[0]['participants']
         }
         else { // check with timestamp
