@@ -2598,3 +2598,6 @@ img {
 
 .crossline {
   border-top: 1px solid #eee; }
+
+.margin-auto {
+  margin: auto !important; }

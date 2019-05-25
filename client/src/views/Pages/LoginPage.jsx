@@ -59,7 +59,7 @@ class LoginPage extends React.Component {
 
   }
 
- 
+
   onChangeInputValue = (e) => {
     var name = e.target.name;
     var value = e.target.value
@@ -189,16 +189,19 @@ class LoginPage extends React.Component {
                 </CardBody>
                 <CardFooter className={classes.justifyContentCenter}>
                   <GridContainer>
-                    <GridItem xs={12} sm={6} md={6}>
+                    <GridItem xs={12} sm={12} md={12}>
                       <Button color="primary" size="lg" block onClick={this.handleLogin}>
                         Login
                        </Button>
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={6}>
+                    {/* <GridItem xs={12} sm={6} md={6}>
                       <Button color="primary" size="lg" block onClick={this.handleNavigateRegister}>
                         Go Register
                        </Button>
-                    </GridItem>
+                    </GridItem> */}
+                    <Button color="primary" simple size="lg" block onClick={this.handleNavigateRegister}>
+                      Go to Register
+                      </Button>
                     <Button color="primary" simple size="lg" block onClick={this.handleForgotpassword}>
                       Forgot Password
                       </Button>

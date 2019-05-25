@@ -16,7 +16,7 @@ import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
 import Snackbar from "components/Snackbar/Snackbar.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
-
+import Button from "components/CustomButtons/Button.jsx";
 import notificationsStyle from "assets/jss/material-dashboard-pro-react/views/notificationsStyle.jsx";
 
 
@@ -108,7 +108,10 @@ class Notifications extends React.Component {
       console.log('error occurred', e);
     }
   }
-
+  handleBack = async () => {
+    await localStorage.clear();
+    window.location.href = "/"
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -117,22 +120,29 @@ class Notifications extends React.Component {
           title="Please open verification email send and click on link"
           textAlign="center"
 
-          category={
-            <span>
-              Handcrafted by our friends from{" "}
-              <a href="">
-                RIDE UI
-              </a>{" "}
-              and styled by{" "}
-              <a href="">
-                Creative Tim
-              </a>. Please checkout the{" "}
-              <a href="" >
-                full documentation
-              </a>.
-            </span>
-          }
+        // category={
+        //   <span>
+        //     Handcrafted by our friends from{" "}
+        //     <a href="">
+        //       RIDE UI
+        //     </a>{" "}
+        //     and styled by{" "}
+        //     <a href="">
+        //       Creative Tim
+        //     </a>. Please checkout the{" "}
+        //     <a href="" >
+        //       full documentation
+        //     </a>.
+        //   </span>
+        // }
         />
+        <GridContainer className={classes.center}>
+          <GridItem xs={12} sm={12} md={1} className="margin-auto">
+            <Button className="margin-auto" color="primary" size="lg" block onClick={this.handleBack}>
+              Back
+            </Button>
+          </GridItem>
+        </GridContainer>
         {/* <GridContainer justify="center">
 
           <GridItem xs={12} sm={12} md={12} >

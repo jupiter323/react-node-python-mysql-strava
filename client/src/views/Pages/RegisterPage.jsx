@@ -144,7 +144,7 @@ class RegisterPage extends React.Component {
                     />
                   </GridItem> */}
                   <GridItem xs={12} sm={12} md={12}>
-                    <div className={classes.center}>
+                    {/* <div className={classes.center}>
                       <Button justIcon round color="twitter">
                         <i className="fab fa-twitter" />
                       </Button>
@@ -158,7 +158,7 @@ class RegisterPage extends React.Component {
                       </Button>
                       {` `}
                       <h4 className={classes.socialTitle}>or be classical</h4>
-                    </div>
+                    </div> */}
                     <form className={classes.form}>
                       <CustomInput
                         success={this.state.emailState === "success"}
