@@ -32,7 +32,7 @@ import * as service from "restful"
 import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
 import _ from 'lodash';
-
+import { confirmAlert } from 'react-confirm-alert';
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -178,12 +178,24 @@ class UserProfile extends React.Component {
     var [response] = await Promise.all([
       service.setUserData(profile)
     ])
-    if (!response.data.error)
-      alert("profile update success!");
     await setUserData(this.state.profile);
     checkCompleteProfile();
     console.log("updated profile:", this.state.profile, response.data.profile);
-
+    setTimeout(() => {
+      const { profileCompleted } = this.props;
+      if (!response.data.error) {
+        if (profileCompleted)
+          confirmAlert({
+            title: 'Success',
+            message: 'Completed profile'
+          });
+        else
+          confirmAlert({
+            title: 'Complete profile',
+            message: '"Please complete all fields of profile before you can continu"'
+          });
+      }
+    }, 100);
   }
 
   onUploadResponse(params) {
@@ -860,7 +872,7 @@ class UserProfile extends React.Component {
                     />
                   </GridItem>
                 </GridContainer>
-               
+
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={2} >
                     {profileCompleted && <GPXUpload onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
