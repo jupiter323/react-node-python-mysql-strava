@@ -1,0 +1,4 @@
+module.exports = {
+    "up": "CREATE TABLE `user` (        `id` int(10) NOT NULL AUTO_INCREMENT,        `email` varchar(250) COLLATE utf8_unicode_ci NOT NULL,        `password` varchar(250) COLLATE utf8_unicode_ci NOT NULL,        `verified` tinyint(1) NOT NULL,        `userId` int(10) DEFAULT NULL,        `username` varchar(250) CHARACTER SET latin1 DEFAULT NULL,        `refresh_token` varchar(250) CHARACTER SET latin1 DEFAULT NULL,        `access_token` varchar(250) CHARACTER SET latin1 DEFAULT NULL,        `expiretime` varchar(250) CHARACTER SET latin1 DEFAULT NULL,        `loggedIn` tinyint(1) DEFAULT NULL,        `role` varchar(250) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user',        `closed` tinyint(1) DEFAULT NULL,        PRIMARY KEY (`id`)      ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
+    "down": "DROP TABLE IF EXISTS `user`;"
+}

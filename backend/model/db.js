@@ -30,5 +30,5 @@ var query = function (queryString, params, callback) {
     });
   });
 };
-
+exports.pool = pool;
 exports.query = query;

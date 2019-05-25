@@ -44,22 +44,14 @@ connect with ssh
     [like this](https://www.dropbox.com/s/qt9pvl0d3hs7px9/2.png)
     [like this](https://www.dropbox.com/s/prtd100nfpu2dvy/3.png)
 
--   run our database query.
-    open database.sql with any editor such as "sublime text 3"
-    and copy all query on that.
-    [like this](https://www.dropbox.com/s/peurhuxd1a4agih/4.png)
-    and past on the SequelPro query panel, then select all and press run button
-    [like this](https://www.dropbox.com/s/oubapp15m630m5r/5.png)
-    Then will be created our tables in the "stravadb"
-    [like this](https://www.dropbox.com/s/qmc9ax34fhotlyy/6.png)
-
 create .env file according .env.example
 
 BACK_END RUNNING
 
     
     "cd backend"
-    Please copy securedata.zip on root directory and extra here(storage folder and .env file should be in root directory)
+
+Run "“npm run migration-refresh"
 
 -	Run “npm i” , then “nodemon server.js”  in new terminal (Linux or mac)
 
