@@ -98,12 +98,8 @@ def Process(user='Test'):
         files = combined_inp_list[i]
         list_ = []
         for file in files:
-            # try:
-            df = pd.read_table(file, sep=';')#.drop("Unnamed: 57", axis=1)
+            df = pd.read_table(file, sep=';').drop("Unnamed: 57", axis=1)
             list_.append(df)
-            # except:
-            #     print("error" + file)
-            #     raise Exception
         trainDF = pd.concat(list_, axis=0, ignore_index=True)
 
         total = trainDF.isnull().sum().sort_values(ascending=False)
