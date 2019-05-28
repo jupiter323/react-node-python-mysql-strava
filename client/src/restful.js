@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from './store.js';
-// var baseUrl = 'http://127.0.0.1/api/'
+// var baseUrl = 'http://127.0.0.1:3001/api/'
 var baseUrl = 'http://188.166.107.75/api/'
 
 export const xapi = (optional) => {
