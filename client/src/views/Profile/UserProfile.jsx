@@ -212,7 +212,8 @@ class UserProfile extends React.Component {
   }
 
   handleNavigateClickForLogin = async () => {
-    window.location.href = "http://127.0.0.1:3001/api/auth/login"
+    // window.location.href = "http://127.0.0.1/api/auth/login"
+    window.location.href = "http://188.166.107.75/api/auth/login"
   }
 
 

@@ -113,6 +113,9 @@ class RegisterPage extends React.Component {
     await register({ email: this.state.email, password: this.state.password });
     // window.location.href = "/"
   }
+  handleLogin = () => {
+    window.location = "/pages/login-page";
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -235,18 +238,21 @@ class RegisterPage extends React.Component {
                       />
                       <div className={classes.center}>
                         <GridContainer>
-                          <GridItem xs={12} sm={6} md={6}>
+                          <GridItem xs={12} sm={12} md={12}>
                             <Button round color="primary" onClick={this.handleRegister}>
                               Register
                             </Button>
                           </GridItem>
-                          <GridItem xs={12} sm={6} md={6}>
+                          {/* <GridItem xs={12} sm={6} md={6}>
                             <NavLink to="/pages/login-page">
                               <Button round color="primary">
                                 Go Log in
                              </Button>
                             </NavLink>
-                          </GridItem>
+                          </GridItem> */}
+                          <Button color="primary" simple size="lg" block onClick={this.handleLogin}>
+                            Go to login
+                          </Button>
                         </GridContainer>
                       </div>
                     </form>
