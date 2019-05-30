@@ -18,8 +18,15 @@ const userProfileStyles = {
   description: {
     color: "#999999"
   },
-  updateProfileButton: {
-    float: "right"
+  profilebuttons: {
+    width: "100%",
+    margin: "auto",
+    fontSize: "11px"
+  },
+  buttonsContainer: {
+    border: "1px solid rgba(153,153,153,0.3)",
+    // margin: "0px -28px",
+    padding: "14px 0!important"
   }
 };
 export default userProfileStyles;

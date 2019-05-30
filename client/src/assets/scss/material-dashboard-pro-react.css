@@ -2581,7 +2581,8 @@ img {
   cursor: pointer;
   text-align: left;
   height: fit-content;
-  width: fit-content; }
+  width: fit-content;
+  width: 100%; }
 
 .gpxfile-container input[type="file"] {
   cursor: pointer;
@@ -2601,3 +2602,9 @@ img {
 
 .margin-auto {
   margin: auto !important; }
+
+.p1 {
+  padding: 0 7px !important; }
+
+.no-padding {
+  padding: 0 !important; }
