@@ -9,10 +9,10 @@ class GPXUpload extends React.Component {
   }
 
   render() {
-    const { onChange, accept, multiple, innerText } = this.props
+    const { onChange, accept, multiple, innerText, className } = this.props
     return (
       <div className="gpxfile-container">
-        <Button color="primary">{innerText || "Choose GPX Files"}</Button>
+        <Button className={className} color="primary">{innerText || "Choose GPX Files"}</Button>
         <input type="file" onChange={onChange} accept={accept} multiple={multiple} />
       </div>
     );

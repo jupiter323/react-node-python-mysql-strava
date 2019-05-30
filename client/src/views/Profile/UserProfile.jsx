@@ -232,15 +232,13 @@ class UserProfile extends React.Component {
                 <h4 className={classes.cardIconTitle}>
                   Edit Profile - <small>Complete your profile</small>
                 </h4>
-                <Button color="primary" disabled={!profileCompleted} className={classes.updateProfileButton} onClick={this.handleNavigateClickForLogin}>
-                  Connect to Strava
-                </Button>
+
               </CardHeader>
 
               <CardBody>
                 <p></p>
                 <h4 className={classes.cardIconTitle}>
-                  <strong>Standard profile</strong>
+                  Standard profile
                 </h4>
                 <GridContainer>
                   {/* first name */}
@@ -560,7 +558,7 @@ class UserProfile extends React.Component {
                                 </GridContainer>
                                 <GridContainer>
                                   {/* hr zone 3 min */}
-                                  <GridItem xs={12} sm={12} md={6}>
+                                  <GridItem xs={12} sm={12} md={6} >
                                     <CustomInput
                                       labelText="Heart Rate Zone 3 MIN"
                                       id="hrzone3min"
@@ -577,7 +575,7 @@ class UserProfile extends React.Component {
                                     />
                                   </GridItem>
                                   {/* hr zone 3 max */}
-                                  <GridItem xs={12} sm={12} md={6}>
+                                  <GridItem xs={12} sm={12} md={6} >
                                     <CustomInput
                                       labelText="Heart Rate Zone 3 MAX"
                                       id="hrzone3max"
@@ -874,16 +872,26 @@ class UserProfile extends React.Component {
                 </GridContainer>
 
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={2} >
-                    {profileCompleted && <GPXUpload onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={2} >
-                    {profileCompleted && <GPXUpload onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="Test GPX FIle" />}
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={8} >
-                    <Button color="primary" className={classes.updateProfileButton} onClick={this.updateProfile}>
-                      Update Profile
-                    </Button>
+                  <GridItem xs={12} sm={12} md={8} ></GridItem>
+                  <GridItem xs={12} sm={12} md={4} >
+                    <GridContainer className={classes.buttonsContainer}>
+                      <GridItem xs={12} sm={12} md={3} >
+                        {profileCompleted && <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={3} >
+                        {profileCompleted && <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="Test GPX FIle" />}
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={3} >
+                        <Button color="primary" className={classes.profilebuttons} disabled={!profileCompleted} onClick={this.handleNavigateClickForLogin}>
+                          Connect to Strava
+                      </Button>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={3} >
+                        <Button color="primary" className={classes.profilebuttons} onClick={this.updateProfile}>
+                          Update Profile
+                        </Button>
+                      </GridItem>
+                    </GridContainer>
                   </GridItem>
                 </GridContainer>
 
