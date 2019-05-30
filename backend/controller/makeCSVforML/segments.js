@@ -12,7 +12,7 @@ let weatherList = [] //{hour:,spd:,dir:,temp:}
 const https = require('https');
 const fs    = require('fs');
 const getTimezoneOffset = require('./getTimezoneOffset.js');
-var rootpath = __dirname + "./../../storage/gpx" 
+var rootpath = require('path').join(__dirname, "./../../storage/gpx")
 function getCategory(value,division,resolution){
     if (value <= division[0]) return 0
     for (var i=0; i < division.length - 1; i++) if (value > division[i] && value <= division[i+1]) {

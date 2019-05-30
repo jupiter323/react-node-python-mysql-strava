@@ -12,6 +12,7 @@
 /src/assets/scss/material-dashboard-pro-react.css
 
 # misc
+.env
 .DS_Store
 .env.local
 .env.development.local

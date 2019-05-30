@@ -7,7 +7,7 @@ let waypoints = require('./waypoints')
 let segs = require('./segments')
 let fs = require('fs')
 const TrainTest = require('../../controller/trainTest')
-var rootdir = __dirname + "./../../storage/gpx"
+var rootdir = require('path').join(__dirname, "./../../storage/gpx")
 var convert = (data, params, isTestData, callback) => { // data = ride file content 
 
     var outputdir = `${rootdir}/output-files/${params['user-id']}/`;

@@ -4,7 +4,7 @@ const fs = require('fs')
 const convert = require('./convert.js')
 var db = require('../../model/db');
 
-var rootpath = __dirname + "./../../storage/gpx"
+var rootpath = require('path').join(__dirname, "./../../storage/gpx")
 
 function runconvert(filedata, params, isTestData) {
     return new Promise(function (resolve, reject) {
