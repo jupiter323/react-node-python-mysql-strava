@@ -8,7 +8,7 @@
 /coverage
 
 # production
-/build
+
 /src/assets/scss/material-dashboard-pro-react.css
 
 # misc

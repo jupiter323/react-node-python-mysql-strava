@@ -5,9 +5,9 @@ class ExpressConfig{
 		app.set('view engine', 'html');
 
 		//Files 
-		app.use(require('express').static(require('path').join('public')));
+		app.use(require('express').static(require('path').join('../client/build')));
 		app.use(/^((?!(api)).)*/, (req, res) => {
-			res.sendFile(require('path').join(__dirname, '../public', '/index.html'));
+			res.sendFile(require('path').join(__dirname, '../../client/build', '/index.html'));
 		});
 	}
 }
