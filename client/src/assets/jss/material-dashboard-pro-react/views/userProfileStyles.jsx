@@ -21,7 +21,7 @@ const userProfileStyles = {
   profilebuttons: {
     width: "100%",
     margin: "auto",
-    fontSize: "11px!important"
+    fontSize: "9px!important"
   },
   buttonsContainer: {
     border: "1px solid rgba(153,153,153,0.3)",
