@@ -2595,7 +2595,7 @@ img {
   width: 100%; }
 
 .marginTop {
-  margin-top: 20vh; }
+  margin-top: 20vh !important; }
 
 .crossline {
   border-top: 1px solid #eee; }

@@ -22,7 +22,6 @@ import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 
 import registerPageStyle from "assets/jss/material-dashboard-pro-react/views/registerPageStyle";
-import { NavLink } from "react-router-dom";
 
 import { bindActionCreators } from 'redux';
 import * as Actions from 'store/actions';

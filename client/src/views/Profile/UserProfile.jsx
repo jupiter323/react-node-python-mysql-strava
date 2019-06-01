@@ -872,8 +872,8 @@ class UserProfile extends React.Component {
                 </GridContainer>
 
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={8} ></GridItem>
-                  <GridItem xs={12} sm={12} md={4} >
+                  <GridItem xs={12} sm={12} md={6} ></GridItem>
+                  <GridItem xs={12} sm={12} md={6} >
                     <GridContainer className={classes.buttonsContainer}>
                       <GridItem xs={12} sm={12} md={3} >
                         {profileCompleted && <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
