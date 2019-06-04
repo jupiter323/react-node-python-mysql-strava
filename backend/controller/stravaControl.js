@@ -7,6 +7,7 @@ const Uploads = require('../model/uploads')
 var makecsvML = require('./makeCSVforML')
 var ActivityIDs = [];
 var userControl = require('../controller/userControl')
+const GpxCvt = require('../controller/gpxConvert')
 // var number = 0;
 var allActivities = [];
 var requestTime = ''
@@ -310,5 +311,104 @@ exports.saveStravaData = async function (req, res) {
             msg: "Fetching on now, You can't send anymore, until completion current fetching, please wait your email"
         })
     }
+}
+
+exports.getRouteGPX = (req, res) => {
+    let { body, user } = req
+    let { id } = user
+    let { routeID, routeName } = body
+    // get access token of strava
+    User.getUser('access_token', { id }, async (err, rows) => {
+        if (err) {
+            console.log(err);
+        } else {
+            var access_token = rows[0];
+            //export gpx
+            let url = `https://www.strava.com/api/v3/routes/${routeID}/export_gpx`
+
+            request.get(
+                url,
+                {
+                    'auth': {
+                        'bearer': access_token.access_token
+                    }
+                },
+                function (error, response, body) {
+                    if (error) return res.json({ success: false, error })
+                    var userfolder = `storage/gpx/uploads/${id}`
+                    if (!fs.existsSync(userfolder)) {
+                        fs.mkdirSync(userfolder);
+                    }
+                    fs.writeFileSync(`${userfolder}/${routeName}.gpx`, body);
+                    var againReq = { body: { isTestData: true }, files: [{ originalname: `${routeName}.gpx` }], user }
+                    GpxCvt.convertgpx(againReq, res);
+                    // return res.json({ success: true })
+
+                }
+            );
+
+        }
+    })
+
+}
+exports.getStravaRoutes = (req, res) => {
+    const { email, id } = req.user
+    let number = 0;
+    let clientId = id;
+    let page = req.body.pageNum;
+    let routes = []
+    let routeIDs = []
+    getRoutes(number, email, page, clientId, routes, routeIDs, res)
+}
+
+var getRoutes = (number, email, page, clientId, routes, routeIDs, res) => {
+    User.getUser('access_token', { id: clientId }, (err, rows) => {
+        if (err) {
+            console.log(err);
+            // fetching = false;
+            res.json({ success: false, err });
+        } else {
+            var access_token = rows[0];
+
+            strava.athlete.listRoutes({ ...access_token, per_page: 200, page: page }, function (
+                err,
+                payload,
+                limits
+            ) {
+                console.log("----->> Start list routes");
+                if (payload.length === undefined) {
+                    console.log(payload);
+                    if (payload.errors)
+
+                        userControl.refreshTokenAbsoultely(id)
+
+                    // fetching = false;
+                    res.json({ success: false, msg: "length is 0" });
+                }
+                console.log(clientId + " page count:" + payload.length)
+                if (err || payload.length === 0) {
+                    if (err) {
+                        // fetching = false;
+                        res.json({ success: false, err });
+                    }
+                    console.log(" <<----- End list routes");
+                    console.log(routes.length);
+                    res.json({ success: true, routes });
+                } else {
+                    // print number of list in current page
+                    console.log(`page ${page}' has ${payload.length} records`);
+
+                    // filter "type": "Ride"
+                    for (var i = 0; i < payload.length; i++) {
+                        // if (payload[i].type === "VirtualRide" || payload[i].type === "Ride") {
+                        routes.push({ id: payload[i].id, name: payload[i]['name'] });
+                        routeIDs.push(payload[i].id);
+                        // }
+                    }
+                    getRoutes(number, email, page + 1, clientId, routes, routeIDs, res);
+                }
+            })
+        }
+    })
 
 }
