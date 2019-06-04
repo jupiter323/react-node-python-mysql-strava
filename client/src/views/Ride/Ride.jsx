@@ -109,7 +109,6 @@ class Ride extends React.Component {
   }
 
   onChooseFile = async (isTestData, event) => {
-    return
     let err1 = "The file API isn't supported on this browser.", err2 = "The browser does not properly implement the event object", err3 = "This browser does not support the `files` property of the file input."
 
     if (typeof window.FileReader !== 'function')
@@ -320,7 +319,7 @@ class Ride extends React.Component {
                         <h4>Manually upload Gpx file</h4>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={4} >
-                        <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Upload" />
+                        <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="Upload" />
                       </GridItem>
                     </GridContainer>
                   </GridItem>
