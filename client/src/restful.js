@@ -117,6 +117,17 @@ export function eraseProfile() {
     return xapi().get('account/eraseprofile');
 }
 
+export function getStravaRoutes() {
+    return xapi().post('account/getStravaRoutes', {
+        pageNum: 1
+    });
+}
+export function exportroutegpx(params) {
+    return xapi().post('account/exportroutegpx', {
+        ...params
+    });
+}
+
 
 
 
