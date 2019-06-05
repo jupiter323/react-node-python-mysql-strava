@@ -36,73 +36,38 @@ class Ride extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ride: [],
+      ride: "",
       route: "",
       // completed: false,
-      slope_cat_sel_options: [{
-        key: '',
-        value: '',
-        text: ''
-      }],
-      output_column_sel_options: [{
-        key: '',
-        value: '',
-        text: ''
-      }],
+
       routes: [{
-        id: 0,
+        id: -1,
         name: "fetching..."
+      }],
+      gpxs: [{
+        upload_id: -1,
+        upload_user_id: -1,
+        upload_filename: "fetching..."
       }]
 
     };
 
   }
   async componentWillMount() {
-    var routesData = await Promise.resolve(service.getStravaRoutes())
+    var [routesData, gpxsData] = await Promise.all([service.getStravaRoutes(), service.getGpxs()])
     if (routesData && routesData['data'] && routesData['data']['success'])
       this.setState({ routes: routesData['data']['routes'] })
     else
       alert("there is not any routes")
+    if (gpxsData && gpxsData['data'] && gpxsData['data']['success'])
+      this.setState({ gpxs: gpxsData['data']['response'] })
+    else
+      alert("there is not any gpxs")
   }
 
   componentDidMount() {
     const { checkCompleteProfile } = this.props;
-    // this.getSystemoptions();
     checkCompleteProfile();
-
-
-  }
-  getSystemoptions = async () => {
-    var [options_res] = await Promise.all([
-      service.getOptions()
-    ]);
-
-    var systemOptions = options_res.data.optionsRes
-
-    if (systemOptions.length !== 0) {
-      await this.setState({
-        slope_cat_sel_options: this.addOptions(systemOptions, 'slope_divisions'),
-        output_column_sel_options: this.addOptions(systemOptions, 'output_column_selections'),
-        loading: false
-      })
-    }
-
-  }
-  addOptions(settings, name) {
-    if (settings.length !== 0) {
-      let data = settings[name]
-      const options = []
-      _.map(data, (sub_value, sub_id) => {
-        let s = ""
-        const option = {}
-        s = sub_value.name + ' = ' + sub_value.values.toString()
-        option.key = sub_value.name
-        option.value = s
-        option.text = s
-        options.push(option)
-      })
-      return options
-    }
   }
   convertValue(typeString, value) {
     var convertedValue;
@@ -157,18 +122,34 @@ class Ride extends React.Component {
   }
 
   handleInputValue = async (event) => {
-    var { routes } = this.state
+    var { routes,gpxs } = this.state
     console.log(event.target.name, event.type, event.target.type)
     var value = this.convertValue(event.target.type, event.target.value)
     this.setState({ [event.target.name]: value });
     var intValue = _.parseInt(event.target.value, 10)
-    var params = {
-      routeID: routes[intValue]['id'],
-      routeName: routes[event.target.value]['name']
+    switch (event.target.name) {
+      case "ride":
+        if (gpxs[intValue]['upload_id'] === -1) return
+        var params = {
+          fileID: gpxs[intValue]['upload_id']         
+        }
+        var response = await Promise.resolve(service.selectGpxConvert(params))
+        if (response['data']['success'])
+          alert("converted you selected ride successfully")
+        break;
+      case "route":
+        if (routes[intValue]['id'] === -1) return
+        var params = {
+          routeID: routes[intValue]['id'],
+          routeName: routes[intValue]['name']
+        }
+        var response = await Promise.resolve(service.exportroutegpx(params))
+        if (response['data']['success'])
+          alert("converted you selected route successfully")
+        break;
     }
-    var response = await Promise.resolve(service.exportroutegpx(params))
-    if (response['data']['success'])
-      alert("converted you selected route successfully")
+
+
 
   }
 
@@ -191,7 +172,7 @@ class Ride extends React.Component {
 
   render() {
     var { classes } = this.props;
-    var { ride, route, routes } = this.state;
+    var { ride, route, routes, gpxs } = this.state;
     return (
       <div>
         <GridContainer>
@@ -244,16 +225,16 @@ class Ride extends React.Component {
                         >
                           Choose Organized ride
                           </MenuItem>
-                        {_.map(routes, (e, i) => {
+                        {_.map(gpxs, (e, i) => {
                           return <MenuItem
                             classes={{
                               root: classes.selectMenuItem,
                               selected: classes.selectMenuItemSelected
                             }}
                             value={`${i}`}
-                            key={e.id}
+                            key={e.upload_id}
                           >
-                            {e['name']}
+                            {e['upload_filename']}
                           </MenuItem>
                         }
                         )}

@@ -128,6 +128,17 @@ export function exportroutegpx(params) {
     });
 }
 
+export function getGpxs() {
+    return xapi().get('getgpxs');
+}
+export function selectGpxConvert(params) {
+    return xapi().post('select_gpx_convert', {
+        ...params
+    });
+}
+
+
+
 
 
 
