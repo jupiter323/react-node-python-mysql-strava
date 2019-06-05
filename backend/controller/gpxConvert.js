@@ -3,7 +3,7 @@ var makecsvML = require('./makeCSVforML')
 var Uploads = require('../model/uploads')
 const Constants = require('../config/contants')
 var folderName = `storage/gpx/`;
-
+var _ = require('lodash');
 if (!fs.existsSync(folderName)) {
     fs.mkdirSync(folderName);
 }
@@ -47,7 +47,29 @@ exports.convertgpx = (req, res) => {
         }
     })
 }
+exports.convertAlreadyGpx = (req, res) => {
+    var { id } = req.user
+    var { fileID } = req.body
+    var isTestData = true
+    console.log("processing convert...")
+    makecsvML.processAlreadyFile(isTestData, fileID, id);
+}
+exports.getgpxs = (req, res) => {
+    var projection = "upload_id,upload_user_id,upload_filename"
+    Uploads.getGpxs(projection, (err, response) => {
 
+        if (err) {
+            console.log(err)
+            res.send({ success: false, err });
+        }
+        else if (response) {
+            res.send({ success: true, response })
+        }
+
+    })
+
+
+}
 var makedirs = () => {
     let uploads = 'storage/gpx/uploads/'
     if (!fs.existsSync(uploads)) fs.mkdirSync(uploads)

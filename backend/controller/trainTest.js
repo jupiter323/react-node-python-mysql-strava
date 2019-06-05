@@ -48,7 +48,7 @@ exports.callPythonTrainAndTest = (userID) => {
             } else {
                 return ({
                     success: false,
-                    message: error 
+                    message: error
                 })
             }
         }

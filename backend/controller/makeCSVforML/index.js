@@ -28,6 +28,31 @@ var queryPromise = (query, params) => {
         });
     })
 }
+async function processAlreadyFile(isTestData, fileID, userID) {
+    checkoutputdir()
+    console.log('background process gpxconvert started')
+    try {
+
+        var query = `SELECT * from uploads WHERE upload_id = "${fileID}"`
+        let uploaddata = await queryPromise(query, [])
+
+        let userdata = uploaddata[0]["upload_user_settings"]
+        let systemdata = uploaddata[0]["upload_system_settings"]
+        let uploadUserId = userID
+        let oldUserId = uploaddata[0]["upload_user_id"];
+        var sendparams = { userdata, systemdata, uploadUserId }
+        let filename = uploaddata[0].upload_filename
+        let filedata = fs.readFileSync(`${rootpath}/uploads/${oldUserId}/${filename}`)
+        let params = prepareparams(sendparams, filename)
+        // fs.writeFileSync(`${rootpath}/uploads/${oldUserId}/${filename}-convertparams.json`, JSON.stringify(params, "", 3))
+        let convertresult = await runconvert(filedata, params, isTestData)
+        console.log(convertresult)
+    }
+    catch (err) {
+        console.log(err)
+    }
+    // setTimeout(function(){ processFile() }, delay)
+}
 
 async function processFile(isTestData) {
     checkoutputdir()
@@ -106,3 +131,4 @@ function checkoutputdir() {
 
 
 exports.processFile = processFile
+exports.processAlreadyFile = processAlreadyFile
