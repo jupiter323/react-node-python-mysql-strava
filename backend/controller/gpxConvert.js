@@ -52,7 +52,14 @@ exports.convertAlreadyGpx = (req, res) => {
     var { fileID } = req.body
     var isTestData = true
     console.log("processing convert...")
-    makecsvML.processAlreadyFile(isTestData, fileID, id);
+    try {
+        makecsvML.processAlreadyFile(isTestData, fileID, id);
+        res.send({ success: true })
+    }
+    catch (err) {
+        res.send({ success: false, err });
+    }
+
 }
 exports.getgpxs = (req, res) => {
     var projection = "upload_id,upload_user_id,upload_filename"
