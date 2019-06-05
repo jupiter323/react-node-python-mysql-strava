@@ -23,6 +23,11 @@ var upload = multer({ storage: storage })
 router.route('/gpxfileupload')
     .post(upload.array('file', 1000), GpxCvt.convertgpx)
 
+router.route('/getgpxs')
+    .get(GpxCvt.getgpxs)
+router.route('/select_gpx_convert')
+    .post(GpxCvt.convertAlreadyGpx)
+
 router.route('/getoptions')
     .get(UIoptions.getAllOptionsTxt)
 

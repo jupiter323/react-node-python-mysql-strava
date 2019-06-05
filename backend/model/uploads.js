@@ -84,9 +84,9 @@ var insertFileRow = (req, callback) => {
                         console.log("not inserted on uploads because there is ", duplicated)
                     }
                     if (i + 1 == files.length && valueFiledsString.length) {
-                        valueFiledsString = valueFiledsString.slice(0, valueFiledsString.length - 1);                       
+                        valueFiledsString = valueFiledsString.slice(0, valueFiledsString.length - 1);
                     }
-                  
+
                 }
 
                 if (valueArray.length)
@@ -151,7 +151,18 @@ var insertFileRowForStrava = (params, callback) => {
     })
 
 }
-
-
+var getGpxs = (projection, cb) => {
+    if (projection === '') projection = '*'
+    var extention = `%.gpx%`
+    db.query("SELECT " + projection + " FROM uploads WHERE upload_filename LIKE ?", [extention],
+        (err, response) => {
+            if (err) cb(err)
+            else {
+                if (response)
+                    cb(err, response)
+            }
+        })
+}
+exports.getGpxs = getGpxs
 exports.insertFileRow = insertFileRow
 exports.insertFileRowForStrava = insertFileRowForStrava
