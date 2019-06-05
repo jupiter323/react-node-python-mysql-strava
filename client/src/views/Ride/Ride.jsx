@@ -37,7 +37,7 @@ class Ride extends React.Component {
     super(props);
     this.state = {
       ride: [],
-      route: [],
+      route: "",
       // completed: false,
       slope_cat_sel_options: [{
         key: '',
@@ -49,15 +49,27 @@ class Ride extends React.Component {
         value: '',
         text: ''
       }],
+      routes: [{
+        id: 0,
+        name: "fetching..."
+      }]
 
     };
 
+  }
+  async componentWillMount() {
+    var routesData = await Promise.resolve(service.getStravaRoutes())
+    if (routesData && routesData['data'] && routesData['data']['success'])
+      this.setState({ routes: routesData['data']['routes'] })
+    else
+      alert("there is not any routes")
   }
 
   componentDidMount() {
     const { checkCompleteProfile } = this.props;
     // this.getSystemoptions();
     checkCompleteProfile();
+
 
   }
   getSystemoptions = async () => {
@@ -144,10 +156,19 @@ class Ride extends React.Component {
     this.runprocess = true
   }
 
-  handleInputValue = event => {
+  handleInputValue = async (event) => {
+    var { routes } = this.state
     console.log(event.target.name, event.type, event.target.type)
     var value = this.convertValue(event.target.type, event.target.value)
     this.setState({ [event.target.name]: value });
+    var intValue = _.parseInt(event.target.value, 10)
+    var params = {
+      routeID: routes[intValue]['id'],
+      routeName: routes[event.target.value]['name']
+    }
+    var response = await Promise.resolve(service.exportroutegpx(params))
+    if (response['data']['success'])
+      alert("converted you selected route successfully")
 
   }
 
@@ -169,8 +190,8 @@ class Ride extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { ride, route } = this.state;
+    var { classes } = this.props;
+    var { ride, route, routes } = this.state;
     return (
       <div>
         <GridContainer>
@@ -223,33 +244,20 @@ class Ride extends React.Component {
                         >
                           Choose Organized ride
                           </MenuItem>
-                        <MenuItem
-                          classes={{
-                            root: classes.selectMenuItem,
-                            selected: classes.selectMenuItemSelected
-                          }}
-                          value="0"
-                        >
-                          ride1
-                            </MenuItem>
-                        <MenuItem
-                          classes={{
-                            root: classes.selectMenuItem,
-                            selected: classes.selectMenuItemSelected
-                          }}
-                          value="1"
-                        >
-                          ride2
-                            </MenuItem>
-                        <MenuItem
-                          classes={{
-                            root: classes.selectMenuItem,
-                            selected: classes.selectMenuItemSelected
-                          }}
-                          value="2"
-                        >
-                          ride3
-                            </MenuItem>
+                        {_.map(routes, (e, i) => {
+                          return <MenuItem
+                            classes={{
+                              root: classes.selectMenuItem,
+                              selected: classes.selectMenuItemSelected
+                            }}
+                            value={`${i}`}
+                            key={e.id}
+                          >
+                            {e['name']}
+                          </MenuItem>
+                        }
+                        )}
+
                       </Select>
                     </FormControl>
                     <FormControl
@@ -283,33 +291,19 @@ class Ride extends React.Component {
                         >
                           Choose Strava route
                             </MenuItem>
-                        <MenuItem
-                          classes={{
-                            root: classes.selectMenuItem,
-                            selected: classes.selectMenuItemSelected
-                          }}
-                          value="0"
-                        >
-                          route1
-                            </MenuItem>
-                        <MenuItem
-                          classes={{
-                            root: classes.selectMenuItem,
-                            selected: classes.selectMenuItemSelected
-                          }}
-                          value="1"
-                        >
-                          route2
-                            </MenuItem>
-                        <MenuItem
-                          classes={{
-                            root: classes.selectMenuItem,
-                            selected: classes.selectMenuItemSelected
-                          }}
-                          value="2"
-                        >
-                          route3
-                            </MenuItem>
+                        {_.map(routes, (e, i) => {
+                          return <MenuItem
+                            classes={{
+                              root: classes.selectMenuItem,
+                              selected: classes.selectMenuItemSelected
+                            }}
+                            value={`${i}`}
+                            key={e.id}
+                          >
+                            {e['name']}
+                          </MenuItem>
+                        }
+                        )}
                       </Select>
                     </FormControl>
                     {/* control buttons */}
