@@ -43,16 +43,16 @@
     padding: 0 !important;
 }
 
-.rdtPicker {
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: block !important;
-    margin-top: 0!important;
+.rdt {
+    height: 500px;
 
-}
+    .rdtPicker {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: block !important;
+        margin-top: 0 !important;
 
-.rdtTime,
-.rdtDays {
+    }
 
     // th.rdtSwitch,
     .rdtTimeToggle {
