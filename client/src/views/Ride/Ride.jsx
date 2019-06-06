@@ -310,7 +310,7 @@ class Ride extends React.Component {
                       className={classes.selectFormControl}
                     >
 
-                      <DateTimePicker
+                      {/* <DateTimePicker
                         selected={this.state.date}
                         onChange={this.handleChangeDateTime}
                         showTimeSelect
@@ -318,7 +318,7 @@ class Ride extends React.Component {
                         timeIntervals={15}
                         dateFormat="MMMM d, yyyy h:mm aa"
                         timeCaption="time"
-                      />
+                      /> */}
                       {/* <DateTimePicker
                         from={new Date("2017-03-15T14:28:06+05:30")}
                         to={new Date("2017-03-30T14:28:06+05:30")}
@@ -326,13 +326,11 @@ class Ride extends React.Component {
                         value={this.state.date}
                       /> */}
 
-                      {/* <Datetime
-                        viewMode='days'
+                      <Datetime                       
                         timeFormat="h:mm a"
-                        color="red"
-                        closeOnSelect
+                        color="red"                    
                         inputProps={{ placeholder: "Start Date & Time", color: "red" }}
-                      /> */}
+                      />
                     </FormControl>
                   </GridItem>
                 </GridContainer>

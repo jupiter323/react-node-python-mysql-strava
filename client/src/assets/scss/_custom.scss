@@ -24,24 +24,33 @@
 }
 
 .marginTop {
-    margin-top: 20vh!important;
+    margin-top: 20vh !important;
 }
 
 .crossline {
     border-top: 1px solid#eee;
 }
+
 .margin-auto {
-    margin: auto!important;
-}
-.p1 {
-    padding: 0 7px!important;
-}
-.no-padding {
-    padding: 0!important;
+    margin: auto !important;
 }
 
-.rdtTime,.rdtDays {
-    visibility: visible!important;
-    opacity: 1!important;
-    display: block!important;
+.p1 {
+    padding: 0 7px !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.rdtTime,
+.rdtDays {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+
+    .rdtSwitch,
+    .rdtTimeToggle {
+        display: none !important;
+    }
 }

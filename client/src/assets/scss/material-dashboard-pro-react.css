@@ -2609,7 +2609,13 @@ img {
 .no-padding {
   padding: 0 !important; }
 
-.rdtTime, .rdtDays {
+.rdtTime,
+.rdtDays {
   visibility: visible !important;
   opacity: 1 !important;
   display: block !important; }
+  .rdtTime .rdtSwitch,
+  .rdtTime .rdtTimeToggle,
+  .rdtDays .rdtSwitch,
+  .rdtDays .rdtTimeToggle {
+    display: none !important; }
