@@ -2617,7 +2617,7 @@ img {
     visibility: visible !important;
     opacity: 1 !important;
     display: block !important;
-    margin-top: 0 !important;
+    margin-top: -64px !important;
     width: 706px !important;
     box-shadow: none !important; }
     .rdt .rdtPicker th.rdtPrev,
@@ -2630,6 +2630,8 @@ img {
     .rdt .rdtPicker .rdtDay {
       border-radius: 10px !important;
       font-size: 20px !important; }
+    .rdt .rdtPicker .rdtDay.rdtActive {
+      background: orangered !important; }
     .rdt .rdtPicker .rdtDay.rdtToday.rdtActive {
       background: orangered !important;
       border-radius: 10px !important; }

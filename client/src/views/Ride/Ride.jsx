@@ -32,6 +32,7 @@ import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
 import _ from 'lodash';
 import Datetime from 'components/DateTimePicker';
+import { confirmAlert } from 'react-confirm-alert';
 class Ride extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +50,8 @@ class Ride extends React.Component {
         upload_user_id: -1,
         upload_filename: "fetching..."
       }],
-      date: new Date()
+      date: new Date(),
+      selectedDate:false
 
     };
 
@@ -123,8 +125,8 @@ class Ride extends React.Component {
   }
 
   handleInputValue = async (event) => {
-    var { routes, gpxs } = this.state
-    console.log(event.target.name, event.type, event.target.type)
+    var { routes, gpxs, selectedDate } = this.state
+    console.log(event.target.name, event.type)
     var value = this.convertValue(event.target.type, event.target.value)
     this.setState({ [event.target.name]: value });
     var intValue = _.parseInt(event.target.value, 10)
@@ -134,9 +136,18 @@ class Ride extends React.Component {
         var params = {
           fileID: gpxs[intValue]['upload_id']
         }
+        if(!selectedDate)
+          confirmAlert({
+            title: 'Alert',
+            message: 'Please select your start date'
+          });
         var response = await Promise.resolve(service.selectGpxConvert(params))
-        if (response['data']['success'])
-          alert("converted you selected ride successfully")
+        // if (response['data']['success'])
+        //   confirmAlert({
+        //     title: 'Alert',
+        //     message: 'converted you selected ride successfully'
+        //   });
+         
         break;
       case "route":
         if (routes[intValue]['id'] === -1) return
@@ -144,11 +155,21 @@ class Ride extends React.Component {
           routeID: routes[intValue]['id'],
           routeName: routes[intValue]['name']
         }
+        if(!selectedDate)
+          confirmAlert({
+            title: 'Alert',
+            message: 'Please select your start date'
+          });
         var response = await Promise.resolve(service.exportroutegpx(params))
-        if (response['data']['success'])
-          alert("converted you selected route successfully")
+        // if (response['data']['success'])
+        //   confirmAlert({
+        //     title: 'Alert',
+        //     message: 'converted you selected route successfully'
+        //   });
         break;
     }
+   
+
 
 
 
@@ -170,8 +191,10 @@ class Ride extends React.Component {
     } else { contents.innerHTML = contents.innerHTML + '<span style="color:red">Failure, processing aborted</span><br>' }
     window.scrollTo(0, document.body.scrollHeight);
   }
-  handleChangeDateTime = (event) => {
-    console.log(event)
+  handleChangeDateTime = (event) => {   
+    var date = event.toDate()
+    console.log(date)
+    this.setState({date, selectedDate:true});
   }
   render() {
     var { classes } = this.props;
