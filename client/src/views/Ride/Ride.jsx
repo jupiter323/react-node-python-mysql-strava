@@ -31,8 +31,8 @@ import * as service from "restful"
 import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
 import _ from 'lodash';
-import Datetime from "react-datetime";
-import DateTimePicker from 'react-datepicker';
+// import Datetime from "react-datetime";
+import Datetime from 'components/DateTimePicker';
 class Ride extends React.Component {
   constructor(props) {
     super(props);
@@ -326,8 +326,7 @@ class Ride extends React.Component {
                         value={this.state.date}
                       /> */}
 
-                      <Datetime
-                        // timeFormat="h:mm a"
+                      <Datetime                        
                         color="red"                   
                         inputProps={{ placeholder: "Start Date & Time", color: "red" }}
                       />
