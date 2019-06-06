@@ -43,13 +43,18 @@
     padding: 0 !important;
 }
 
-.rdtTime,
-.rdtDays {
+.rdtPicker {
     visibility: visible !important;
     opacity: 1 !important;
     display: block !important;
+    margin-top: 0!important;
 
-    .rdtSwitch,
+}
+
+.rdtTime,
+.rdtDays {
+
+    // th.rdtSwitch,
     .rdtTimeToggle {
         display: none !important;
     }

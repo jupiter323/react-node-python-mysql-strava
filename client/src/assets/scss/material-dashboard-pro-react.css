@@ -2609,13 +2609,12 @@ img {
 .no-padding {
   padding: 0 !important; }
 
-.rdtTime,
-.rdtDays {
+.rdtPicker {
   visibility: visible !important;
   opacity: 1 !important;
-  display: block !important; }
-  .rdtTime .rdtSwitch,
-  .rdtTime .rdtTimeToggle,
-  .rdtDays .rdtSwitch,
-  .rdtDays .rdtTimeToggle {
-    display: none !important; }
+  display: block !important;
+  margin-top: 0 !important; }
+
+.rdtTime .rdtTimeToggle,
+.rdtDays .rdtTimeToggle {
+  display: none !important; }

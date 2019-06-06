@@ -326,9 +326,9 @@ class Ride extends React.Component {
                         value={this.state.date}
                       /> */}
 
-                      <Datetime                       
-                        timeFormat="h:mm a"
-                        color="red"                    
+                      <Datetime
+                        // timeFormat="h:mm a"
+                        color="red"                   
                         inputProps={{ placeholder: "Start Date & Time", color: "red" }}
                       />
                     </FormControl>
