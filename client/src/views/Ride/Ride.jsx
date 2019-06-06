@@ -32,6 +32,7 @@ import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
 import _ from 'lodash';
 import Datetime from "react-datetime";
+import DateTimePicker from 'react-datepicker';
 class Ride extends React.Component {
   constructor(props) {
     super(props);
@@ -48,7 +49,8 @@ class Ride extends React.Component {
         upload_id: -1,
         upload_user_id: -1,
         upload_filename: "fetching..."
-      }]
+      }],
+      date: new Date()
 
     };
 
@@ -122,7 +124,7 @@ class Ride extends React.Component {
   }
 
   handleInputValue = async (event) => {
-    var { routes,gpxs } = this.state
+    var { routes, gpxs } = this.state
     console.log(event.target.name, event.type, event.target.type)
     var value = this.convertValue(event.target.type, event.target.value)
     this.setState({ [event.target.name]: value });
@@ -131,7 +133,7 @@ class Ride extends React.Component {
       case "ride":
         if (gpxs[intValue]['upload_id'] === -1) return
         var params = {
-          fileID: gpxs[intValue]['upload_id']         
+          fileID: gpxs[intValue]['upload_id']
         }
         var response = await Promise.resolve(service.selectGpxConvert(params))
         if (response['data']['success'])
@@ -169,7 +171,9 @@ class Ride extends React.Component {
     } else { contents.innerHTML = contents.innerHTML + '<span style="color:red">Failure, processing aborted</span><br>' }
     window.scrollTo(0, document.body.scrollHeight);
   }
-
+  handleChangeDateTime = (event) => {
+    console.log(event)
+  }
   render() {
     var { classes } = this.props;
     var { ride, route, routes, gpxs } = this.state;
@@ -300,14 +304,35 @@ class Ride extends React.Component {
                   </GridItem>
                   {/* datetimepicker */}
                   <GridItem xs={12} sm={12} md={6}>
+
                     <FormControl
                       fullWidth
                       className={classes.selectFormControl}
                     >
-                      <Datetime
-                        color="red"
-                        inputProps={{ placeholder: "Start Date & Time", color: "red" }}
+
+                      <DateTimePicker
+                        selected={this.state.date}
+                        onChange={this.handleChangeDateTime}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="MMMM d, yyyy h:mm aa"
+                        timeCaption="time"
                       />
+                      {/* <DateTimePicker
+                        from={new Date("2017-03-15T14:28:06+05:30")}
+                        to={new Date("2017-03-30T14:28:06+05:30")}
+                        onChange={this.handleChangeDateTime}
+                        value={this.state.date}
+                      /> */}
+
+                      {/* <Datetime
+                        viewMode='days'
+                        timeFormat="h:mm a"
+                        color="red"
+                        closeOnSelect
+                        inputProps={{ placeholder: "Start Date & Time", color: "red" }}
+                      /> */}
                     </FormControl>
                   </GridItem>
                 </GridContainer>
