@@ -45,17 +45,49 @@
 
 .rdt {
     height: 500px;
-
+    input {
+        display: none!important;
+    }
     .rdtPicker {
         visibility: visible !important;
         opacity: 1 !important;
         display: block !important;
-        margin-top: 0 !important;
+        margin-top: -64px !important;
+        width: 706px !important;
+        box-shadow: none!important;
+        th.rdtPrev,
+        th.rdtNext,
+        .dow,
+        th.rdtSwitch,
+        .rdtBtn {
+            color: orangered !important;
+            font-size: 20px !important;
+        }
 
+        .rdtDay {
+            border-radius: 10px !important;
+            font-size: 20px !important;
+        }
+
+        .rdtDay.rdtToday.rdtActive {
+            background: orangered !important;
+            border-radius: 10px !important;
+        }
+
+        .rdtCount {
+            font-size: 20px !important;
+        }
+
+        .rdtCounters .rdtCounter:last-child .rdtCount {
+            border: 1px solid orangered !important;
+            color: orangered !important;
+            font-size: 15px !important;
+        }
+
+        .rdtTimeToggle {
+            display: none !important;
+        }
     }
 
-    // th.rdtSwitch,
-    .rdtTimeToggle {
-        display: none !important;
-    }
+
 }

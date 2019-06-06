@@ -2611,10 +2611,33 @@ img {
 
 .rdt {
   height: 500px; }
+  .rdt input {
+    display: none !important; }
   .rdt .rdtPicker {
     visibility: visible !important;
     opacity: 1 !important;
     display: block !important;
-    margin-top: 0 !important; }
-  .rdt .rdtTimeToggle {
-    display: none !important; }
+    margin-top: 0 !important;
+    width: 706px !important;
+    box-shadow: none !important; }
+    .rdt .rdtPicker th.rdtPrev,
+    .rdt .rdtPicker th.rdtNext,
+    .rdt .rdtPicker .dow,
+    .rdt .rdtPicker th.rdtSwitch,
+    .rdt .rdtPicker .rdtBtn {
+      color: orangered !important;
+      font-size: 20px !important; }
+    .rdt .rdtPicker .rdtDay {
+      border-radius: 10px !important;
+      font-size: 20px !important; }
+    .rdt .rdtPicker .rdtDay.rdtToday.rdtActive {
+      background: orangered !important;
+      border-radius: 10px !important; }
+    .rdt .rdtPicker .rdtCount {
+      font-size: 20px !important; }
+    .rdt .rdtPicker .rdtCounters .rdtCounter:last-child .rdtCount {
+      border: 1px solid orangered !important;
+      color: orangered !important;
+      font-size: 15px !important; }
+    .rdt .rdtPicker .rdtTimeToggle {
+      display: none !important; }
