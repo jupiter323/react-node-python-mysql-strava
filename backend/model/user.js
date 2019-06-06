@@ -387,7 +387,6 @@ var deleteUser = (username, callback) => {
 
 }
 
-
 exports.loginEmailUser = loginEmailUser
 exports.insertUserProfile = insertUserProfile
 exports.insertUser = insertUser
