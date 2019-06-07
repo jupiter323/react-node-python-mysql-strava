@@ -32,6 +32,7 @@ import GPXUpload from "components/CustomUpload/GPXUpload.jsx";
 import FormData from 'form-data'
 import _ from 'lodash';
 import Datetime from 'components/DateTimePicker';
+import Button from "components/CustomButtons/Button.jsx";
 import { confirmAlert } from 'react-confirm-alert';
 class Ride extends React.Component {
   constructor(props) {
@@ -46,12 +47,15 @@ class Ride extends React.Component {
         name: "fetching..."
       }],
       gpxs: [{
-        upload_id: -1,
-        upload_user_id: -1,
-        upload_filename: "fetching..."
+        id: -1,
+        file_name: "fetching..."
       }],
       date: new Date(),
-      selectedDate:false
+      selectedDate: false,
+      selectedMethod: -1,
+      rideIndex: -1,
+      routeIndex: -1,
+      gpxParams: null
 
     };
 
@@ -109,14 +113,7 @@ class Ride extends React.Component {
       params.append('file', file);
     }
 
-    var response = await Promise.all([
-      service.trainAndTestDataUpload(params)
-    ]);
-    if (response[0].status === 200 || response[0].readyState === 4) {
-      // this.onUploadResponse(response[0].data)
-      console.log("uploaded files")
-    }
-
+    this.setState({ gpxParams: params, selectedMethod: 2 })
 
     if (this.files.length === 0) return;
     this.filesIndex = -1
@@ -125,52 +122,72 @@ class Ride extends React.Component {
   }
 
   handleInputValue = async (event) => {
-    var { routes, gpxs, selectedDate } = this.state
+    var { routes, gpxs } = this.state
     console.log(event.target.name, event.type)
     var value = this.convertValue(event.target.type, event.target.value)
     this.setState({ [event.target.name]: value });
     var intValue = _.parseInt(event.target.value, 10)
     switch (event.target.name) {
       case "ride":
-        if (gpxs[intValue]['upload_id'] === -1) return
-        var params = {
-          fileID: gpxs[intValue]['upload_id']
-        }
-        if(!selectedDate)
-          confirmAlert({
-            title: 'Alert',
-            message: 'Please select your start date'
-          });
-        var response = await Promise.resolve(service.selectGpxConvert(params))
-        // if (response['data']['success'])
-        //   confirmAlert({
-        //     title: 'Alert',
-        //     message: 'converted you selected ride successfully'
-        //   });
-         
+        if (gpxs[intValue]['id'] === -1) return
+        this.setState({ selectedMethod: 0, rideIndex: intValue })
         break;
       case "route":
         if (routes[intValue]['id'] === -1) return
-        var params = {
-          routeID: routes[intValue]['id'],
-          routeName: routes[intValue]['name']
-        }
-        if(!selectedDate)
-          confirmAlert({
-            title: 'Alert',
-            message: 'Please select your start date'
-          });
-        var response = await Promise.resolve(service.exportroutegpx(params))
-        // if (response['data']['success'])
-        //   confirmAlert({
-        //     title: 'Alert',
-        //     message: 'converted you selected route successfully'
-        //   });
+        this.setState({ selectedMethod: 1, routeIndex: intValue })
         break;
     }
-   
+  }
+  handleSelectRide = async () => {
+    var { selectedDate, selectedMethod, gpxs, routes, rideIndex, routeIndex, gpxParams } = this.state
+    if (!selectedDate)
+      return confirmAlert({
+        title: 'Alert',
+        message: 'Please select date and time'
+      });
+    switch (selectedMethod) {
+      case -1:
+        return confirmAlert({
+          title: 'Alert',
+          message: 'Please fill in the Ride'
+        });
+      case 0:
+        var params = {
+          fileID: gpxs[rideIndex]['id']
+        }
 
+        var response = await Promise.resolve(service.selectGpxConvert(params))
+        if (response['data']['success'])
+          confirmAlert({
+            title: 'Alert',
+            message: 'converted you selected ride successfully'
+          });
+        break;
+      case 1:
+        var params = {
+          routeID: routes[routeIndex]['id'],
+          routeName: routes[routeIndex]['name']
+        }
 
+        var response = await Promise.resolve(service.exportroutegpx(params))
+        if (response['data']['success'])
+          confirmAlert({
+            title: 'Alert',
+            message: 'converted you selected route successfully'
+          });
+        break;
+      case 2:
+        var response = await Promise.all([
+          service.trainAndTestDataUpload(gpxParams)
+        ]);
+        if (response[0].status === 200 || response[0].readyState === 4) {
+          confirmAlert({
+            title: 'Alert',
+            message: 'converted you selected manually gpx file successfully'
+          });
+        }
+        break;
+    }
 
 
   }
@@ -191,11 +208,12 @@ class Ride extends React.Component {
     } else { contents.innerHTML = contents.innerHTML + '<span style="color:red">Failure, processing aborted</span><br>' }
     window.scrollTo(0, document.body.scrollHeight);
   }
-  handleChangeDateTime = (event) => {   
+  handleChangeDateTime = (event) => {
     var date = event.toDate()
     console.log(date)
-    this.setState({date, selectedDate:true});
+    this.setState({ date, selectedDate: true });
   }
+
   render() {
     var { classes } = this.props;
     var { ride, route, routes, gpxs } = this.state;
@@ -227,7 +245,7 @@ class Ride extends React.Component {
                       <InputLabel
                         htmlFor="ride"
                       >
-                        Organized ride
+                        Organized event
                           </InputLabel>
                       <Select
                         MenuProps={{
@@ -249,7 +267,7 @@ class Ride extends React.Component {
                             root: classes.selectMenuItem
                           }}
                         >
-                          Choose Organized ride
+                          Choose Organized event
                           </MenuItem>
                         {_.map(gpxs, (e, i) => {
                           return <MenuItem
@@ -258,9 +276,9 @@ class Ride extends React.Component {
                               selected: classes.selectMenuItemSelected
                             }}
                             value={`${i}`}
-                            key={e.upload_id}
+                            key={e.id}
                           >
-                            {e['upload_filename']}
+                            {e['file_name']}
                           </MenuItem>
                         }
                         )}
@@ -320,9 +338,10 @@ class Ride extends React.Component {
                         <h4>Manually upload Gpx file</h4>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={4} >
-                        <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="Upload" />
+                        <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="File" />
                       </GridItem>
                     </GridContainer>
+
                   </GridItem>
                   {/* datetimepicker */}
                   <GridItem xs={12} sm={12} md={6}>
@@ -330,16 +349,26 @@ class Ride extends React.Component {
                     <FormControl
                       fullWidth
                       className={classes.selectFormControl}
-                    >               
+                    >
 
-                      <Datetime                        
-                        color="red"   
+                      <Datetime
+                        color="red"
                         value={this.state.date}
-                        onChange={this.handleChangeDateTime}                
+                        onChange={this.handleChangeDateTime}
                         inputProps={{ placeholder: "Start Date & Time", color: "red" }}
                       />
                     </FormControl>
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={8} >
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={4} >
+                        <Button color="primary" className={classes.profilebuttons} onClick={this.handleSelectRide}>
+                          Select Ride
+                      </Button>
+                      </GridItem>
+                    </GridContainer>
                   </GridItem>
+
                 </GridContainer>
                 <Clearfix />
               </CardBody>

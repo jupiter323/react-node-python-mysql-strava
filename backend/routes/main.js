@@ -24,7 +24,7 @@ router.route('/gpxfileupload')
     .post(upload.array('file', 1000), GpxCvt.convertgpx)
 
 router.route('/getgpxs')
-    .get(GpxCvt.getgpxs)
+    .get(GpxCvt.getOrganizedGpxs)
 router.route('/select_gpx_convert')
     .post(GpxCvt.convertAlreadyGpx)
 
