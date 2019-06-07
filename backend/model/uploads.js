@@ -81,7 +81,7 @@ var insertFileRow = (req, callback) => {
                         valueFiledsString += "(?,?,?,?),"
                         valueArray.push(upload_user_id, upload_filename, upload_user_settings, upload_system_settings)
                     } else {
-                        console.log("not inserted on uploads because there is ", duplicated)
+                        console.log("not inserted on uploads because there is ", duplicated)                        
                     }
                     if (i + 1 == files.length && valueFiledsString.length) {
                         valueFiledsString = valueFiledsString.slice(0, valueFiledsString.length - 1);
