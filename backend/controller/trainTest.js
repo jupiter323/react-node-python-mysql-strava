@@ -7,7 +7,7 @@ exports.callPythonTrainForHost = (req, res) => {
     var url = `${urlCfg.PYTHON_URL}?user=${req.query.user}`
     request.get(
         url,
-        function (error, response, body) {
+        (error, response, body) => {
             console.log(error, body)
             if (!error && JSON.parse(body).status === 'success') {
 
@@ -34,7 +34,7 @@ exports.callPythonTrainAndTest = (userID) => {
     var url = `${urlCfg.PYTHON_URL}?user=${userID}`
     request.get(
         url,
-        function (error, response, body) {
+        (error, response, body) => {
             console.log(error, body)
             if (!error && JSON.parse(body).status === 'success') {
 
