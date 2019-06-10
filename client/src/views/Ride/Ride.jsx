@@ -60,21 +60,32 @@ class Ride extends React.Component {
     };
 
   }
-  async componentWillMount() {
-    var [routesData, gpxsData] = await Promise.all([service.getStravaRoutes(), service.getGpxs()])
-    if (routesData && routesData['data'] && routesData['data']['success'])
-      this.setState({ routes: routesData['data']['routes'] })
-    else
-      alert("there is not any routes")
-    if (gpxsData && gpxsData['data'] && gpxsData['data']['success'])
-      this.setState({ gpxs: gpxsData['data']['response'] })
-    else
-      alert("there is not any gpxs")
+  componentWillMount() {
+    const { checkCompleteProfile } = this.props;
+    checkCompleteProfile();
+    setTimeout(async () => {
+      var { profileCompleted, history } = this.props;
+      if (!profileCompleted) {
+        alert("Your profile is not completed. Please connect with Strava Api on your profile")
+        return history.push("/profile");
+      }
+      var [routesData, gpxsData] = await Promise.all([service.getStravaRoutes(), service.getGpxs()])
+      if (routesData && routesData['data'] && routesData['data']['success'])
+        this.setState({ routes: routesData['data']['routes'] })
+      else
+        alert("there is not any routes")
+      if (gpxsData && gpxsData['data'] && gpxsData['data']['success'])
+        this.setState({ gpxs: gpxsData['data']['response'] })
+      else
+        alert("there is not any gpxs")
+    }, 500);
+
+
   }
 
   componentDidMount() {
-    const { checkCompleteProfile } = this.props;
-    checkCompleteProfile();
+
+
   }
   convertValue(typeString, value) {
     var convertedValue;
@@ -113,7 +124,7 @@ class Ride extends React.Component {
       params.append('file', file);
     }
 
-    this.setState({ gpxParams: params, selectedMethod: 2 })
+    this.setState({ gpxParams: params, selectedMethod: 2, route: '', ride: '' })
 
     if (this.files.length === 0) return;
     this.filesIndex = -1
@@ -130,11 +141,11 @@ class Ride extends React.Component {
     switch (event.target.name) {
       case "ride":
         if (gpxs[intValue]['id'] === -1) return
-        this.setState({ selectedMethod: 0, rideIndex: intValue })
+        this.setState({ selectedMethod: 0, rideIndex: intValue, gpxParams: null, route: '' })
         break;
       case "route":
         if (routes[intValue]['id'] === -1) return
-        this.setState({ selectedMethod: 1, routeIndex: intValue })
+        this.setState({ selectedMethod: 1, routeIndex: intValue, gpxParams: null, ride: '' })
         break;
     }
   }
