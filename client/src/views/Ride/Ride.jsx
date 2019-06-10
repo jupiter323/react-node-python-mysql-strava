@@ -61,11 +61,10 @@ class Ride extends React.Component {
 
   }
   componentWillMount() {
-    const { checkCompleteProfile } = this.props;
-    checkCompleteProfile();
+    const { userProfile, history } = this.props;
+    // checkCompleteProfile();
     setTimeout(async () => {
-      var { profileCompleted, history } = this.props;
-      if (!profileCompleted) {
+      if (!userProfile || !userProfile.athlete || !userProfile.athlete.id) {
         alert("Your profile is not completed. Please connect with Strava Api on your profile")
         return history.push("/profile");
       }
