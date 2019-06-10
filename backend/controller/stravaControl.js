@@ -165,7 +165,7 @@ var getStreamActivities = (number, email, access_token, clientId) => {
         }
     );
 }
-function isUpdatedActivities(clientId) {
+var isUpdatedActivities = (clientId) => {
     const activitiesCount = ActivityIDs.length
     return new Promise((resolve, reject) => {
         Activity.getactivityCountByUsername(clientId, (err, counts) => {
@@ -183,7 +183,7 @@ function isUpdatedActivities(clientId) {
     })
 }
 
-function getAcitivies(number, email, page, clientId) {
+var getAcitivies = (number, email, page, clientId) => {
     User.getUser('access_token', { id: clientId }, (err, rows) => {
         if (err) {
             console.log(err);

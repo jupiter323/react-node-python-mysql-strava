@@ -12,10 +12,10 @@ exports.getactivityCountByUsername = function (clientId, callback) {
             return callback(err, 0);
     });
 }
-exports.activitiesUpdate = function (params, callback) {
+exports.activitiesUpdate = (params, callback) => {
     var clientId = params.clientId;
     var activitiesCount = params.activitiesCount;
-    db.query('SELECT * FROM activity WHERE username = ?', [clientId], function (err, rows) {
+    db.query('SELECT * FROM activity WHERE username = ?', [clientId], (err, rows) => {
         if (err) {
             callback(err);
         }
@@ -26,7 +26,7 @@ exports.activitiesUpdate = function (params, callback) {
     });
 }
 
-var updateActivityCount = function (params, callback) {
+var updateActivityCount = (params, callback) => {
     var clientId = params.clientId;
     var activitiesCount = params.activitiesCount;
     db.query('UPDATE activity SET ? WHERE username = ?', [{ username: clientId, count: activitiesCount }, clientId]

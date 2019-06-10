@@ -143,7 +143,7 @@ exports.register = (req, res) => {
     })
 
 }
-exports.getStravaToken = function (req, res) {
+exports.getStravaToken = (req, res) => {
     var { user } = req
     request.post(
         "https://www.strava.com/oauth/token",
@@ -156,7 +156,7 @@ exports.getStravaToken = function (req, res) {
                 scope: "activity:read_all"
             }
         },
-        function (error, response, body) {
+        (error, response, body) => {
             if (!error && response.statusCode == 200) {
 
                 // saveStravaConfig(body.access_token)
@@ -294,7 +294,7 @@ exports.eamilVerify = (req, res) => {
         }
     })
 }
-exports.getUserListOptions = function (req, res) {
+exports.getUserListOptions = (req, res) => {
     let projection = 'userId,username,profile_medium'
     UserProfile.getUserList(projection, (err, users) => {
         if (err) {
@@ -312,7 +312,7 @@ exports.getUserListOptions = function (req, res) {
         }
     })
 }
-exports.getUserOption = function (req, res) {
+exports.getUserOption = (req, res) => {
     let projection = "*"
     User.getUser(projection, { id: req.body.id }, (err, users) => {
         if (err) {

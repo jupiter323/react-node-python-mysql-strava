@@ -1,26 +1,26 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/db-config');
 
-module.exports = function(req, res, next){
-    
+module.exports = (req, res, next) => {
+
     let token = req.headers["authorization"];
-    if(token){      
-        
-        jwt.verify(token, config.secret, function(err, decoded){
-            if(err){
+    if (token) {
+
+        jwt.verify(token, config.secret, (err, decoded) => {
+            if (err) {
                 res.json({
-                    success:false,
-                    message:'failed to authenticate token'
+                    success: false,
+                    message: 'failed to authenticate token'
                 });
-            }else{
-                req.decoded=decoded;
+            } else {
+                req.decoded = decoded;
                 next();
             }
         })
-    }else{
+    } else {
         res.status(403).json({
-            success:false,
-            message:'No token provided'
+            success: false,
+            message: 'No token provided'
         });
     }
 }

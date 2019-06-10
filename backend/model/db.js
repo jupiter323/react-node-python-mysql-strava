@@ -19,9 +19,9 @@ var getConnection = function (callback) {
 
 // Helper function for querying the db; releases the db connection
 // callback(err, rows)
-var query = function (queryString, params, callback) {
+var query = (queryString, params, callback) => {
   getConnection(function (err, conn) {
-    conn.query(queryString, params, function (err, rows) {
+    conn.query(queryString, params, (err, rows) => {
       conn.release();
       if (err)
         return callback(err);
