@@ -61,9 +61,10 @@ class Ride extends React.Component {
 
   }
   componentWillMount() {
-    const { userProfile, history } = this.props;
-    // checkCompleteProfile();
+    const { history, checkCompleteProfile } = this.props;
+    checkCompleteProfile();
     setTimeout(async () => {
+      var { userProfile } = this.props;
       if (!userProfile || !userProfile.athlete || !userProfile.athlete.id) {
         alert("Your profile is not completed. Please connect with Strava Api on your profile")
         return history.push("/profile");
@@ -77,7 +78,7 @@ class Ride extends React.Component {
         this.setState({ gpxs: gpxsData['data']['response'] })
       else
         alert("there is not any gpxs")
-    }, 500);
+    }, 200);
 
 
   }
