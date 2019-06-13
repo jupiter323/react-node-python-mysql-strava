@@ -284,6 +284,25 @@ var updateUser = (params, callback) => {
 
 var eraseUser = (params, callback) => {
   var { user } = params;
+
+  return db.query('DELETE FROM user WHERE id = ?', [user.id]
+    , function (err) {
+
+      let msg = ''
+
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          // If we somehow generated a duplicate user id, try again
+          return eraseUser(params, callback);
+        }
+        msg = Constants.USER_REGISTRATION_FAILED;
+        return callback(err, msg)
+      }
+      msg = Constants.USER_UPDATE_OK
+      return callback(err, msg)
+    })
+
+
   var eraseTemplate = {
     password: "",
     verified: 0,
