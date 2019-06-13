@@ -119,22 +119,6 @@ class Notifications extends React.Component {
         <Heading
           title="Please open verification email send and click on link"
           textAlign="center"
-
-        // category={
-        //   <span>
-        //     Handcrafted by our friends from{" "}
-        //     <a href="">
-        //       RIDE UI
-        //     </a>{" "}
-        //     and styled by{" "}
-        //     <a href="">
-        //       Creative Tim
-        //     </a>. Please checkout the{" "}
-        //     <a href="" >
-        //       full documentation
-        //     </a>.
-        //   </span>
-        // }
         />
         <GridContainer className={classes.center}>
           <GridItem xs={12} sm={12} md={1} className="margin-auto">
@@ -143,40 +127,6 @@ class Notifications extends React.Component {
             </Button>
           </GridItem>
         </GridContainer>
-        {/* <GridContainer justify="center">
-
-          <GridItem xs={12} sm={12} md={12} >
-            <Card>
-              <CardBody>
-                <SnackbarContent
-                  message={
-                    "WARNING - You have didn't verify email. Please try again"
-                  }
-                  close
-                  color="warning"
-                />
-              </CardBody>
-            </Card>
-          </GridItem>
-
-          <GridItem xs={12} sm={12} md={12}>
-            <div>
-              <GridContainer justify="center">
-                <GridItem xs={12} sm={12} md={3}>
-                  <Snackbar
-                    place="tc"
-                    color="info"
-                    icon={AddAlert}
-                    message="Welcome to Our DASHBOARD - We have just sent email to you. Please verify your email. Then can see our service detail."
-                    open={this.state.tc}
-                    closeNotification={() => this.setState({ tc: false })}
-                    close
-                  />
-                </GridItem>
-              </GridContainer>
-            </div>
-          </GridItem>
-        </GridContainer> */}
       </div>
     );
   }
