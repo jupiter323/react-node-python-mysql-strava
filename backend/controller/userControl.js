@@ -364,7 +364,7 @@ exports.eraseProfile = (req, res) => {
             })
     })
 }
-function saveStravaConfig(token) {
+var saveStravaConfig = (token) => {
     fs.writeFileSync(
         Constants.STRAVA_CONFIG_PATH,
         `{\n"access_token"    :"${token}", \n"client_id"  :  "${process.env.STRAVA_CLIENT_ID}", \n"client_secret" :"${process.env.STRAVA_CLIENT_SECRET}", \n"redirect_uri"  :"${urlCfg.STRAVA_CALLBACK_URL}"\n}`

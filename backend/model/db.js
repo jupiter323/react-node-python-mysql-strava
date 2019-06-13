@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var dbconfig = require('../config/db-config');
 var pool = mysql.createPool(dbconfig.connection);
 
-pool.getConnection(function (err, conn) {
+pool.getConnection((err, conn) => {
   conn.query('USE ' + dbconfig.connection.database, function () {
     console.log('connected succuessfully to ' + dbconfig.connection.database)
     conn.release();

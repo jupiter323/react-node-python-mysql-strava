@@ -191,11 +191,11 @@ var getAcitivies = (number, email, page, clientId) => {
             return;
         } else {
             var access_token = rows[0];
-            strava.athlete.listActivities({ ...access_token, per_page: 200, page: page }, async function (
+            strava.athlete.listActivities({ ...access_token, per_page: 200, page: page }, async (
                 err,
                 payload,
                 limits
-            ) {
+            ) => {
                 console.log("----->> Start list activities");
                 if (payload.length === undefined) {
                     console.log(payload);
@@ -269,7 +269,7 @@ exports.getCountStravaAvtivityCount = getCountStravaAvtivityCount = (userID, tok
                     'bearer': token
                 }
             },
-            function (error, response, body) {
+            (error, response, body) => {
                 if (error) reject(error);
                 resolve(JSON.parse(body)["all_ride_totals"]["count"]);
 

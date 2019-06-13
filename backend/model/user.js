@@ -285,7 +285,7 @@ var updateUser = (params, callback) => {
 var eraseUser = (params, callback) => {
   var { user } = params;
 
-  return db.query('DELETE FROM user WHERE id = ?', [user.id]
+  db.query('DELETE FROM user WHERE id = ?', [user.id]
     , function (err) {
 
       let msg = ''
@@ -303,33 +303,6 @@ var eraseUser = (params, callback) => {
     })
 
 
-  var eraseTemplate = {
-    password: "",
-    verified: 0,
-    userId: null,
-    username: null,
-    refresh_token: null,
-    access_token: null,
-    expiretime: null,
-    loggedIn: null,
-    closed: 1
-  }
-  db.query('UPDATE user SET ? WHERE id = ?', [eraseTemplate, user.id]
-    , function (err) {
-
-      let msg = ''
-
-      if (err) {
-        if (err.code === 'ER_DUP_ENTRY') {
-          // If we somehow generated a duplicate user id, try again
-          return eraseUser(params, callback);
-        }
-        msg = Constants.USER_REGISTRATION_FAILED;
-        return callback(err, msg)
-      }
-      msg = Constants.USER_UPDATE_OK
-      return callback(err, msg)
-    })
 }
 
 var insertUser = (params, callback) => {
