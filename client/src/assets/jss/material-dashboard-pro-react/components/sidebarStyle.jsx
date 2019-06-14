@@ -55,7 +55,7 @@ const sidebarStyle = theme => ({
       top: "0",
       height: "100vh",
       right: "0",
-      left: "auto",
+      // left: "auto",
       zIndex: "1032",
       visibility: "visible",
       overflowY: "visible",

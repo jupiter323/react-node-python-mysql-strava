@@ -35,7 +35,7 @@ function Header({ ...props }) {
       }
       return null;
     });
-    if(name){
+    if (name) {
       return name;
     } else {
       return "Default Brand Name";
@@ -66,26 +66,17 @@ function Header({ ...props }) {
                 <ViewList className={classes.sidebarMiniIcon} />
               </Button>
             ) : (
-              <Button
-                justIcon
-                round
-                color="white"
-                onClick={props.sidebarMinimize}
-              >
-                <MoreVert className={classes.sidebarMiniIcon} />
-              </Button>
-            )}
+                <Button
+                  justIcon
+                  round
+                  color="white"
+                  onClick={props.sidebarMinimize}
+                >
+                  <MoreVert className={classes.sidebarMiniIcon} />
+                </Button>
+              )}
           </div>
         </Hidden>
-        <div className={classes.flex}>
-          {/* Here we create navbar brand, based on route name */}
-          <Button href="#" className={classes.title} color="transparent">
-            {makeBrand()}
-          </Button>
-        </div>
-        {/* <Hidden smDown implementation="css">
-          <HeaderLinks rtlActive={rtlActive} />
-        </Hidden> */}
         <Hidden mdUp implementation="css">
           <Button
             className={classes.appResponsive}
@@ -97,6 +88,16 @@ function Header({ ...props }) {
             <Menu />
           </Button>
         </Hidden>
+        <div className={classes.flex}>
+          {/* Here we create navbar brand, based on route name */}
+          <Button href="#" className={classes.title} color="transparent">
+            {makeBrand()}
+          </Button>
+        </div>
+        {/* <Hidden smDown implementation="css">
+          <HeaderLinks rtlActive={rtlActive} />
+        </Hidden> */}
+
       </Toolbar>
     </AppBar>
   );

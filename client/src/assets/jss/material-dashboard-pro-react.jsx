@@ -17,7 +17,7 @@
 // ##############################
 // // // Variables - Styles that are used on more than one component
 // #############################
-import {mainColor} from "variables/theme.jsx"
+import { mainColor } from "variables/theme.jsx"
 const drawerWidth = 260;
 
 const drawerMiniWidth = 80;
