@@ -200,13 +200,17 @@ var setEmailVerified = (id, callback) => {
 }
 
 var registerEmailUser = (params, callback) => {
-  var { email, password } = params;
+  var { email, password, resend } = params;
 
   db.query('SELECT * FROM user WHERE email = ?', [email], (err, rows) => {
     if (err)
       return callback(err, false, null);//register faild
     if (rows.length) {
-      return callback(null, true, null); //registered already
+      if (resend) {
+        var response = { insertId: rows[0].id }
+        return callback(err, false, response) //success    
+      } else
+        return callback(null, true, null); //registered already
     }
 
     var encoded_password = bcrypt.hashSync(password);

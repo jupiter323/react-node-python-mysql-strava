@@ -108,7 +108,9 @@ class RegisterPage extends React.Component {
     }
 
     if (emailState === "error" || passwordState === "error") return;
-
+    // to resend email again localstorage
+    localStorage.setItem("email", this.state.email);
+    localStorage.setItem("password", this.state.password);
     await register({ email: this.state.email, password: this.state.password });
     // window.location.href = "/"
   }

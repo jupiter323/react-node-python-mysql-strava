@@ -114,6 +114,7 @@ exports.forgotpasswordChange = (req, res) => {
 }
 exports.register = (req, res) => {
     var { email } = req.body;
+
     User.registerEmailUser(req.body, (err, registered, response) => {
         if (err) {
             res.send({
@@ -143,6 +144,7 @@ exports.register = (req, res) => {
     })
 
 }
+
 exports.getStravaToken = (req, res) => {
     var { user } = req
     request.post(

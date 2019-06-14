@@ -112,6 +112,15 @@ class Notifications extends React.Component {
     await localStorage.clear();
     window.location.href = "/"
   }
+  handleResend = () => {
+    const { register } = this.props;
+    var email = localStorage.email;
+    var password = localStorage.password;
+    if (email && password) {
+      register({ email, password, resend: true });
+      alert("Re sent your verification link ")
+    }
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -120,6 +129,15 @@ class Notifications extends React.Component {
           title="Please open verification email send and click on link"
           textAlign="center"
         />
+
+        <GridContainer className={classes.center}>
+          <GridItem xs={12} sm={12} md={1} className="margin-auto">
+            <Button className="margin-auto" color="primary" size="lg" block onClick={this.handleResend}>
+              Resend
+            </Button>
+          </GridItem>
+        </GridContainer>
+        <p><br></br></p>
         <GridContainer className={classes.center}>
           <GridItem xs={12} sm={12} md={1} className="margin-auto">
             <Button className="margin-auto" color="primary" size="lg" block onClick={this.handleBack}>
@@ -141,7 +159,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    verifyEmail: Actions.verifyEmail
+    verifyEmail: Actions.verifyEmail,
+    register: Actions.register
   }, dispatch);
 }
 
