@@ -34,51 +34,11 @@ const products = [
 
 ];
 
-var Tablerow = (props) => {
-  var { classes, keyProps } = props
-  return [
-    <div key={`${keyProps}0`} className={classes.imgContainer}>
-      <img src={product1} alt="..." className={classes.img} />
-    </div>,
-    <span key={`${keyProps}1`}>
-      <a href="#jacket" className={classes.tdNameAnchor}>
-        Spring Jacket
-        </a>
-      <br />
-      <small className={classes.tdNameSmall}>
-        by Dolce&amp;Gabbana
-        </small>
-    </span>,
-    <span key={`${keyProps}2`}>
-      1{` `}
-      <div className={classes.buttonGroup}>
-        <Button
-          color="info"
-          size="sm"
-          round
-          className={classes.firstButton}
-        >
-          <Remove className={classes.icon} />
-        </Button>
-        <Button
-          color="info"
-          size="sm"
-          round
-          className={classes.lastButton}
-        >
-          <Add className={classes.icon} />
-        </Button>
-      </div>
-    </span>,
-    <Button
-      key={`${keyProps}3`}
-      round
-      color="danger"
-      className={classes.actionButton + " " + classes.actionButtonRound}
-    >
-      <Close className={classes.icon} />
-    </Button>
-  ]
+var Product = (props) => {
+  var { product } = props;
+  return <div>
+    {product.label}
+  </div>
 }
 class ExtendedTables extends React.Component {
   constructor(props) {
@@ -108,7 +68,54 @@ class ExtendedTables extends React.Component {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
   };
-
+  Tablerow = (products, classes) => {
+    var keyProps = "keyprops"
+    // return [[<div>Hi</div> , <div>Hi</div>], [<div>Hi</div> , <div>Hi</div>]]
+    var tempArray = _.map(products, (product, index) => [
+      <div key={`${keyProps}0`} className={classes.imgContainer}>
+        <img src={product1} alt="..." className={classes.img} />
+      </div>,
+      <span key={`${keyProps}1`}>
+        <a href="#jacket" className={classes.tdNameAnchor}>
+          Spring Jacket
+          </a>
+        <br />
+        <small className={classes.tdNameSmall}>
+          by Dolce&amp;Gabbana
+          </small>
+      </span>,
+      <span key={`${keyProps}2`}>
+        1{` `}
+        <div className={classes.buttonGroup}>
+          <Button
+            color="info"
+            size="sm"
+            round
+            className={classes.firstButton}
+          >
+            <Remove className={classes.icon} />
+          </Button>
+          <Button
+            color="info"
+            size="sm"
+            round
+            className={classes.lastButton}
+          >
+            <Add className={classes.icon} />
+          </Button>
+        </div>
+      </span>,
+      <Button
+        key={`${keyProps}3`}
+        round
+        color="danger"
+        className={classes.actionButton + " " + classes.actionButtonRound}
+      >
+        <Close className={classes.icon} />
+      </Button>
+    ])
+    return tempArray;
+  }
   render() {
     const { classes } = this.props;
     var { selectedOption } = this.state;
@@ -130,10 +137,12 @@ class ExtendedTables extends React.Component {
                 onChange={this.handleChange}
                 options={products}
               />
+              {_.map(products, (product, index) => {
+                return <Product product={product} />
+              })}
               <Table
                 tableHead={[]}
                 tableData={[
-                  _.map(products, (product, index) => <Tablerow classes={classes} keyProps={index} />),
                   {
                     total: true,
                     colspan: "5",
