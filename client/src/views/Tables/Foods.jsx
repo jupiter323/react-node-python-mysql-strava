@@ -35,10 +35,36 @@ const products = [
 ];
 
 var Product = (props) => {
-  var { product } = props;
-  return <div>
-    {product.label}
-  </div>
+  var { product, classes } = props;
+  return <GridContainer>
+    <GridItem xs={12}>
+      <div>
+        <div className={classes.imgContainer}>
+          <img src={product1} alt="..." className={classes.img} />
+          <span >
+            <a href="#jacket" className={classes.tdNameAnchor}>
+              {product.label}
+            </a>
+            <br />
+            <small className={classes.tdNameSmall}>
+              Calories: &nbsp;{product.cal}&nbsp; Kcal
+          </small>
+            <small className={classes.tdNameSmall}>
+              Fibers: &nbsp;{product.fib}&nbsp; gram
+          </small>
+            <small className={classes.tdNameSmall}>
+              Carbohydrates: &nbsp;{product.car}&nbsp; gram
+          </small>
+            <small className={classes.tdNameSmall}>
+              Fat: &nbsp;{product.fat}&nbsp; gram
+          </small>
+          </span>
+        </div>
+
+
+      </div>
+    </GridItem>
+  </GridContainer>
 }
 class ExtendedTables extends React.Component {
   constructor(props) {
@@ -70,7 +96,6 @@ class ExtendedTables extends React.Component {
   };
   Tablerow = (products, classes) => {
     var keyProps = "keyprops"
-    // return [[<div>Hi</div> , <div>Hi</div>], [<div>Hi</div> , <div>Hi</div>]]
     var tempArray = _.map(products, (product, index) => [
       <div key={`${keyProps}0`} className={classes.imgContainer}>
         <img src={product1} alt="..." className={classes.img} />
@@ -138,7 +163,7 @@ class ExtendedTables extends React.Component {
                 options={products}
               />
               {_.map(products, (product, index) => {
-                return <Product product={product} />
+                return <Product product={product} classes={classes} key={index} />
               })}
               <Table
                 tableHead={[]}
