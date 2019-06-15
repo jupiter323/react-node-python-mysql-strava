@@ -1,4 +1,4 @@
-import ExtendedTables from "views/Tables/ExtendedTables.jsx";
+import ExtendedTables from "views/Tables/Foods.jsx";
 import UserProfile from "views/Profile/UserProfile.jsx";
 import Ride from "views/Ride/Ride";
 import TimelinePage from "views/Pages/Timeline.jsx";

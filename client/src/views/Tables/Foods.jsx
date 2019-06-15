@@ -24,12 +24,22 @@ import extendedTablesStyle from "assets/jss/material-dashboard-pro-react/views/e
 import product1 from "assets/img/product1.jpg";
 import product2 from "assets/img/product2.jpg";
 import product3 from "assets/img/product3.jpg";
+import Select from 'react-select';
+import _ from 'lodash'
+const products = [
+  { value: 0, label: 'Banana - 2X', cal: 103, fib: 2, car: 24, fat: 0, img: product1 },
+  { value: 1, label: 'Clif Bar Chocolate Chip', cal: 103, fib: 2, car: 24, fat: 0, img: product2 },
+  { value: 2, label: 'Waffle', cal: 103, fib: 2, car: 24, fat: 0, img: product3 },
+  { value: 3, label: 'Powerbar Isoactive', cal: 103, fib: 2, car: 24, fat: 0, img: product3 },
+
+];
 
 class ExtendedTables extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      checked: []
+      checked: [],
+      selectedOption: null,
     };
     this.handleToggle = this.handleToggle.bind(this);
   }
@@ -48,8 +58,13 @@ class ExtendedTables extends React.Component {
       checked: newChecked
     });
   }
+  handleChange = selectedOption => {
+    this.setState({ selectedOption });
+    console.log(`Option selected:`, selectedOption);
+  };
   render() {
     const { classes } = this.props;
+    var { selectedOption } = this.state;
     return (
       <GridContainer>
         <GridItem xs={12}>
@@ -61,35 +76,28 @@ class ExtendedTables extends React.Component {
               <h4 className={classes.cardIconTitle}>Food Table</h4>
             </CardHeader>
             <CardBody>
+              <Select
+                isSearchable
+                isMulti
+                value={selectedOption}
+                onChange={this.handleChange}
+                options={products}
+              />
               <Table
-                tableHead={[
-                  "",
-                  "PRODUCT",
-                  "COLOR",
-                  "SIZE",
-                  "PRICE",
-                  "QTY",
-                  "AMOUNT",
-                  ""
-                ]}
+                tableHead={[]}
                 tableData={[
-                  [
+                  _.map(products, (product, i) => [
                     <div className={classes.imgContainer}>
                       <img src={product1} alt="..." className={classes.img} />
                     </div>,
                     <span>
                       <a href="#jacket" className={classes.tdNameAnchor}>
                         Spring Jacket
-                      </a>
+                        </a>
                       <br />
                       <small className={classes.tdNameSmall}>
                         by Dolce&amp;Gabbana
-                      </small>
-                    </span>,
-                    "Red",
-                    "M",
-                    <span>
-                      <small className={classes.tdNumberSmall}>€</small> 549
+                        </small>
                     </span>,
                     <span>
                       1{` `}
@@ -112,109 +120,20 @@ class ExtendedTables extends React.Component {
                         </Button>
                       </div>
                     </span>,
-                    <span>
-                      <small className={classes.tdNumberSmall}>€</small> 549
-                    </span>,
-                    <Button simple className={classes.actionButton}>
+                    <Button
+                      round
+                      color="danger"
+                      className={classes.actionButton + " " + classes.actionButtonRound}
+                    >
                       <Close className={classes.icon} />
                     </Button>
-                  ],
-                  [
-                    <div className={classes.imgContainer}>
-                      <img src={product2} alt="..." className={classes.img} />
-                    </div>,
-                    <span>
-                      <a href="#jacket" className={classes.tdNameAnchor}>
-                        Short Pants{" "}
-                      </a>
-                      <br />
-                      <small className={classes.tdNameSmall}>by Pucci</small>
-                    </span>,
-                    "Purple",
-                    "M",
-                    <span>
-                      <small className={classes.tdNumberSmall}>€</small> 499
-                    </span>,
-                    <span>
-                      2{` `}
-                      <div className={classes.buttonGroup}>
-                        <Button
-                          color="info"
-                          size="sm"
-                          round
-                          className={classes.firstButton}
-                        >
-                          <Remove className={classes.icon} />
-                        </Button>
-                        <Button
-                          color="info"
-                          size="sm"
-                          round
-                          className={classes.lastButton}
-                        >
-                          <Add className={classes.icon} />
-                        </Button>
-                      </div>
-                    </span>,
-                    <span>
-                      <small className={classes.tdNumberSmall}>€</small> 998
-                    </span>,
-                    <Button simple className={classes.actionButton}>
-                      <Close className={classes.icon} />
-                    </Button>
-                  ],
-                  [
-                    <div className={classes.imgContainer}>
-                      <img src={product3} alt="..." className={classes.img} />
-                    </div>,
-                    <span>
-                      <a href="#jacket" className={classes.tdNameAnchor}>
-                        Pencil Skirt
-                      </a>
-                      <br />
-                      <small className={classes.tdNameSmall}>
-                        by Valentino
-                      </small>
-                    </span>,
-                    "White",
-                    "XL",
-                    <span>
-                      <small className={classes.tdNumberSmall}>€</small> 799
-                    </span>,
-                    <span>
-                      1{` `}
-                      <div className={classes.buttonGroup}>
-                        <Button
-                          color="info"
-                          size="sm"
-                          round
-                          className={classes.firstButton}
-                        >
-                          <Remove className={classes.icon} />
-                        </Button>
-                        <Button
-                          color="info"
-                          size="sm"
-                          round
-                          className={classes.lastButton}
-                        >
-                          <Add className={classes.icon} />
-                        </Button>
-                      </div>
-                    </span>,
-                    <span>
-                      <small className={classes.tdNumberSmall}>€</small> 799
-                    </span>,
-                    <Button simple className={classes.actionButton}>
-                      <Close className={classes.icon} />
-                    </Button>
-                  ],
+                  ]),
                   {
                     total: true,
                     colspan: "5",
                     amount: (
                       <span>
-                        <small>€</small>2,346
+                        <small>3</small>
                       </span>
                     )
                   },
@@ -241,7 +160,7 @@ class ExtendedTables extends React.Component {
                   classes.right,
                   classes.right
                 ]}
-                customHeadClassesForCells={[0, 2, 3, 4, 5, 6]}
+                customHeadClassesForCells={[0, 2, 3, 4]}
                 customCellClasses={[
                   classes.tdName,
                   classes.customFont,
@@ -250,7 +169,7 @@ class ExtendedTables extends React.Component {
                   classes.tdNumber + " " + classes.tdNumberAndButtonGroup,
                   classes.tdNumber
                 ]}
-                customClassesForCells={[1, 2, 3, 4, 5, 6]}
+                customClassesForCells={[1, 2, 3, 4]}
               />
             </CardBody>
           </Card>
