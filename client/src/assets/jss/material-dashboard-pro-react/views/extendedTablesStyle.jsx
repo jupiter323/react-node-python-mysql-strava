@@ -14,6 +14,23 @@ const extendedTablesStyle = {
   description: {
     maxWidth: "150px"
   },
+  ProductDesContainer: {
+    paddingTop: "10px!important"
+  },
+  ProductContainer: {
+    borderRadius: "10px",
+    border: "1px solid gray",
+    boxShadow: "1px 0 1px gray, -0.2em 0 .4em gray",
+    marginTop: "20px",
+    marginBottom: "20px",
+    width: "100%!important",
+    margin: "20px 0!important"
+  },
+  closeBtnContainer: {
+    textAlign: "right",
+    paddingTop: "20px"
+  },
+
   actionButton: {
     margin: "0 0 0 5px",
     padding: "5px",
@@ -29,7 +46,7 @@ const extendedTablesStyle = {
     position: "relative"
   },
   imgContainer: {
-    width: "120px",
+    width: "100%",
     maxHeight: "160px",
     overflow: "hidden",
     display: "block"
@@ -46,7 +63,8 @@ const extendedTablesStyle = {
     fontSize: "1.5em"
   },
   tdNameAnchor: {
-    color: "#3C4858"
+    color: "#3C4858",
+    marginTop: "20px"
   },
   tdNameSmall: {
     color: "#999999",

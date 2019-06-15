@@ -36,30 +36,37 @@ const products = [
 
 var Product = (props) => {
   var { product, classes } = props;
-  return <GridContainer>
-    <GridItem xs={12}>
-      <div>
-        <div className={classes.imgContainer}>
-          <img src={product.img} alt="..." className={classes.img} />
-          <span >
-            <a href="#jacket" className={classes.tdNameAnchor}>
-              {product.label}
-            </a>
-            <br />
-            <small className={classes.tdNameSmall}>
-              Calories: &nbsp;{product.cal}&nbsp; Kcal
+  return <GridContainer className={classes.ProductContainer}>
+    <GridItem xs={12} sm={12} md={2}>
+      <div className={classes.imgContainer}>
+        <img src={product.img} alt="..." className={classes.img} />
+      </div>
+    </GridItem>
+    <GridItem xs={12} sm={12} md={3} className={classes.ProductDesContainer}>
+      <span >
+        <strong className={classes.tdNameAnchor}>
+          {product.label}
+        </strong>
+        <br />
+        <small className={classes.tdNameSmall}>
+          Calories: &nbsp;{product.cal}&nbsp; Kcal
           </small>
-            <small className={classes.tdNameSmall}>
-              Fibers: &nbsp;{product.fib}&nbsp; gram
+        <br />
+        <small className={classes.tdNameSmall}>
+          Fibers: &nbsp;{product.fib}&nbsp; gram
           </small>
-            <small className={classes.tdNameSmall}>
-              Carbohydrates: &nbsp;{product.car}&nbsp; gram
+        <br />
+        <small className={classes.tdNameSmall}>
+          Carbohydrates: &nbsp;{product.car}&nbsp; gram
           </small>
-            <small className={classes.tdNameSmall}>
-              Fat: &nbsp;{product.fat}&nbsp; gram
+        <br />
+        <small className={classes.tdNameSmall}>
+          Fat: &nbsp;{product.fat}&nbsp; gram
           </small>
-          </span>
-        </div>
+      </span>
+    </GridItem>
+    <GridItem xs={12} sm={12} md={7}>
+      <div className={classes.closeBtnContainer}>
         <Button
           round
           color="danger"
@@ -67,11 +74,9 @@ var Product = (props) => {
         >
           <Close className={classes.icon} />
         </Button>
-
-
       </div>
     </GridItem>
-  </GridContainer>
+  </GridContainer >
 }
 class ExtendedTables extends React.Component {
   constructor(props) {
