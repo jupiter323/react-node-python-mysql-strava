@@ -40,7 +40,7 @@ var Product = (props) => {
     <GridItem xs={12}>
       <div>
         <div className={classes.imgContainer}>
-          <img src={product1} alt="..." className={classes.img} />
+          <img src={product.img} alt="..." className={classes.img} />
           <span >
             <a href="#jacket" className={classes.tdNameAnchor}>
               {product.label}
@@ -60,6 +60,13 @@ var Product = (props) => {
           </small>
           </span>
         </div>
+        <Button
+          round
+          color="danger"
+          className={classes.actionButton + " " + classes.actionButtonRound}
+        >
+          <Close className={classes.icon} />
+        </Button>
 
 
       </div>
