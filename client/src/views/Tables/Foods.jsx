@@ -21,16 +21,17 @@ import CardHeader from "components/Card/CardHeader.jsx";
 
 import extendedTablesStyle from "assets/jss/material-dashboard-pro-react/views/extendedTablesStyle.jsx";
 
-import product1 from "assets/img/product1.jpg";
-import product2 from "assets/img/product2.jpg";
-import product3 from "assets/img/product3.jpg";
+import product1 from "assets/img/Banaan.jfif";
+import product2 from "assets/img/krentenbol.jpg";
+import product3 from "assets/img/Maxim_bar.png";
+import product4 from "assets/img/Maxim_Gel.jpg";
 import Select from 'react-select';
 import _ from 'lodash'
 const products = [
   { value: 0, label: 'Banana - 2X', cal: 103, fib: 2, car: 24, fat: 0, img: product1 },
   { value: 1, label: 'Clif Bar Chocolate Chip', cal: 103, fib: 2, car: 24, fat: 0, img: product2 },
   { value: 2, label: 'Waffle', cal: 103, fib: 2, car: 24, fat: 0, img: product3 },
-  { value: 3, label: 'Powerbar Isoactive', cal: 103, fib: 2, car: 24, fat: 0, img: product3 },
+  { value: 3, label: 'Powerbar Isoactive', cal: 103, fib: 2, car: 24, fat: 0, img: product4 },
 
 ];
 
