@@ -53,20 +53,21 @@
         opacity: 1 !important;
         display: block !important;
         margin-top: -64px !important;
-        width: 706px !important;
+        width: auto;
         box-shadow: none!important;
+        
         th.rdtPrev,
         th.rdtNext,
         .dow,
         th.rdtSwitch,
         .rdtBtn {
             color: orangered !important;
-            font-size: 20px !important;
+            font-size: 16px !important;
         }
 
         .rdtDay {
             border-radius: 10px !important;
-            font-size: 20px !important;
+            font-size: 16px !important;
         }
         .rdtDay.rdtActive {
             background: orangered !important;
@@ -77,7 +78,7 @@
         }
 
         .rdtCount {
-            font-size: 20px !important;
+            font-size: 16px !important;
         }
 
         .rdtCounters .rdtCounter:last-child .rdtCount {
@@ -89,7 +90,32 @@
         .rdtTimeToggle {
             display: none !important;
         }
+
+
+        /* Desktop Styles */
+        @media only screen and ( min-width: 720px ) {
+            th.rdtPrev,
+            th.rdtNext,
+            .dow,
+            th.rdtSwitch,
+            .rdtBtn,
+            .rdtDay,
+            .rdtCount {
+                font-size: 18px !important;
+            }
+        }
+
+        /* Desktop Styles */
+        @media only screen and ( min-width: 1280px ) {
+            th.rdtPrev,
+            th.rdtNext,
+            .dow,
+            th.rdtSwitch,
+            .rdtBtn,
+            .rdtDay,
+            .rdtCount {
+                font-size: 20px !important;
+            }
+        }
     }
-
-
 }

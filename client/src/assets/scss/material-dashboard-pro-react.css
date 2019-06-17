@@ -2618,28 +2618,48 @@ img {
     opacity: 1 !important;
     display: block !important;
     margin-top: -64px !important;
-    width: 706px !important;
-    box-shadow: none !important; }
+    width: auto;
+    box-shadow: none !important;
+    /* Desktop Styles */
+    /* Desktop Styles */ }
     .rdt .rdtPicker th.rdtPrev,
     .rdt .rdtPicker th.rdtNext,
     .rdt .rdtPicker .dow,
     .rdt .rdtPicker th.rdtSwitch,
     .rdt .rdtPicker .rdtBtn {
       color: orangered !important;
-      font-size: 20px !important; }
+      font-size: 16px !important; }
     .rdt .rdtPicker .rdtDay {
       border-radius: 10px !important;
-      font-size: 20px !important; }
+      font-size: 16px !important; }
     .rdt .rdtPicker .rdtDay.rdtActive {
       background: orangered !important; }
     .rdt .rdtPicker .rdtDay.rdtToday.rdtActive {
       background: orangered !important;
       border-radius: 10px !important; }
     .rdt .rdtPicker .rdtCount {
-      font-size: 20px !important; }
+      font-size: 16px !important; }
     .rdt .rdtPicker .rdtCounters .rdtCounter:last-child .rdtCount {
       border: 1px solid orangered !important;
       color: orangered !important;
       font-size: 15px !important; }
     .rdt .rdtPicker .rdtTimeToggle {
       display: none !important; }
+    @media only screen and (min-width: 720px) {
+      .rdt .rdtPicker th.rdtPrev,
+      .rdt .rdtPicker th.rdtNext,
+      .rdt .rdtPicker .dow,
+      .rdt .rdtPicker th.rdtSwitch,
+      .rdt .rdtPicker .rdtBtn,
+      .rdt .rdtPicker .rdtDay,
+      .rdt .rdtPicker .rdtCount {
+        font-size: 18px !important; } }
+    @media only screen and (min-width: 1280px) {
+      .rdt .rdtPicker th.rdtPrev,
+      .rdt .rdtPicker th.rdtNext,
+      .rdt .rdtPicker .dow,
+      .rdt .rdtPicker th.rdtSwitch,
+      .rdt .rdtPicker .rdtBtn,
+      .rdt .rdtPicker .rdtDay,
+      .rdt .rdtPicker .rdtCount {
+        font-size: 20px !important; } }
