@@ -13,7 +13,7 @@ var getProductList = (projection, cb) => {
 }
 
 var getById = (projection, id, cb) => {
-    if (projection === '') projection = '*'    
+    if (projection === '') projection = '*'
     db.query("SELECT " + projection + " FROM products WHERE product_id = ?", [id],
         (err, response) => {
             if (err) cb(err)
@@ -24,5 +24,15 @@ var getById = (projection, id, cb) => {
         })
 }
 
+var getListByUserSelection = (projection, params, callback) => {
+    var { user_id, product_selection_id } = params
+    if (projection === '') projection = '*'
+    db.query('SELECT ' + projection + ' FROM user INNER JOIN product_user ON products.product_id = product_user.product_id WHERE product_user.user_id = ? AND product_user.product_selection_id = ?', [user_id, product_selection_id], function (err, rows) {
+        if (err) return callback(err)
+        return callback(err, rows);
+    });
+}
+
 exports.getProductList = getProductList
 exports.getById = getById
+exports.getListByUserSelection = getListByUserSelection

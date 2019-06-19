@@ -43,6 +43,7 @@ router.route('/getuseroption')
 router.route('/pythontrain')
     .get(TrainTest.callPythonTrainForHost)
 router.route('/getallproducts').get(FoodControl.getAllProducts)
+router.route('/getalluserproduct').post(FoodControl.getAllUserProduct)
 router.route('/useraddproduct').post(FoodControl.userAddProduct)
 router.route('/userdeleteproduct').post(FoodControl.userDeleteProduct)
 module.exports = router;

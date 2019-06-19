@@ -19,6 +19,20 @@ var deleteById = (params, cb) => {
         }
     })
 }
+
+var getListByUserSelection = (projection, params, cb) => {
+    var { user_id, product_selection_id } = params
+    if (projection === '') projection = '*'
+    db.query("SELECT " + projection + " FROM product_user WHERE user_id = ? AND product_selection_id = ?", [user_id, product_selection_id],
+        (err, response) => {
+            if (err) cb(err)
+            else {
+                if (response)
+                    cb(err, response)
+            }
+        })
+}
+
 var getGpxList = (projection, cb) => {
     if (projection === '') projection = '*'
     var extention = `%.gpx`
@@ -44,7 +58,9 @@ var getById = (projection, id, cb) => {
         })
 }
 
+
 exports.getGpxList = getGpxList
 exports.getById = getById
 exports.add = add
 exports.deleteById = deleteById
+exports.getListByUserSelection = getListByUserSelection

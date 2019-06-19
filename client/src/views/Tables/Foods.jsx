@@ -38,7 +38,8 @@ var products = [
   //   img: "https://images.pexels.com/photos/20787/pexels-photo.jpg",
   //   label: "Clif Bar Chocolate Chip",
   //   product_id: 2,
-  //   value: 1
+  //   value: 1,
+  //   id: 6
   // }
 ];
 
