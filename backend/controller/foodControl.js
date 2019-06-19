@@ -18,18 +18,8 @@ exports.getAllUserProduct = (req, res) => {
     var params = { user_id: id, product_selection_id }
     Products.getListByUserSelection(projection, params, (err, userproducts) => {
         if (err) res.send({ success: false, err })
-        else {
-            var productsByUser = []
-            projection = "*"
-            for (let userproduct of userproducts)
-                Products.getById(projection, userproduct.product_id, (eerr, products) => { //get product detail by userproduct
-                    if (eerr) res.send({ success: false, err: eerr })
-                    else {
-                        productsByUser.push(products[0]);
-                    }
-                })
-            res.send({ success: true, productsByUser });
-
+        else {           
+            res.send({ success: true, userproducts });
         }
     })
 }
