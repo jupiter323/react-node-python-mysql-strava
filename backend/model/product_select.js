@@ -1,4 +1,24 @@
 var db = require('./db');
+var add = (params, cb) => {
+    var { product_selection_id, user_id, product_id } = params
+    db.query("INSERT INTO product_user (product_selection_id,user_id,product_id) values (?,?,?)", [product_selection_id, user_id, product_id], (err, response) => {
+        if (err) cb(err)
+        else {
+            if (response)
+                cb(err, response)
+        }
+    })
+}
+var deleteById = (params, cb) => {
+    var { id } = params
+    db.query("DELETE FROM product_user WHERE id = ?", [id], (err, response) => {
+        if (err) cb(err)
+        else {
+            if (response)
+                cb(err, response)
+        }
+    })
+}
 var getGpxList = (projection, cb) => {
     if (projection === '') projection = '*'
     var extention = `%.gpx`
@@ -26,3 +46,5 @@ var getById = (projection, id, cb) => {
 
 exports.getGpxList = getGpxList
 exports.getById = getById
+exports.add = add
+exports.deleteById = deleteById

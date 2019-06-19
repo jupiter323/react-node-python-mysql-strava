@@ -44,5 +44,5 @@ router.route('/pythontrain')
     .get(TrainTest.callPythonTrainForHost)
 router.route('/getallproducts').get(FoodControl.getAllProducts)
 router.route('/useraddproduct').post(FoodControl.userAddProduct)
-
+router.route('/userdeleteproduct').post(FoodControl.userDeleteProduct)
 module.exports = router;
