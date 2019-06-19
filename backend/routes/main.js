@@ -5,6 +5,7 @@ const GpxCvt = require('../controller/gpxConvert')
 const UIoptions = require('../controller/uioptonsControl')
 const TrainTest = require('../controller/trainTest')
 const UserControl = require('../controller/userControl')
+const FoodControl = require('../controller/foodControl')
 var multer = require('multer')
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -41,5 +42,7 @@ router.route('/getuseroption')
     .post(UserControl.getUserOption)
 router.route('/pythontrain')
     .get(TrainTest.callPythonTrainForHost)
+router.route('/getallproducts').get(FoodControl.getAllProducts)
+router.route('/useraddproduct').post(FoodControl.userAddProduct)
 
 module.exports = router;

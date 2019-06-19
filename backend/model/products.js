@@ -1,20 +1,8 @@
 var db = require('./db');
-var getGpxList = (projection, cb) => {
+
+var getProductList = (projection, cb) => {
     if (projection === '') projection = '*'
-    var extention = `%.gpx`
-    db.query("SELECT " + projection + " FROM organizedevents WHERE file_name LIKE ?", [extention],
-        (err, response) => {
-            if (err) cb(err)
-            else {
-                if (response)
-                    cb(err, response)
-            }
-        })
-}
-var getById = (projection, id, cb) => {
-    if (projection === '') projection = '*'
-    var extention = `%.gpx`
-    db.query("SELECT " + projection + " FROM organizedevents WHERE id = ?", [id],
+    db.query("SELECT " + projection + " FROM products", [],
         (err, response) => {
             if (err) cb(err)
             else {
@@ -24,5 +12,17 @@ var getById = (projection, id, cb) => {
         })
 }
 
-exports.getGpxList = getGpxList
+var getById = (projection, id, cb) => {
+    if (projection === '') projection = '*'    
+    db.query("SELECT " + projection + " FROM products WHERE product_id = ?", [id],
+        (err, response) => {
+            if (err) cb(err)
+            else {
+                if (response)
+                    cb(err, response)
+            }
+        })
+}
+
+exports.getProductList = getProductList
 exports.getById = getById
