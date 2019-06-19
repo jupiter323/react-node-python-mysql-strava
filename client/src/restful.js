@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from './store.js';
 
 var baseUrl = process.env.REACT_APP_ROUTE_SERVER
-
+export const storageUrl = process.env.REACT_APP_STORAGE
 export const xapi = (optional) => {
     let token = null;
     if (store.getState().user.access_token) {

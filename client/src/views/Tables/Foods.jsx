@@ -104,10 +104,10 @@ class ExtendedTables extends React.Component {
     var [productsRes, userSelectedProducts] = await Promise.all([service.getAllProducts(), service.getAllUserProduct({ product_selection_id })])
     console.log(productsRes.data.products, userSelectedProducts.data.userproducts);
     products = _.map(productsRes.data.products, (e, i) => {
-      return { value: e.product_id, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: e.product_img, product_id: e.product_id }
+      return { value: e.product_id, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: `${service.storageUrl}${e.product_img}`, product_id: e.product_id }
     })
     var selectedOption = _.map(userSelectedProducts.data.userproducts, (e, i) => {
-      return { value: e.product_id, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: e.product_img, product_id: e.product_id, id: e.id }
+      return { value: e.product_id, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: `${service.storageUrl}${e.product_img}`, product_id: e.product_id, id: e.id }
 
     })
     this.setState({ selectedOption })
