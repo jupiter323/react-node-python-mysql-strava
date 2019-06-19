@@ -27,7 +27,8 @@ import product3 from "assets/img/Maxim_bar.png";
 import product4 from "assets/img/Maxim_Gel.jpg";
 import Select from 'react-select';
 import _ from 'lodash'
-const products = [
+import * as service from "restful"
+var products = [
   { value: 0, label: 'Banana - 2X', cal: 103, fib: 2, car: 24, fat: 0, img: product1 },
   { value: 1, label: 'Clif Bar Chocolate Chip', cal: 103, fib: 2, car: 24, fat: 0, img: product2 },
   { value: 2, label: 'Waffle', cal: 103, fib: 2, car: 24, fat: 0, img: product3 },
@@ -91,6 +92,13 @@ class ExtendedTables extends React.Component {
       selectedOption: null,
     };
     this.handleToggle = this.handleToggle.bind(this);
+  }
+  async componentWillMount() {
+    var [productsRes] = await Promise.all([service.getAllProducts()])
+    console.log(productsRes.data.products);
+    products = _.map(productsRes.data.products, (e, i) => {
+      return { value: i, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: e.product_img, product_id: e.product_id }
+    })
   }
   removeProduct = (index) => {
     var { selectedOption } = this.state;
