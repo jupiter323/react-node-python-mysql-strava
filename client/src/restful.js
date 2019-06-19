@@ -137,6 +137,23 @@ export function selectGpxConvert(params) {
     });
 }
 
+export function getAllProducts() {
+    return xapi().get('getallproducts');
+}
+
+export function userAddProduct(params) {
+    return xapi().post('useraddproduct', {
+        ...params
+    });
+}
+
+export function userDeleteProduct(params) {
+    return xapi().post('userdeleteproduct', {
+        ...params
+    });
+}
+
+
 
 
 
