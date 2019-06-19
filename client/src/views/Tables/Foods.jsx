@@ -101,11 +101,16 @@ class ExtendedTables extends React.Component {
     this.handleToggle = this.handleToggle.bind(this);
   }
   async componentWillMount() {
-    var [productsRes] = await Promise.all([service.getAllProducts()])
-    console.log(productsRes.data.products);
+    var [productsRes, userSelectedProducts] = await Promise.all([service.getAllProducts(), service.getAllUserProduct({ product_selection_id })])
+    console.log(productsRes.data.products, userSelectedProducts.data.userproducts);
     products = _.map(productsRes.data.products, (e, i) => {
-      return { value: i, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: e.product_img, product_id: e.product_id }
+      return { value: e.product_id, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: e.product_img, product_id: e.product_id }
     })
+    var selectedOption = _.map(userSelectedProducts.data.userproducts, (e, i) => {
+      return { value: e.product_id, label: e.product_label, cal: e.cal, fib: e.fib, car: e.car, fat: e.fat, img: e.product_img, product_id: e.product_id, id: e.id }
+
+    })
+    this.setState({ selectedOption })
   }
   removeProduct = (index) => {
     var { selectedOption } = this.state;

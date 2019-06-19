@@ -153,6 +153,14 @@ export function userDeleteProduct(params) {
     });
 }
 
+export function getAllUserProduct(params) {
+    return xapi().post('getalluserproduct', {
+        ...params
+    });
+}
+
+
+
 
 
 
