@@ -28,12 +28,18 @@ import product4 from "assets/img/Maxim_Gel.jpg";
 import Select from 'react-select';
 import _ from 'lodash'
 import * as service from "restful"
+const product_selection_id = 0;
 var products = [
-  { value: 0, label: 'Banana - 2X', cal: 103, fib: 2, car: 24, fat: 0, img: product1 },
-  { value: 1, label: 'Clif Bar Chocolate Chip', cal: 103, fib: 2, car: 24, fat: 0, img: product2 },
-  { value: 2, label: 'Waffle', cal: 103, fib: 2, car: 24, fat: 0, img: product3 },
-  { value: 3, label: 'Powerbar Isoactive', cal: 103, fib: 2, car: 24, fat: 0, img: product4 },
-
+  // {
+  //   cal: 103,
+  //   car: 24,
+  //   fat: 2,
+  //   fib: 2,
+  //   img: "https://images.pexels.com/photos/20787/pexels-photo.jpg",
+  //   label: "Clif Bar Chocolate Chip",
+  //   product_id: 2,
+  //   value: 1
+  // }
 ];
 
 var Product = (props) => {
@@ -89,7 +95,7 @@ class ExtendedTables extends React.Component {
     super(props);
     this.state = {
       checked: [],
-      selectedOption: null,
+      selectedOption: [],
     };
     this.handleToggle = this.handleToggle.bind(this);
   }
@@ -121,9 +127,48 @@ class ExtendedTables extends React.Component {
       checked: newChecked
     });
   }
-  handleChange = selectedOption => {
-    this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
+  handleChange = changedSelectedOption => {
+    var { selectedOption } = this.state;
+    changedSelectedOption ? null : changedSelectedOption = [];
+    var offset = changedSelectedOption.length - selectedOption.length
+
+    if (offset > 0) {//added
+      var addedElements = _.filter(changedSelectedOption, (e, i) => {
+        for (let ee of selectedOption) {
+          if (ee.value == e.value) return false
+        }
+        return true
+      })
+      console.log("added :", offset, addedElements)
+      _.forEach(addedElements, async (e, i) => {
+        var params = { product_selection_id, product_id: e.product_id }
+        var [res] = await Promise.all([service.userAddProduct(params)])
+        changedSelectedOption = _.map(changedSelectedOption, (ee, ii) => {
+          if (ee.value == e.value)
+            return ee.id = res.data.result.insertId
+          else return ee
+        })
+        console.log(res.data.result.insertId)
+      })
+
+
+    } else { // removed
+      var deletedElements = _.filter(selectedOption, (e, i) => {
+        for (let ee of changedSelectedOption) {
+          if (ee.value == e.value) return false
+        }
+        return true
+      })
+      console.log("removed :", -offset, deletedElements)
+      _.forEach(deletedElements, async (e, i) => {
+        var params = { id: e.id }
+        var [res] = await Promise.all([service.userDeleteProduct(params)])
+        console.log(res)
+      })
+    }
+    this.setState({ selectedOption: changedSelectedOption });
+
+    console.log(`Option selected:`, selectedOption, changedSelectedOption);
   };
   Tablerow = (products, classes) => {
     var keyProps = "keyprops"
