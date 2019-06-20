@@ -13,8 +13,8 @@ var propertyToHrCat = (profile) => {
 }
 
 var propertyToUserDataJson = (profile) => {
-    const { firstname, lastname, sex, weight, age, height } = profile;
-    var tempJson = { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings" }
+    const { firstname, lastname, sex, weight, age, height, ridedate, ridestarttime, rideduration, removetimestamps } = profile;
+    var tempJson = { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings", ridedate: "", ridestarttime: "", rideduration: "", removetimestamps: "" }
     return new Promise((resolve, reject) => {
         Uioption.fromSystemTableToSlopAndOutcol((err, data) => {
 
@@ -30,7 +30,11 @@ var propertyToUserDataJson = (profile) => {
                 tempJson.length = height;
                 tempJson.hrcat = hrcat;
                 tempJson.shape = "na" //there is not values in defaults
-                tempJson.send = "Update user settings" //there is not values in defaults
+                tempJson.send = "Update user settings" //there is not values in defaults,
+                tempJson.ridedate = ridedate
+                tempJson.ridestarttime = ridestarttime
+                tempJson.rideduration = rideduration
+                tempJson.removetimestamps = removetimestamps
             } catch (err) {
                 console.log(err)
                 reject(err)
@@ -81,7 +85,7 @@ var insertFileRow = (req, callback) => {
                         valueFiledsString += "(?,?,?,?),"
                         valueArray.push(upload_user_id, upload_filename, upload_user_settings, upload_system_settings)
                     } else {
-                        console.log("not inserted on uploads because there is ", duplicated)                        
+                        console.log("not inserted on uploads because there is ", duplicated)
                     }
                     if (i + 1 == files.length && valueFiledsString.length) {
                         valueFiledsString = valueFiledsString.slice(0, valueFiledsString.length - 1);
