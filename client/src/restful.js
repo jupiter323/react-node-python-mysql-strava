@@ -159,6 +159,11 @@ export function getAllUserProduct(params) {
     });
 }
 
+export function setRideValue(params) {
+    return xapi().post('setridevalue', {
+        ...params
+    });
+}
 
 
 

@@ -366,6 +366,24 @@ exports.eraseProfile = (req, res) => {
             })
     })
 }
+exports.updateRideValue = (req, res) => {
+    var { date, rideduration } = req.body;
+    var { id } = req.user;
+    User.updateRideValue(date, rideduration, id, (err, msg) => {
+        if (err)
+            res.send({
+                success: false,
+                msg
+            })
+        else
+            res.send({
+                success: true,
+                msg
+            })
+
+    })
+
+}
 var saveStravaConfig = (token) => {
     fs.writeFileSync(
         Constants.STRAVA_CONFIG_PATH,

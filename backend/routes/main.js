@@ -46,4 +46,6 @@ router.route('/getallproducts').get(FoodControl.getAllProducts)
 router.route('/getalluserproduct').post(FoodControl.getAllUserProduct)
 router.route('/useraddproduct').post(FoodControl.userAddProduct)
 router.route('/userdeleteproduct').post(FoodControl.userDeleteProduct)
+router.route('/setridevalue').post(UserControl.updateRideValue)
+
 module.exports = router;

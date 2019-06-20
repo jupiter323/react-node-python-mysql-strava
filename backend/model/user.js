@@ -371,6 +371,22 @@ var insertUserProfile = (user, callback) => { //optional
   )
 }
 
+var updateRideValue = (date, rideduration, id, cb) => {
+  db.query(`UPDATE user_profile SET ridedate = ?, ridestarttime = ?, rideduration = ?, removetimestamps = ? WHERE clientId =?`, [date, date, rideduration, 0, id],
+    function (err) {
+      let msg = ''
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return updateRideValue(date, rideduration, id, cb);
+        }
+        msg = Constants.USER_UPDATE_FAILED
+      } else
+        msg = Constants.USER_UPDATE_OK
+      // Successfully update user
+      return cb(err, msg);
+    }
+  )
+}
 
 var deleteUser = (username, callback) => {
 
@@ -398,4 +414,5 @@ exports.changePassword = changePassword
 exports.getUserByEmail = getUserByEmail
 exports.getUserProfileByClientId = getUserProfileByClientId
 exports.eraseUser = eraseUser
+exports.updateRideValue = updateRideValue
 

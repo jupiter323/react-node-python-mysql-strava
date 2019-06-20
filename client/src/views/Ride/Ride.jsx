@@ -163,6 +163,15 @@ class Ride extends React.Component {
         break;
     }
   }
+
+  updateProfileForRideValue = async () => {
+    const { date, rideduration } = this.state;
+    var params = { date, rideduration }
+    var [response] = await Promise.all([
+      service.setRideValue(params)
+    ])
+  }
+
   handleSelectRide = async () => {
     var { selectedDate, selectedRideduration, date, rideduration, selectedMethod, gpxs, routes, rideIndex, routeIndex, gpxParams } = this.state
     if (!selectedDate)
@@ -175,6 +184,14 @@ class Ride extends React.Component {
         title: 'Alert',
         message: 'Please input Rideduration'
       });
+
+    // set ride value on the profile
+    var params = { date, rideduration }
+    await Promise.all([
+      service.setRideValue(params)
+    ])
+    // end
+
     switch (selectedMethod) {
       case -1:
         return confirmAlert({
@@ -381,6 +398,22 @@ class Ride extends React.Component {
                       </GridItem>
                     </GridContainer>
 
+                    <p><br /></p>
+                    <p><br /></p>
+                    {/* ride duration */}
+                    <CustomInput
+                      labelText="Ride Duration "
+                      id="rideduration"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        // disabled: true,
+                        name: "rideduration",
+                        onChange: this.handleInputValue,
+                        value: rideduration || ""
+                      }}
+                    />
                   </GridItem>
                   {/* datetimepicker */}
                   <GridItem xs={12} sm={12} md={6}>
@@ -397,19 +430,7 @@ class Ride extends React.Component {
                         inputProps={{ placeholder: "Start Date & Time", color: "red" }}
                       />
                     </FormControl>
-                    <CustomInput
-                      labelText="Ride Duration "
-                      id="rideduration"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                        // disabled: true,
-                        name: "rideduration",
-                        onChange: this.handleInputValue,
-                        value: rideduration || ""
-                      }}
-                    />
+
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={8} >
                       </GridItem>
