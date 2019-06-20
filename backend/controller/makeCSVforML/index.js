@@ -121,6 +121,10 @@ function prepareparams(receivedParams, filename) {
     params['seglen'] = systemsettings.seglen
     params['zeronegativeenergy'] = systemsettings.negzero && systemsettings.negzero == 'checked' ? 'true' : 'false'
     params['csvwithcomma'] = systemsettings.withcomma && systemsettings.withcomma == 'checked' ? 'true' : 'false'
+    params['ridedate'] = usersettings.ridedate
+    params['ridestarttime'] = usersettings.ridestarttime
+    params['rideduration'] = usersettings.rideduration
+    params['removetimestamps'] = usersettings.removetimestamps
     return params
 }
 
