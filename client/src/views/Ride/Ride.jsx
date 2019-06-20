@@ -33,6 +33,7 @@ import FormData from 'form-data'
 import _ from 'lodash';
 import Datetime from 'components/DateTimePicker';
 import Button from "components/CustomButtons/Button.jsx";
+import CustomInput from "components/CustomInput/CustomInput.jsx";
 import { confirmAlert } from 'react-confirm-alert';
 class Ride extends React.Component {
   constructor(props) {
@@ -52,10 +53,12 @@ class Ride extends React.Component {
       }],
       date: new Date(),
       selectedDate: false,
+      selectedRideduration: false,
       selectedMethod: -1,
       rideIndex: -1,
       routeIndex: -1,
-      gpxParams: null
+      gpxParams: null,
+      rideduration: null
 
     };
 
@@ -83,7 +86,7 @@ class Ride extends React.Component {
             return 1
           return 0
         })
-        this.setState({ gpxs: sortedGpxs })        
+        this.setState({ gpxs: sortedGpxs })
       } else
         alert("there is not any gpxs")
     }, 200);
@@ -155,14 +158,22 @@ class Ride extends React.Component {
         if (routes[intValue]['id'] === -1) return
         this.setState({ selectedMethod: 1, routeIndex: intValue, gpxParams: null, ride: '' })
         break;
+      case "rideduration":
+        this.setState({ rideduration: event.target.value, selectedRideduration: true });
+        break;
     }
   }
   handleSelectRide = async () => {
-    var { selectedDate, selectedMethod, gpxs, routes, rideIndex, routeIndex, gpxParams } = this.state
+    var { selectedDate, selectedRideduration, date, rideduration, selectedMethod, gpxs, routes, rideIndex, routeIndex, gpxParams } = this.state
     if (!selectedDate)
       return confirmAlert({
         title: 'Alert',
         message: 'Please select date and time'
+      });
+    if (!selectedRideduration)
+      return confirmAlert({
+        title: 'Alert',
+        message: 'Please input Rideduration'
       });
     switch (selectedMethod) {
       case -1:
@@ -172,7 +183,9 @@ class Ride extends React.Component {
         });
       case 0:
         var params = {
-          fileID: gpxs[rideIndex]['id']
+          fileID: gpxs[rideIndex]['id'],
+          startDate: date,
+          rideDuration: rideduration
         }
 
         var response = await Promise.resolve(service.selectGpxConvert(params))
@@ -185,7 +198,9 @@ class Ride extends React.Component {
       case 1:
         var params = {
           routeID: routes[routeIndex]['id'],
-          routeName: routes[routeIndex]['name']
+          routeName: routes[routeIndex]['name'],
+          startDate: date,
+          rideDuration: rideduration
         }
 
         var response = await Promise.resolve(service.exportroutegpx(params))
@@ -196,6 +211,11 @@ class Ride extends React.Component {
           });
         break;
       case 2:
+        var params = {
+          ...gpxParams,
+          startDate: date,
+          rideDuration: rideduration
+        }
         var response = await Promise.all([
           service.trainAndTestDataUpload(gpxParams)
         ]);
@@ -235,7 +255,7 @@ class Ride extends React.Component {
 
   render() {
     var { classes } = this.props;
-    var { ride, route, routes, gpxs } = this.state;
+    var { ride, route, routes, gpxs, rideduration } = this.state;
     return (
       <div>
         <GridContainer>
@@ -377,6 +397,19 @@ class Ride extends React.Component {
                         inputProps={{ placeholder: "Start Date & Time", color: "red" }}
                       />
                     </FormControl>
+                    <CustomInput
+                      labelText="Ride Duration "
+                      id="rideduration"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        // disabled: true,
+                        name: "rideduration",
+                        onChange: this.handleInputValue,
+                        value: rideduration || ""
+                      }}
+                    />
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={8} >
                       </GridItem>
