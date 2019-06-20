@@ -74,9 +74,17 @@ class Ride extends React.Component {
         this.setState({ routes: routesData['data']['routes'] })
       else
         alert("there is not any routes")
-      if (gpxsData && gpxsData['data'] && gpxsData['data']['success'])
-        this.setState({ gpxs: gpxsData['data']['response'] })
-      else
+      if (gpxsData && gpxsData['data'] && gpxsData['data']['success']) {
+        var sortedGpxs = Array.from(gpxsData['data']['response']).sort((a, b) => {
+          var nameA = a['file_name'].toLowerCase(), nameB = b['file_name'].toLowerCase()
+          if (nameA < nameB) //sort string ascending
+            return -1
+          if (nameA > nameB)
+            return 1
+          return 0
+        })
+        this.setState({ gpxs: sortedGpxs })        
+      } else
         alert("there is not any gpxs")
     }, 200);
 
@@ -289,7 +297,7 @@ class Ride extends React.Component {
                             value={`${i}`}
                             key={e.id}
                           >
-                            {e['file_name']}
+                            {e['file_name'].replace('.gpx', '')}
                           </MenuItem>
                         }
                         )}

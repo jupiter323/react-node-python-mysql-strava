@@ -117,7 +117,7 @@ export function eraseProfile() {
     return xapi().get('account/eraseprofile');
 }
 
-export function getStravaRoutes() {
+export function getStravaRoutes() {// get routes for ride page
     return xapi().post('account/getStravaRoutes', {
         pageNum: 1
     });
@@ -128,7 +128,7 @@ export function exportroutegpx(params) {
     });
 }
 
-export function getGpxs() {
+export function getGpxs() {//organized event get for ride page
     return xapi().get('getgpxs');
 }
 export function selectGpxConvert(params) {
