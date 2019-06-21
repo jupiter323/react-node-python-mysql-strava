@@ -875,18 +875,18 @@ class UserProfile extends React.Component {
                   <GridItem xs={12} sm={12} md={6} ></GridItem>
                   <GridItem xs={12} sm={12} md={6} >
                     <GridContainer className={classes.buttonsContainer}>
-                      <GridItem xs={12} sm={12} md={3} >
+                      <GridItem xs={12} sm={12} md={4} >
                         {profileCompleted && <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(false, event)} accept=".gpx, .csv, .fit" multiple innerText="Train GPX FIles" />}
                       </GridItem>
-                      <GridItem xs={12} sm={12} md={3} >
+                      {/* <GridItem xs={12} sm={12} md={3} >
                         {profileCompleted && <GPXUpload className={classes.profilebuttons} onChange={(event) => this.onChooseFile(true, event)} accept=".gpx, .csv, .fit" innerText="Test GPX FIle" />}
-                      </GridItem>
-                      <GridItem xs={12} sm={12} md={3} >
+                      </GridItem> */}
+                      <GridItem xs={12} sm={12} md={4} >
                         <Button color="primary" className={classes.profilebuttons} disabled={!profileCompleted} onClick={this.handleNavigateClickForLogin}>
                           Connect to Strava
                       </Button>
                       </GridItem>
-                      <GridItem xs={12} sm={12} md={3} >
+                      <GridItem xs={12} sm={12} md={4} >
                         <Button color="primary" className={classes.profilebuttons} onClick={this.updateProfile}>
                           Update Profile
                         </Button>
