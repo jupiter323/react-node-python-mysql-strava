@@ -373,7 +373,8 @@ exports.updateRideValue = (req, res) => {
         if (err)
             res.send({
                 success: false,
-                msg
+                msg,
+                err
             })
         else
             res.send({
