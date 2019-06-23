@@ -164,14 +164,6 @@ class Ride extends React.Component {
     }
   }
 
-  updateProfileForRideValue = async () => {
-    const { date, rideduration } = this.state;
-    var params = { date, rideduration }
-    var [response] = await Promise.all([
-      service.setRideValue(params)
-    ])
-  }
-
   handleSelectRide = async () => {
     var { selectedDate, selectedRideduration, date, rideduration, selectedMethod, gpxs, routes, rideIndex, routeIndex, gpxParams } = this.state
     if (!selectedDate)
@@ -187,7 +179,7 @@ class Ride extends React.Component {
 
     // set ride value on the profile
     var params = { date, rideduration }
-    await Promise.all([
+    var [response] = await Promise.all([
       service.setRideValue(params)
     ])
     // end
