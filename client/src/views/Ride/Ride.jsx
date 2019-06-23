@@ -182,6 +182,7 @@ class Ride extends React.Component {
     var [response] = await Promise.all([
       service.setRideValue(params)
     ])
+    console.log("ride changed: ", response)
     // end
 
     switch (selectedMethod) {
