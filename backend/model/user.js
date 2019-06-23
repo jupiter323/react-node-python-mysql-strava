@@ -372,6 +372,11 @@ var insertUserProfile = (user, callback) => { //optional
 }
 
 var updateRideValue = (date, rideduration, id, cb) => {
+  var date = new Date(date)
+  var cDate = date.getDate();
+  var Month = date.getMonth(); //Be careful! January is 0 not 1
+  var Year = date.getFullYear();  
+  var dateString = cDate + "-" +(Month + 1) + "-" + Year;  
   db.query(`UPDATE user_profile SET ridedate = ?, ridestarttime = ?, rideduration = ?, removetimestamps = ? WHERE clientId =?`, [date, date, rideduration, 0, id],
     function (err) {
       let msg = ''
