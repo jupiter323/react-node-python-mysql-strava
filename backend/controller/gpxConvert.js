@@ -69,7 +69,7 @@ exports.convertAlreadyGpx = (req, res) => {
                 // insert row to the uploads table
                 var files = [{ "originalname": fileName }]
 
-                Uploads.insertFileRow(_.assign(req, { files }), (err, nonUser) => {
+                Uploads.insertFileRow(_.assign(req, { files, body: { isTestData } }), (err, nonUser) => {
                     if (err) {
                         console.log(err)
                         res.send({

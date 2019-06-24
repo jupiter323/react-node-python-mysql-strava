@@ -100,7 +100,7 @@ var expertCSV = (payload, id, clientId) => {
     fs.writeFileSync(`${userfolder}/${allActivities[id].id}.csv`, content);
 
     // insert recod to uploads table and convert
-    var params = { clientId, fileName: `${allActivities[id].id}.csv` }
+    var params = { clientId, fileName: `${allActivities[id].id}.csv`, req: { body: { isTestData: false } } }
     Uploads.insertFileRowForStrava(params, (err, nonUser) => {
         if (err) {
             console.log(err)
