@@ -82,7 +82,7 @@ async function processFile(isTestData) {
             var sendparams = { userdata, systemdata, uploadUserId }
             let filename = uploaddata[0].upload_filename
             let filedata = fs.readFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}`)
-            let params = prepareparams(sendparams, filename)
+            let params = prepareparams(sendparams, filename, isTestData)
             // fs.writeFileSync(`${rootpath}/uploads/${uploadUserId}/${filename}-convertparams.json`, JSON.stringify(params, "", 3))
             let convertresult = await runconvert(filedata, params, isTestData)
             console.log(convertresult)
@@ -94,7 +94,7 @@ async function processFile(isTestData) {
     // setTimeout(function(){ processFile() }, delay)
 }
 
-function prepareparams(receivedParams, filename) {
+function prepareparams(receivedParams, filename, isTestData) {
     let params = {}
     let usersettings = JSON.parse(receivedParams.userdata)
     let systemsettings = JSON.parse(receivedParams.systemdata)
@@ -121,10 +121,12 @@ function prepareparams(receivedParams, filename) {
     params['seglen'] = systemsettings.seglen
     params['zeronegativeenergy'] = systemsettings.negzero && systemsettings.negzero == 'checked' ? 'true' : 'false'
     params['csvwithcomma'] = systemsettings.withcomma && systemsettings.withcomma == 'checked' ? 'true' : 'false'
-    params['ridedate'] = usersettings.ridedate
-    params['ridestarttime'] = usersettings.ridestarttime
-    params['rideduration'] = usersettings.rideduration
-    params['removetimestamps'] = usersettings.removetimestamps
+    if (isTestData) {
+        params['ridedate'] = usersettings.ridedate
+        params['ridestarttime'] = usersettings.ridestarttime
+        params['rideduration'] = usersettings.rideduration
+        params['removetimestamps'] = usersettings.removetimestamps
+    }
     return params
 }
 

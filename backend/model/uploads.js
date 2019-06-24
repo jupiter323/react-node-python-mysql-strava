@@ -12,9 +12,9 @@ var propertyToHrCat = (profile) => {
     return hrCat
 }
 
-var propertyToUserDataJson = (profile) => {
+var propertyToUserDataJson = (profile, isTestData) => {
     const { firstname, lastname, sex, weight, age, height, ridedate, ridestarttime, rideduration, removetimestamps } = profile;
-    var tempJson = { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings", ridedate: "", ridestarttime: "", rideduration: "", removetimestamps: "" }
+    var tempJson = (isTestData === "true" || isTestData === true) ? { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings", ridedate: "", ridestarttime: "", rideduration: "", removetimestamps: "" } : { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings" };
     return new Promise((resolve, reject) => {
         Uioption.fromSystemTableToSlopAndOutcol((err, data) => {
 
@@ -31,10 +31,12 @@ var propertyToUserDataJson = (profile) => {
                 tempJson.hrcat = hrcat;
                 tempJson.shape = "na" //there is not values in defaults
                 tempJson.send = "Update user settings" //there is not values in defaults,
-                tempJson.ridedate = ridedate
-                tempJson.ridestarttime = ridestarttime
-                tempJson.rideduration = rideduration
-                tempJson.removetimestamps = removetimestamps
+                if (isTestData === "true" || isTestData === true) {
+                    tempJson.ridedate = ridedate
+                    tempJson.ridestarttime = ridestarttime
+                    tempJson.rideduration = rideduration
+                    tempJson.removetimestamps = removetimestamps
+                }
             } catch (err) {
                 console.log(err)
                 reject(err)
@@ -58,7 +60,8 @@ var checkExistInRow = (upload_filename, upload_user_id) => {
     })
 }
 var insertFileRow = (req, callback) => {
-    var { user, files } = req;
+    var { user, files, body } = req;
+    var isTestData = body.isTestData;
     var upload_user_id = user.id;
     var upload_filename = files[0]["originalname"];
     var upload_user_settings;
@@ -73,7 +76,7 @@ var insertFileRow = (req, callback) => {
             else {
 
                 upload_system_settings = userprofile.systemsetting;
-                upload_user_settings = JSON.stringify(await propertyToUserDataJson(userprofile));
+                upload_user_settings = JSON.stringify(await propertyToUserDataJson(userprofile, isTestData));
 
                 var valueFiledsString = '';
                 var valueArray = [];
@@ -115,8 +118,9 @@ var insertFileRow = (req, callback) => {
 
 }
 var insertFileRowForStrava = (params, callback) => {
-    var { clientId, fileName } = params;
+    var { clientId, fileName, req } = params;
 
+    var isTestData = req.body;
     var upload_user_id = clientId;
     var upload_filename = fileName;
     var upload_user_settings;
@@ -131,7 +135,7 @@ var insertFileRowForStrava = (params, callback) => {
             else {
 
                 upload_system_settings = userprofile.systemsetting;
-                upload_user_settings = JSON.stringify(await propertyToUserDataJson(userprofile));
+                upload_user_settings = JSON.stringify(await propertyToUserDataJson(userprofile, isTestData));
                 var duplicated = await checkExistInRow(upload_filename, clientId)
 
                 if (!duplicated) {
