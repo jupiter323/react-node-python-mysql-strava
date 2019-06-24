@@ -21,10 +21,6 @@ import CardHeader from "components/Card/CardHeader.jsx";
 
 import extendedTablesStyle from "assets/jss/material-dashboard-pro-react/views/extendedTablesStyle.jsx";
 
-import product1 from "assets/img/Banaan.jfif";
-import product2 from "assets/img/krentenbol.jpg";
-import product3 from "assets/img/Maxim_bar.png";
-import product4 from "assets/img/Maxim_Gel.jpg";
 import Select from 'react-select';
 import _ from 'lodash'
 import * as service from "restful"
@@ -112,11 +108,15 @@ class ExtendedTables extends React.Component {
     })
     this.setState({ selectedOption })
   }
-  removeProduct = (index) => {
+  removeProduct = async (index) => {
     var { selectedOption } = this.state;
+    var params = { id: selectedOption[index]["id"] }
     selectedOption.splice(index, 1)
-
     this.setState({ selectedOption });
+    var [res] = await Promise.all([service.userDeleteProduct(params)])
+    console.log(res)
+
+
   }
   handleToggle(value) {
     const { checked } = this.state;
@@ -133,48 +133,54 @@ class ExtendedTables extends React.Component {
       checked: newChecked
     });
   }
-  handleChange = changedSelectedOption => {
+  handleChange = async changedSelectedOption => {
     var { selectedOption } = this.state;
-    changedSelectedOption ? null : changedSelectedOption = [];
-    var offset = changedSelectedOption.length - selectedOption.length
-
-    if (offset > 0) {//added
-      var addedElements = _.filter(changedSelectedOption, (e, i) => {
-        for (let ee of selectedOption) {
-          if (ee.value == e.value) return false
-        }
-        return true
-      })
-      console.log("added :", offset, addedElements)
-      _.forEach(addedElements, async (e, i) => {
-        var params = { product_selection_id, product_id: e.product_id }
-        var [res] = await Promise.all([service.userAddProduct(params)])
-        changedSelectedOption = _.map(changedSelectedOption, (ee, ii) => {
-          if (ee.value == e.value)
-            return ee.id = res.data.result.insertId
-          else return ee
-        })
-        console.log(res.data.result.insertId)
-      })
+    // on multi
+    // changedSelectedOption ? null : changedSelectedOption = [];
 
 
-    } else { // removed
-      var deletedElements = _.filter(selectedOption, (e, i) => {
-        for (let ee of changedSelectedOption) {
-          if (ee.value == e.value) return false
-        }
-        return true
-      })
-      console.log("removed :", -offset, deletedElements)
-      _.forEach(deletedElements, async (e, i) => {
-        var params = { id: e.id }
-        var [res] = await Promise.all([service.userDeleteProduct(params)])
-        console.log(res)
-      })
-    }
-    this.setState({ selectedOption: changedSelectedOption });
+    // var offset = changedSelectedOption.length - selectedOption.length
 
-    console.log(`Option selected:`, selectedOption, changedSelectedOption);
+    // if (offset > 0) {//added
+    //   var addedElements = _.filter(changedSelectedOption, (e, i) => {
+    //     for (let ee of selectedOption) {
+    //       if (ee.value == e.value) return false
+    //     }
+    //     return true
+    //   })
+    //   console.log("added :", offset, addedElements)
+    //   _.forEach(addedElements, async (e, i) => {
+    //     var params = { product_selection_id, product_id: e.product_id }
+    //     var [res] = await Promise.all([service.userAddProduct(params)])
+    //     changedSelectedOption = _.map(changedSelectedOption, (ee, ii) => {
+    //       if (ee.value == e.value)
+    //         return ee.id = res.data.result.insertId
+    //       else return ee
+    //     })
+    //     console.log(res.data.result.insertId)
+    //   })
+
+
+    // } else { // removed
+    //   var deletedElements = _.filter(selectedOption, (e, i) => {
+    //     for (let ee of changedSelectedOption) {
+    //       if (ee.value == e.value) return false
+    //     }
+    //     return true
+    //   })
+    //   console.log("removed :", -offset, deletedElements)
+    //   _.forEach(deletedElements, async (e, i) => {
+    //     var params = { id: e.id }
+    //     var [res] = await Promise.all([service.userDeleteProduct(params)])
+    //     console.log(res)
+    //   })
+    // }
+    selectedOption.push(changedSelectedOption);
+
+    this.setState({ selectedOption });
+    var params = { product_selection_id, product_id: changedSelectedOption.product_id }
+    var [res] = await Promise.all([service.userAddProduct(params)])
+    console.log(`Option selected:`, selectedOption, changedSelectedOption, res);
   };
   render() {
     const { classes } = this.props;
@@ -191,8 +197,8 @@ class ExtendedTables extends React.Component {
             </CardHeader>
             <CardBody>
               <Select
-                isSearchable
-                isMulti
+                // isSearchable
+                // isMulti
                 value={selectedOption}
                 onChange={this.handleChange}
                 options={products}
