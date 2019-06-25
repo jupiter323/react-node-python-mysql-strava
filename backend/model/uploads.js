@@ -14,6 +14,10 @@ var propertyToHrCat = (profile) => {
 
 var propertyToUserDataJson = (profile, isTestData) => {
     const { firstname, lastname, sex, weight, age, height, ridedate, ridestarttime, rideduration, removetimestamps } = profile;
+    var cDate = ridedate.getDate();
+    var Month = ridedate.getMonth(); //Be careful! January is 0 not 1
+    var Year = ridedate.getFullYear();  
+    var dateString = cDate + "-" +(Month + 1) + "-" + Year;  
     var tempJson = (isTestData === "true" || isTestData === true) ? { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings", ridedate: "", ridestarttime: "", rideduration: "", removetimestamps: "" } : { firstname: "", lastname: "", gender: "M", weight: "0", age: "0", length: "1.80", shape: "na", hrcat: "", send: "Update user settings" };
     return new Promise((resolve, reject) => {
         Uioption.fromSystemTableToSlopAndOutcol((err, data) => {
@@ -32,7 +36,7 @@ var propertyToUserDataJson = (profile, isTestData) => {
                 tempJson.shape = "na" //there is not values in defaults
                 tempJson.send = "Update user settings" //there is not values in defaults,
                 if (isTestData === "true" || isTestData === true) {
-                    tempJson.ridedate = ridedate
+                    tempJson.ridedate = dateString
                     tempJson.ridestarttime = ridestarttime
                     tempJson.rideduration = rideduration
                     tempJson.removetimestamps = removetimestamps
