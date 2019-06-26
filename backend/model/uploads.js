@@ -36,7 +36,7 @@ var propertyToUserDataJson = (profile, isTestData) => {
                 tempJson.shape = "na" //there is not values in defaults
                 tempJson.send = "Update user settings" //there is not values in defaults,
                 if (isTestData === "true" || isTestData === true) {
-                    tempJson.ridedate = dateString
+                    tempJson.ridedate = ridedate
                     tempJson.ridestarttime = ridestarttime
                     tempJson.rideduration = rideduration
                     tempJson.removetimestamps = removetimestamps
