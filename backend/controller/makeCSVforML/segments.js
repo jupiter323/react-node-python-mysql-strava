@@ -382,7 +382,7 @@ function buildSegments2(params, trackinfo, segsize) {
             hrCategory: Math.round(hrcat),
             hrCategory1: hrcat,
             beatcount: Math.round(segbeats * 100) / 100,
-            gpxtimestamp: new Date(time1 * 1000).toISOString().substr(0, 19) + 'Z',
+            gpxtimestamp: params['ridedate'] ? new Date(params['ridedate']).toISOString().substr(0, 19) : new Date(time1 * 1000).toISOString().substr(0, 19) + 'Z',
             utctime: Math.round(time1),
             gpxdist: Math.round(waypoints[index].dist),
             valid_speed: valid_speed,
