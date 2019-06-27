@@ -195,7 +195,7 @@ function buildSegments(params, trackinfo, segsize) {
                 hrIntScore: Math.round(hrIntScore * 10) / 10,
                 cumHrIntScore: Math.round(params.cumHrIntScore),
                 beatcount: segment.timedif == 0 ? 0 : Math.round(segment.beats / segment.count / 60 * segment.timedif / 1000 * 10) / 10,
-                gpxtimestamp: new Date(waypoints[index].utc * 1000).toISOString().substr(0, 19) + 'Z',
+                gpxtimestamp: params['ridedate'] ? new Date(params['ridedate']).toISOString().substr(0, 19) : new Date(waypoints[index].utc * 1000).toISOString().substr(0, 19) + 'Z',
                 utctime: waypoints[index].utc,
                 gpxdist: Math.round(waypoints[index].dist),
                 valid_speed: valid_speed,
@@ -654,7 +654,7 @@ function segmentsToCSV(params, trackinfo, segments) {
         let end
         if (params['ridedate']) {
             start = new Date(params['ridedate']).toISOString().substr(0, 19);
-            end = new Date(Date.parse(params['ridedate'])+params['rideduration'] * 3600000).toISOString().substr(0, 19);
+            end = new Date(Date.parse(params['ridedate']) + params['rideduration'] * 3600000).toISOString().substr(0, 19);
         } else {
             start = new Date(trackinfo.waypoints[0].utc * 1000 + params.timeoffset * 3600000).toISOString().substr(0, 19)
             end = new Date(trackinfo.waypoints[trackinfo.waypoints.length - 1].utc * 1000 + params.timeoffset * 3600000).toISOString().substr(0, 19)
