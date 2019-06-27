@@ -177,7 +177,7 @@ function buildSegments(params, trackinfo, segsize) {
                 index: index,   // waypoints index
                 cumdist: Math.round(segcumdist - segsize),
                 ele: Math.round(eledifsum * 10) / 10,
-                time: Math.round(segment.timedif) / 1000,
+                time: params['rideduration'] ? params['rideduration'] : Math.round(segment.timedif) / 1000,
                 time1: fmtsec(segment.timedif / 1000),
                 temp: Math.round(segment.temp / segment.count * 10) / 10,
                 beats: Math.round(segment.beats / segment.count * 10) / 10,
@@ -367,7 +367,7 @@ function buildSegments2(params, trackinfo, segsize) {
             index: index,
             cumdist: i * segsize,
             ele: Math.round(ele1 * 10) / 10,
-            time: Math.round(segtime * 100) / 100,
+            time: params['rideduration'] ? params['rideduration'] : Math.round(segtime * 100) / 100,
             time1: fmtsec((segtime * 100) / 100),
             temp: waypoints[prev.index].temp,
             beats: segtime == 0 ? 0 : Math.round(segbeats / segtime * 600) / 10,
